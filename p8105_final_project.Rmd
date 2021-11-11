@@ -2,6 +2,6 @@
 title: "P8105_final_project"
 author: "XIAO MA"
 date: "11/11/2021"
-output: html_document
+output: github_document
 ---
 
