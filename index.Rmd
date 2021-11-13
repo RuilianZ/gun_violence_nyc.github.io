@@ -1,0 +1,16 @@
+---
+title: "Gun Violence Continues in NYC?"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+Hi there! This is the final project website for P8105.
+
+# Proposal
+
+This is our project [proposal](proposal.html)
+
+
+

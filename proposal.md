@@ -1,4 +1,4 @@
-P8105 Final Project Proposal: Gun Violence Continues in NYC?
+Gun Violence Continues in NYC?
 ================
 Hao Zheng (hz2770), Peilin Zhou (pz2281), Xiao Ma(xm2276), Yida
 Wang(yw3774), Ruilian Zhang (rz2570)
