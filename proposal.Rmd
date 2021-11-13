@@ -1,7 +1,7 @@
 ---
 title: "Gun Violence Continues in NYC?"
 author: "Hao Zheng (hz2770), Peilin Zhou (pz2281), Xiao Ma(xm2276), Yida Wang(yw3774), Ruilian Zhang (rz2570)"
-output: html_document
+output: github_document
 ---
 
 ```{r, include = FALSE}
