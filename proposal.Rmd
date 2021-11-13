@@ -4,6 +4,10 @@ author: "Hao Zheng (hz2770), Peilin Zhou (pz2281), Xiao Ma(xm2276), Yida Wang(yw
 output: github_document
 ---
 
+```{r, include = FALSE}
+library(tidyverse)
+```
+
 ## Motivation
 
 Recently, the tragedy of a Chinese grad student at Chicago University killed in a shooting near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC. Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also try to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.
@@ -48,8 +52,10 @@ Recently, the tragedy of a Chinese grad student at Chicago University killed in 
  
 ## Planned timeline
 
-11/11 Zoom meeting: Determine project theme and data source  
-11/15 - 11/21 Delegate responsibilities, data cleaning & framework  
-11/22 - 11/28 Visualization and analysation  
-12/01 - 12/10 Create websites, final draft completed  
-12/06 Final Assignment due & in-class discussion  
+```{r, echo = FALSE}
+tibble(
+        "Date" = c("11/11", "11/15 - 11/21", "11/22 - 11/28", "12/01 - 12/10",  "12/06"),
+        "Work" = c("Zoom meeting: determine project theme and data source", "Delegate responsibilities, data cleaning & framework", "Visualization and analysation", "Create websites, final draft completed", "Final Assignment due & in-class discussion")
+        ) %>% 
+        knitr::kable()
+```

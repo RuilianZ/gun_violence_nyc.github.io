@@ -67,8 +67,10 @@ Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hosp
 
 ## Planned timeline
 
-11/11 Zoom meeting: Determine project theme and data source  
-11/15 - 11/21 Delegate responsibilities, data cleaning & framework  
-11/22 - 11/28 Visualization and analysation  
-12/01 - 12/10 Create websites, final draft completed  
-12/06 Final Assignment due & in-class discussion
+| Date          | Work                                                  |
+|:--------------|:------------------------------------------------------|
+| 11/11         | Zoom meeting: determine project theme and data source |
+| 11/15 - 11/21 | Delegate responsibilities, data cleaning & framework  |
+| 11/22 - 11/28 | Visualization and analysation                         |
+| 12/01 - 12/10 | Create websites, final draft completed                |
+| 12/06         | Final Assignment due & in-class discussion            |
