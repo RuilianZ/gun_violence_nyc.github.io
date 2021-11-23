@@ -83,3 +83,34 @@ shooting %>%
    ) 
 ```
 
+Next, clean the COVID-19 case count data
+
+Importing COVID-19 case count data
+
+```{r}
+covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
+```
+
+The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
+```{r}
+clean_covid = covid_counts %>% 
+   janitor::clean_names() %>% 
+   rename(date = date_of_interest) %>% 
+   select(date, contains("case_count")) %>% 
+   select(-contains(c("probable_case_count", "case_count_7day_avg", "all_case_count_7day_avg"))) %>%
+   separate(date, into = c("month", "day", "year")) %>% 
+   mutate_all(as.character) %>% 
+   mutate_if(is.character, gsub, pattern = ",", replacement = "") %>% 
+   mutate_if(is.character, as.numeric) %>%
+   pivot_longer(
+    cols = bx_case_count:si_case_count,
+    names_to = "borough",
+    values_to = "borough_case_count"
+  ) %>% 
+  mutate(borough = gsub("_case_count", "", borough)) %>% 
+  relocate(case_count, .after = borough_case_count) %>% 
+  rename(total_case_count = case_count)
+
+head(clean_covid)
+```
+
