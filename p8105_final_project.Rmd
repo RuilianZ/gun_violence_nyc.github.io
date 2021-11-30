@@ -57,21 +57,10 @@ shooting = shooting %>%
   mutate(month = as.numeric(month)) %>% 
   arrange(year, month) %>% 
  # mutate(month = month.name[month]) %>% 
-  mutate(year = as.character(year))
-```
-
-
-Try a plot by boro
-```{r}
-shooting %>%
-  ggplot(aes(x = boro, y = precinct)) + 
-  geom_point(alpha = .5) + 
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(
-    title = " ",
-    x = "Boror",
-    y = "Precint"
-   ) 
+  mutate(year = as.character(year)) %>% 
+  mutate(boro = tolower(boro)) %>% 
+  mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
+  rename(borough = boro)
 ```
 
 Next, clean the COVID-19 case count data
@@ -99,6 +88,7 @@ clean_covid = covid_counts %>%
     values_to = "borough_case_count"
   ) %>% 
   mutate(borough = gsub("_case_count", "", borough)) %>% 
+  mutate(borough = recode(borough, "bx" = "bronx","bk" = "brooklyn","mn" = "manhattan","si" = "staten_island","qn" = "queens")) %>% 
   relocate(case_count, .after = borough_case_count) %>% 
   rename(total_case_count = case_count)
 

@@ -15,8 +15,8 @@
 
 <title>P8105_final_project</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -344,19 +344,10 @@ scale_fill_discrete = scale_fill_viridis_d</code></pre>
   mutate(month = as.numeric(month)) %&gt;% 
   arrange(year, month) %&gt;% 
  # mutate(month = month.name[month]) %&gt;% 
-  mutate(year = as.character(year))</code></pre>
-<p>Try a plot by boro</p>
-<pre class="r"><code>shooting %&gt;%
-  ggplot(aes(x = boro, y = precinct)) + 
-  geom_point(alpha = .5) + 
-  geom_smooth(method = &quot;lm&quot;, se = FALSE) +
-  labs(
-    title = &quot; &quot;,
-    x = &quot;Boror&quot;,
-    y = &quot;Precint&quot;
-   ) </code></pre>
-<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+  mutate(year = as.character(year)) %&gt;% 
+  mutate(boro = tolower(boro)) %&gt;% 
+  mutate(boro = if_else(boro == &quot;staten island&quot;, &quot;staten_island&quot;, boro)) %&gt;% 
+  rename(borough = boro)</code></pre>
 <p>Next, clean the COVID-19 case count data</p>
 <p>Importing COVID-19 case count data</p>
 <pre class="r"><code>covid_counts = read.csv(&quot;./data/COVID19_data.csv&quot;, sep = &quot;;&quot;) %&gt;% as_tibble()</code></pre>
@@ -376,19 +367,20 @@ scale_fill_discrete = scale_fill_viridis_d</code></pre>
     values_to = &quot;borough_case_count&quot;
   ) %&gt;% 
   mutate(borough = gsub(&quot;_case_count&quot;, &quot;&quot;, borough)) %&gt;% 
+  mutate(borough = recode(borough, &quot;bx&quot; = &quot;bronx&quot;,&quot;bk&quot; = &quot;brooklyn&quot;,&quot;mn&quot; = &quot;manhattan&quot;,&quot;si&quot; = &quot;staten_island&quot;,&quot;qn&quot; = &quot;queens&quot;)) %&gt;% 
   relocate(case_count, .after = borough_case_count) %&gt;% 
   rename(total_case_count = case_count)
 
 head(clean_covid)</code></pre>
 <pre><code>## # A tibble: 6 × 6
-##   month   day  year borough borough_case_count total_case_count
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;            &lt;dbl&gt;
-## 1     2    29  2020 bx                       0                1
-## 2     2    29  2020 bk                       0                1
-## 3     2    29  2020 mn                       1                1
-## 4     2    29  2020 qn                       0                1
-## 5     2    29  2020 si                       0                1
-## 6     3     1  2020 bx                       0                0</code></pre>
+##   month   day  year borough       borough_case_count total_case_count
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                      &lt;dbl&gt;            &lt;dbl&gt;
+## 1     2    29  2020 bronx                          0                1
+## 2     2    29  2020 brooklyn                       0                1
+## 3     2    29  2020 manhattan                      1                1
+## 4     2    29  2020 queens                         0                1
+## 5     2    29  2020 staten_island                  0                1
+## 6     3     1  2020 bronx                          0                0</code></pre>
 
 
 
