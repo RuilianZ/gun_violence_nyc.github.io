@@ -386,6 +386,161 @@ head(clean_covid)</code></pre>
 ## 4 2/29/2020     2    29  2020 queens                         0                1
 ## 5 2/29/2020     2    29  2020 staten_island                  0                1
 ## 6 3/1/2020      3     1  2020 bronx                          0                0</code></pre>
+<div id="covid-and-shooting-relations" class="section level2">
+<h2>Covid and shooting relations</h2>
+<p>Note: The date of shooting and covid datasets only overlap on February-December 2020, so we do the analysis base on the overlap.</p>
+<pre class="r"><code>shooting_mini =
+  shooting %&gt;% 
+  filter(year == &quot;2020&quot;) %&gt;% 
+  select(c(&quot;date&quot;, &quot;incident_key&quot;, &quot;borough&quot;))
+
+shooting_covid = 
+  merge(x = shooting_mini, y = clean_covid, by = c(&quot;date&quot;, &quot;borough&quot;)) %&gt;% 
+  relocate(&quot;date&quot;, &quot;month&quot;, &quot;day&quot;, &quot;year&quot;, everything()) %&gt;% 
+  group_by(date) %&gt;% 
+  add_count(borough, name = &quot;borough_n_victim&quot;) %&gt;% # victim number equals to the count of incident_key (includind duplicate)
+  distinct() %&gt;% 
+  add_count(borough, name = &quot;borough_n_shooting&quot;) %&gt;% # shooting number equals to the count of distinct incident_key
+  select(-incident_key) %&gt;% 
+  distinct() %&gt;% 
+  add_count(date, wt = borough_n_victim, name = &quot;total_n_victim&quot;) %&gt;% 
+  add_count(date, wt = borough_n_shooting, name = &quot;total_n_shooting&quot;) %&gt;% 
+  mutate(
+    borough = recode(borough, 
+                     &quot;bronx&quot; = &quot;Bronx&quot;,
+                     &quot;brooklyn&quot; = &quot;Brooklyn&quot;,
+                     &quot;manhattan&quot; = &quot;Manhattan&quot;,
+                     &quot;queens&quot; = &quot;Queens&quot;,
+                     &quot;staten_island&quot; = &quot;Staten Island&quot;)
+  )</code></pre>
+<p>First find the association between total covid cases and total shootings.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_shooting, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of shooting cases against Covid cases within each day&quot;,
+    x = &quot;Total Covid cases&quot;,
+    y = &quot;Total shooting cases&quot;
+  )</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>See separately for each borough:</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = borough_case_count, y = borough_n_shooting, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of shooting cases against Covid cases within each day&quot;,
+    x = &quot;Total Covid cases&quot;,
+    y = &quot;Total shooting cases&quot;
+  ) + 
+  facet_wrap(~ borough)</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-7-1.png" width="672" /> We can see that for each borough, there is a general trend that higher number of shooting cases is associated with fewer covid cases, whereas the number of shooting cases decreases when covid case increases. This trend does not manifest in Staten Island, which may due to the limited size of data.</p>
+<p>Then look at the association between total covid cases and total victims in shooting.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_victim, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of shooting victims against Covid cases within each day&quot;,
+    x = &quot;Total Covid cases&quot;,
+    y = &quot;Total shooting cases&quot;
+  )</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We can also see it separately by borough:</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = borough_case_count, y = borough_n_victim, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of shooting victims against Covid cases within each day&quot;,
+    x = &quot;Total Covid cases&quot;,
+    y = &quot;Total shooting cases&quot;
+  ) + 
+  facet_wrap(~ borough)</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Then explore by month.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+#  mutate(month = month.name[month]) %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_victim, group = month, color = month)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of shooting victims against Covid cases within each day&quot;,
+    x = &quot;Total Covid cases&quot;,
+    y = &quot;Total shooting cases&quot;
+  ) +
+  facet_wrap(~ month)</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-10-1.png" width="672" /> We can see from the above plot that there is no general pattern of the association between total shooting and total covid cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few covid cases, in which the inner logic is deserved to be explored.</p>
+<p>Fit a linear regression model for total covid case with total shooting as predictor.</p>
+<pre class="r"><code>total_lm = lm(total_n_shooting ~ total_case_count, data = shooting_covid) 
+
+broom::tidy(total_lm) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">7.1159313</td>
+<td align="right">0.1860307</td>
+<td align="right">38.25137</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">total_case_count</td>
+<td align="right">-0.0011568</td>
+<td align="right">0.0001142</td>
+<td align="right">-10.13164</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>set.seed(100)
+par(mfrow = c(2,2))
+plot(total_lm)</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>We can see from the Residuals vs Fitted plot that the residuals is not equally distributed around the 0 horizontal line. In fact, the residuals has a pattern of decrease, indicating that the model has high goodness of fit, but violates the assumption of the normal distribution of the residual. Besides, from the Normal Q-Q plot we can see that most of the data fit the line when the theoretical quantile is under 2, indicating the data might have a normal distribution in a certain range.</p>
+<p>Then do it with total victims as predictor.</p>
+<pre class="r"><code>total_lm = lm(total_n_victim ~ total_case_count, data = shooting_covid) 
+
+broom::tidy(total_lm) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">9.0144130</td>
+<td align="right">0.2531176</td>
+<td align="right">35.613542</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">total_case_count</td>
+<td align="right">-0.0015452</td>
+<td align="right">0.0001554</td>
+<td align="right">-9.946264</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>set.seed(100)
+par(mfrow = c(2,2))
+plot(total_lm)</code></pre>
+<p><img src="p8105_final_project_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
 
 
 
