@@ -60,7 +60,9 @@ shooting = shooting %>%
   mutate(year = as.character(year)) %>% 
   mutate(boro = tolower(boro)) %>% 
   mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
-  rename(borough = boro)
+  rename(borough = boro) %>% 
+    mutate(date = str_c(month, day, year, sep = "/")) %>% 
+  select(incident_key, date, everything())
 ```  
 
 Next, clean the COVID-19 case count data
@@ -90,8 +92,9 @@ clean_covid = covid_counts %>%
   mutate(borough = gsub("_case_count", "", borough)) %>% 
   mutate(borough = recode(borough, "bx" = "bronx","bk" = "brooklyn","mn" = "manhattan","si" = "staten_island","qn" = "queens")) %>% 
   relocate(case_count, .after = borough_case_count) %>% 
-  rename(total_case_count = case_count)
+  rename(total_case_count = case_count) %>% 
+  mutate(date = str_c(month, day, year, sep = "/")) %>% 
+  select(date, everything())
 
 head(clean_covid)
 ```
-

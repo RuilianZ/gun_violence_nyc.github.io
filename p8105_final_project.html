@@ -296,12 +296,13 @@ scale_fill_discrete = scale_fill_viridis_d</code></pre>
 <pre class="r"><code>shooting = 
   read_csv(&quot;./data/NYPD_Shooting.csv&quot;) %&gt;%
   janitor::clean_names()</code></pre>
-<pre><code>## Rows: 23865 Columns: 19</code></pre>
+<pre><code>## Rows: 23585 Columns: 19</code></pre>
 <pre><code>## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## chr (11): OCCUR_DATE, OCCUR_TIME, BORO, LOCATION_DESC, PERP_AGE_GROUP, PERP_...
-## dbl  (5): INCIDENT_KEY, PRECINCT, JURISDICTION_CODE, Latitude, Longitude
-## lgl  (1): STATISTICAL_MURDER_FLAG</code></pre>
+## chr  (10): OCCUR_DATE, BORO, LOCATION_DESC, PERP_AGE_GROUP, PERP_SEX, PERP_R...
+## dbl   (7): INCIDENT_KEY, PRECINCT, JURISDICTION_CODE, X_COORD_CD, Y_COORD_CD...
+## lgl   (1): STATISTICAL_MURDER_FLAG
+## time  (1): OCCUR_TIME</code></pre>
 <pre><code>## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -347,7 +348,9 @@ scale_fill_discrete = scale_fill_viridis_d</code></pre>
   mutate(year = as.character(year)) %&gt;% 
   mutate(boro = tolower(boro)) %&gt;% 
   mutate(boro = if_else(boro == &quot;staten island&quot;, &quot;staten_island&quot;, boro)) %&gt;% 
-  rename(borough = boro)</code></pre>
+  rename(borough = boro) %&gt;% 
+    mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
+  select(incident_key, date, everything())</code></pre>
 <p>Next, clean the COVID-19 case count data</p>
 <p>Importing COVID-19 case count data</p>
 <pre class="r"><code>covid_counts = read.csv(&quot;./data/COVID19_data.csv&quot;, sep = &quot;;&quot;) %&gt;% as_tibble()</code></pre>
@@ -369,18 +372,20 @@ scale_fill_discrete = scale_fill_viridis_d</code></pre>
   mutate(borough = gsub(&quot;_case_count&quot;, &quot;&quot;, borough)) %&gt;% 
   mutate(borough = recode(borough, &quot;bx&quot; = &quot;bronx&quot;,&quot;bk&quot; = &quot;brooklyn&quot;,&quot;mn&quot; = &quot;manhattan&quot;,&quot;si&quot; = &quot;staten_island&quot;,&quot;qn&quot; = &quot;queens&quot;)) %&gt;% 
   relocate(case_count, .after = borough_case_count) %&gt;% 
-  rename(total_case_count = case_count)
+  rename(total_case_count = case_count) %&gt;% 
+  mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
+  select(date, everything())
 
 head(clean_covid)</code></pre>
-<pre><code>## # A tibble: 6 × 6
-##   month   day  year borough       borough_case_count total_case_count
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                      &lt;dbl&gt;            &lt;dbl&gt;
-## 1     2    29  2020 bronx                          0                1
-## 2     2    29  2020 brooklyn                       0                1
-## 3     2    29  2020 manhattan                      1                1
-## 4     2    29  2020 queens                         0                1
-## 5     2    29  2020 staten_island                  0                1
-## 6     3     1  2020 bronx                          0                0</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##   date      month   day  year borough       borough_case_count total_case_count
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                      &lt;dbl&gt;            &lt;dbl&gt;
+## 1 2/29/2020     2    29  2020 bronx                          0                1
+## 2 2/29/2020     2    29  2020 brooklyn                       0                1
+## 3 2/29/2020     2    29  2020 manhattan                      1                1
+## 4 2/29/2020     2    29  2020 queens                         0                1
+## 5 2/29/2020     2    29  2020 staten_island                  0                1
+## 6 3/1/2020      3     1  2020 bronx                          0                0</code></pre>
 
 
 
