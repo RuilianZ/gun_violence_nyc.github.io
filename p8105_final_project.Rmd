@@ -140,6 +140,165 @@ shooting %>%
 ```
 
 
+## Demographic Characteristics
+
+Based on the shooting dataset we obtained, we could study the demographic characteristics of the perpetrators and victims to see whether there exists some potential patterns/correlations or not.
+
+### perpetrators' characteristics
+First, let's look at perpetrators' demographic information.
+
+According to the previously checked numbers of null values in each column, there are `8295` values missing in `perp_age_group` and `8261` values missing in both `perp_sex` and `perp_race`. The information missing maybe not available or unknown at the time of the report and should be considered as either “Unknown/Not Available/Not Reported.”
+
+```{r}
+# group by perp_age_group and do a little summary
+sum_perp_age = 
+  shooting %>% 
+  mutate(
+    perp_age_group = ifelse(is.na(perp_age_group), "UNKNOWN", perp_age_group),
+    perp_age_group = as.factor(perp_age_group)
+  ) %>% 
+  # count distinct incident case
+  distinct(incident_key, .keep_all = TRUE) %>% 
+  group_by(perp_age_group) %>% 
+  arrange(perp_age_group) %>%
+  relocate(perp_age_group) %>% 
+  # filter the abnormal value
+  filter(!(perp_age_group %in% c("1020", "224", "940"))) %>% 
+  summarize(number = n())
+
+# Visualize by a pie chart
+sum_perp_age %>% 
+  mutate(perc = scales::percent(number/sum(number))) %>% 
+  ggplot(aes(x = "", y = perc, fill = perp_age_group)) +
+  geom_bar(width = 1, stat = "identity") +
+  geom_text(aes(label = perc),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start=0) +
+  theme_void() + 
+  labs(title = "Pie chart for different perpetrator age groups") +
+  theme(legend.position = "right")
+```
+
+Therefore, except those with unknown age group, most perpetrators are in the age group `18-24` and `24-44`, which takes up 39.4% in total.
+
+```{r}
+# Now look at perpetrators' sex and race
+perp_sex_race = 
+  shooting %>% 
+  distinct(incident_key, .keep_all = TRUE) %>% 
+  mutate(
+    perp_sex = ifelse(is.na(perp_sex), "U", perp_sex),
+    perp_race = ifelse(is.na(perp_race), "UNKNOWN", perp_race)
+  ) %>% 
+  mutate(perp_race = fct_infreq(as.factor(perp_race))) %>%
+  group_by(perp_sex, perp_race) %>% 
+  relocate(perp_sex, perp_race) %>% 
+  arrange(perp_sex, perp_race) %>% 
+  summarise(num = n())
+
+# pie chart
+perp_sex_race %>% 
+  mutate(perc = scales::percent(num/sum(num))) %>% 
+  filter(perp_sex != "U") %>%
+  ggplot(aes(x = "", y = perc, fill = perp_race)) +
+  geom_bar(width = 1, stat = "identity") +
+  geom_text(aes(label = perc), position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start=0) +
+  theme_void() + 
+  labs(title = "Pie chart for different perpetrator race in different sex") +
+  theme(legend.position = "right") +
+  facet_grid(.~perp_sex)
+
+
+# Or we can try to visualize using bar chart
+perp_sex_race %>% 
+  ggplot(aes(x = perp_race, y = num, fill = perp_sex)) +
+  geom_bar(
+    stat = "identity", position=position_dodge()
+  ) +
+  labs(
+    x = "Perpetrator's race",
+    y = "Number of perpetrators",
+    title = "Number of perpetrators in different races"
+  ) +
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
+```
+
+From the `perp_sex_race` chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest rate are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%).
+
+
+### Victims' characteristics
+There is no value missing in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`.
+
+What age groups are most victims in?
+```{r}
+vic_age_group =
+  shooting %>% 
+  mutate(as.factor(vic_age_group)) %>%
+  group_by(vic_age_group) %>% 
+  relocate(vic_age_group) %>% 
+  arrange(vic_age_group) %>% 
+  summarise(num = n())
+
+vic_age_group %>% 
+  ggplot(aes(x = vic_age_group, y = num)) +
+  geom_bar(
+    stat = "identity"
+  ) +
+  labs(
+    x = "Victim's age group",
+    y = "Number of victims",
+    title = "Number of victims in different age groups"
+  ) 
+```
+
+As shown above, most victims are in the age group `18-24` and `25-44`.
+
+For victims' sex and race, similarly, first check the bar plot and pie chart.
+```{r}
+# The sex and race characteristics of victims
+vic_sex_race = 
+  shooting %>% 
+  mutate(vic_race = fct_infreq(as.factor(vic_race))) %>% 
+  group_by(vic_sex, vic_race) %>% 
+  relocate(vic_sex, vic_race) %>% 
+  arrange(vic_sex, vic_race) %>% 
+  summarise(num = n())
+
+# bar plot
+vic_sex_race %>% 
+  ggplot(aes(x = vic_race, y = num, fill = vic_sex)) +
+  geom_bar(
+    stat = "identity", position=position_dodge()
+  ) +
+  labs(
+    x = "Victim's race",
+    y = "Number of victims",
+    title = "Number of victims in different races"
+  ) +
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
+
+
+# To see the percentage of different race, we can draw a pie chart
+vic_sex_race %>% 
+  mutate(perc = scales::percent(num/sum(num))) %>% 
+  filter(vic_sex != "U") %>%
+  ggplot(aes(x = "", y = perc, fill = vic_race)) +
+  geom_bar(width = 1, stat = "identity") +
+  geom_text(aes(label = perc),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start=0) +
+  theme_void() + 
+  labs(title = "Pie chart for different victims' race in different sex") +
+  theme(legend.position = "right") +
+  facet_grid(.~vic_sex)
+
+```
+
+Most of the victims are Black (M: 71.84%, F: 68.6%), and the number of male victims in shooting cases is much more than female victims.
+
 
 
 
