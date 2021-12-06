@@ -10,11 +10,12 @@ library(tidyverse)
 library(rvest)
 library(knitr)
 library(leaflet)
-install.packages("rgdal",repos = "http://cran.us.r-project.org")
+#install.packages("rgdal",repos = "http://cran.us.r-project.org")
 library(rgdal)
 library(lubridate)
 #library(dplyr)
 #library(plyr)
+library(plotly)
 col1 = "#d8e1cf" 
 col2 = "#438484"
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -116,6 +117,82 @@ heatmap
 ```
 
 According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
+
+
+## Shooting Incidents Across Time
+
+### Distribution of Shooting Case of Years
+```{r}
+shooting_year = shooting %>%
+  group_by(year) %>% 
+  summarise(n_obs = n())
+#visualization shooting incidence trend
+shooting_year %>% 
+  plot_ly( x = ~year, y = ~n_obs, type = "scatter", mode = "lines+markers") %>% 
+  layout(title = "Shooting Incidence Trend from 2006 to 2020",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Frequency"))
+```
+
+
+### Distribution of Shooting Case of Months
+```{r}
+shooting_month = shooting %>%
+  mutate(month = as.factor(month)) %>% 
+  group_by(month) %>% 
+  summarise(n_obs = n())
+
+shooting_month %>% 
+  plot_ly(x = ~month, y = ~n_obs, color = ~month, type = "bar") %>% 
+  layout( title = "The Distribution of Shooting Incidence by Month",
+          xaxis = list(title = "Month"),
+          yaxis = list(title = "Frequency"))
+```
+
+
+### Distribution of Shooting Case of Time Range Across day
+```{r}
+shooting_time = shooting %>% 
+##format the occur_time variable to only hours.
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = "%H")) %>% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %>% 
+  group_by(occur_time_hour) %>% 
+  summarise(case_numb = n())
+
+#divide day time to 4 groups: 0-6;6-12;12-18;18-24
+shooting_time = shooting_time %>% 
+  mutate(occur_time_hour_type = case_when(
+    occur_time_hour >= 0 & occur_time_hour < 6 ~ "0-6",
+    occur_time_hour >= 6 & occur_time_hour < 12 ~ "6-12",
+    occur_time_hour >= 12 & occur_time_hour < 18 ~ "12-18",
+    occur_time_hour >= 18 & occur_time_hour < 24 ~ "18-24"))
+
+ggplot(shooting_time, aes(x = occur_time_hour_type, y = case_numb, fill = occur_time_hour_type)) + geom_col(alpha = 1) + labs(x = "Occur Time Range",
+       y = "Frequency",
+       title = "Distribution of Shooting Case by Day")
+
+```
+
+### Distribution of shooting case across month in 2020
+### (since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
+```{r}
+shooting_2020 = shooting %>%
+  filter(year == "2020") %>% 
+  mutate(month = as.factor(month)) %>% 
+  group_by(month) %>% 
+  summarise(n_obs = n())
+
+ggplot(shooting_2020, aes(x = month, y = n_obs, fill = month)) + geom_col(alpha = 1) + labs(
+  x = "Month",
+  y = "Frequency",
+  title = "Distribution of Shooting Case by Day in NYC")
+
+```
+
+
+
+
+
 
 ## Shooting Incidents Across Space
 
