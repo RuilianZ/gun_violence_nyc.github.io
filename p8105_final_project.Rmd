@@ -12,6 +12,11 @@ library(knitr)
 library(leaflet)
 install.packages("rgdal",repos = "http://cran.us.r-project.org")
 library(rgdal)
+library(lubridate)
+library(dplyr)
+library(plyr)
+col1 = "#d8e1cf" 
+col2 = "#438484"
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
@@ -22,18 +27,18 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 Load the dataset NYPD shooting incident
 ```{r}
-shooting = 
+shooting_initial = 
   read_csv("./data/NYPD_Shooting.csv") %>%
   janitor::clean_names()
 ```
 check null
 ```{r}
-shooting %>%
+shooting_initial %>%
   summarise_all(~ sum(is.na(.)))
 ```
 For col boro
 ```{r}
-shooting = shooting %>% 
+shooting = shooting_initial %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
   mutate(location_desc = as.factor(location_desc)) %>%
@@ -263,3 +268,28 @@ set.seed(100)
 par(mfrow = c(2,2))
 plot(total_lm)
 ```
+
+### Make the heatmap based on time
+```{r}
+shooting_heatmap = shooting_initial %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour)
+
+dayHour = ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total shooting cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "",
+       x = "shooting cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+```
+
