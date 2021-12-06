@@ -9,6 +9,9 @@ output: github_document
 library(tidyverse)
 library(rvest)
 library(knitr)
+library(leaflet)
+install.packages("rgdal",repos = "http://cran.us.r-project.org")
+library(rgdal)
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 options(
   ggplot2.continuous.colour = "viridis",
@@ -99,10 +102,37 @@ clean_covid = covid_counts %>%
 head(clean_covid)
 ```
 
+## Shooting Incidents Across Space
+
+This is an interactive map of shooting incidents from 2006 to 2021 in NYC. Incidents' details will be displayed after clicking the icon. GIS data of Boroughs' boundaries were obtained from NYC Open Data.
+
+[Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
+```{r}
+
+nyc_boro = readOGR("./data/Borough_Boundaries/geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877.shp", layer = "geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877")
 
 
-
-
+shooting %>% 
+#  filter(year %in% c("2020", "2021")) %>%
+  mutate_at(c("perp_age_group", "perp_sex", "perp_race"), funs(ifelse(is.na(.), "unknown", .))) %>% 
+  mutate(labels = str_c("<b>Incident Key: </b>", incident_key, 
+                    "<br>", "<b>Date: </b>", date,
+                    "<br>", "<b>Borough: </b>", borough,
+                    "<br>", "<b>Murdered: </b>", statistical_murder_flag,
+                    "<br>", "<b>Perpetrator's Race: </b>", perp_race,
+                    "<br>", "<b>Victim's Race: </b>", vic_race,
+                    "<br>", "<b>Perpetrator's Age: </b>", perp_age_group,
+                    "<br>", "<b>Victim's Age: </b>", vic_age_group
+                    )) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addMarkers(lng = ~longitude, lat = ~latitude, popup = ~labels,
+             clusterOptions = markerClusterOptions()) %>% 
+  addPolygons(data = nyc_boro,
+              weight = 0.85,
+              label = ~nyc_boro@data$boro_name)
+```
 
 
 
