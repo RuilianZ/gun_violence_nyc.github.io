@@ -13,8 +13,8 @@ library(leaflet)
 install.packages("rgdal",repos = "http://cran.us.r-project.org")
 library(rgdal)
 library(lubridate)
-library(dplyr)
-library(plyr)
+#library(dplyr)
+#library(plyr)
 col1 = "#d8e1cf" 
 col2 = "#438484"
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -42,25 +42,6 @@ shooting = shooting_initial %>%
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
   mutate(location_desc = as.factor(location_desc)) %>%
-  mutate(location_desc = fct_relevel(location_desc, c("NONE", "MULTI DWELL - PUBLIC HOUS", "MULTI DWELL - APT BUILD", "PVT HOUSE", "GROCERY/BODEGA", "BAR/NIGHT CLUB", "HOSPITAL", "COMMERCIAL BLDG", "DEPT STORE", "GAS STATION", "HOTEL/MOTEL", "SMALL MERCHANT", "RESTAURANT/DINER", "CLOTHING BOUTIQUE", "FACTORY/WAREHOUSE", "SOCIAL CLUB/POLICY LOCATI"))) %>%
-  mutate(location_desc = recode(location_desc, 
-                                "NONE" = "none",
-                                "MULTI DWELL - PUBLIC HOUS" = "public_house", 
-                                "MULTI DWELL - APT BUILD" = "apt_building", 
-                                "PVT HOUSE" = "pirvate_house", 
-                                "GROCERY/BODEGA" = "grocery_bodega", 
-                                "BAR/NIGHT CLUB" = "bar_club",
-                                "HOSPITAL" = "hospital",
-                                "COMMERCIAL BLDG" = "commercial",
-                                "DEPT STORE" = "dept_store",
-                                "GAS_STATION" = "gas_station",
-                                "HOTEL/MOTEL" = "hotel",
-                                "SMALL MERCHANT" = "merchant",
-                                "RESTAURANT/DINER" = "restaurant",
-                                "CLOTHING BOUTIQUE" = "clothing",
-                                "FACTORY/WAREHOUSE" = "factory",
-                                "SOCIAL CLUB/POLICY LOCATI" = "club"
-                                )) %>%
   separate(occur_date, into = c("month", "day", "year")) %>% 
   mutate(month = as.numeric(month)) %>% 
   arrange(year, month) %>% 
@@ -106,6 +87,35 @@ clean_covid = covid_counts %>%
 
 head(clean_covid)
 ```
+
+### Make the heatmap based on time
+```{r}
+shooting_heatmap = shooting_initial %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap
+```
+
+According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
 
 ## Shooting Incidents Across Space
 
@@ -426,29 +436,5 @@ broom::tidy(total_lm) %>%
 set.seed(100)
 par(mfrow = c(2,2))
 plot(total_lm)
-```
-
-### Make the heatmap based on time
-```{r}
-shooting_heatmap = shooting_initial %>%
-  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
-  mutate(occur_date = weekdays(occur_date)) %>%
-  separate(occur_time, into = c("hour", "minute", "second")) %>%
-  mutate(hour = as.factor(hour)) %>%
-  select(incident_key, occur_date, hour)
-
-dayHour = ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
-attach(dayHour)
-
-heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
-  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
-  scale_fill_gradient(low = col1, high = col2) +  
-  guides(fill = guide_legend(title = "Total shooting cases")) +
-  theme_bw() + 
-  theme_minimal() + 
-  labs(title = "",
-       x = "shooting cases Per Hour", y = "Day of Week") +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
 ```
 
