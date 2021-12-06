@@ -10,11 +10,11 @@ library(tidyverse)
 library(rvest)
 library(knitr)
 library(leaflet)
-install.packages("rgdal",repos = "http://cran.us.r-project.org")
+# install.packages("rgdal",repos = "http://cran.us.r-project.org")
 library(rgdal)
 library(lubridate)
-library(dplyr)
-library(plyr)
+# library(dplyr)
+# library(plyr)
 library(plotly)
 col1 = "#d8e1cf" 
 col2 = "#438484"
@@ -368,11 +368,6 @@ vic_sex_race %>%
 Most of the victims are Black (M: 71.84%, F: 68.6%), and the number of male victims in shooting cases is much more than female victims.
 
 
-
-
-
-
-
 ## Covid and shooting relations
 Note: The date of shooting and covid datasets only overlap on February-December 2020, so we do the analysis base on the overlap.
 
@@ -505,7 +500,7 @@ shooting_heatmap = shooting_initial %>%
   mutate(hour = as.factor(hour)) %>%
   select(incident_key, occur_date, hour)
 
-dayHour = ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
+dayHour = plyr::ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
 attach(dayHour)
 
 heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
@@ -518,5 +513,6 @@ heatmap = ggplot(dayHour, aes(hour, occur_date)) +
        x = "shooting cases Per Hour", y = "Day of Week") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
+heatmap
 ```
 
