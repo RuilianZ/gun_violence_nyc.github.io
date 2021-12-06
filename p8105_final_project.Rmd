@@ -11,6 +11,7 @@ library(rvest)
 library(knitr)
 library(leaflet)
 # install.packages("rgdal",repos = "http://cran.us.r-project.org")
+# install.packages("ggrepel")
 library(rgdal)
 library(lubridate)
 # library(dplyr)
@@ -242,6 +243,7 @@ sum_perp_age %>%
   geom_text(aes(label = perc),
             position = position_stack(vjust = 0.5)) +
   coord_polar("y", start=0) +
+  scale_fill_brewer(palette = "Pastel1") +
   theme_void() + 
   labs(title = "Pie chart for different perpetrator age groups") +
   theme(legend.position = "right")
@@ -262,19 +264,30 @@ perp_sex_race =
   group_by(perp_sex, perp_race) %>% 
   relocate(perp_sex, perp_race) %>% 
   arrange(perp_sex, perp_race) %>% 
-  summarise(num = n())
+  summarise(num = n()) %>% 
+  mutate(perc = round(num/sum(num), digits = 2))
+
+# Get the position for the label of the pie charts
+position = 
+  perp_sex_race %>% 
+  filter(perp_sex != "U") %>%
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
 
 # pie chart
 perp_sex_race %>% 
-  mutate(perc = scales::percent(num/sum(num))) %>% 
   filter(perp_sex != "U") %>%
-  ggplot(aes(x = "", y = perc, fill = perp_race)) +
-  geom_bar(width = 1, stat = "identity") +
-  geom_text(aes(label = perc), position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
-  theme_void() + 
+  ggplot(aes(x = "" , y = perc*100, fill = fct_inorder(perp_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Pastel1") +
+  ggrepel::geom_label_repel(data = position,
+                   aes(y = pos, label = paste0(perc*100, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Perpetrator's race")) +
+  theme_void() +
   labs(title = "Pie chart for different perpetrator race in different sex") +
-  theme(legend.position = "right") +
   facet_grid(.~perp_sex)
 
 
@@ -297,6 +310,8 @@ From the `perp_sex_race` chart and the pie charts, most of the perpetrators are 
 
 
 ### Victims' characteristics
+We are also interested in the characteritics of victims.
+
 There is no value missing in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`.
 
 What age groups are most victims in?
@@ -332,7 +347,8 @@ vic_sex_race =
   group_by(vic_sex, vic_race) %>% 
   relocate(vic_sex, vic_race) %>% 
   arrange(vic_sex, vic_race) %>% 
-  summarise(num = n())
+  summarise(num = n()) %>% 
+  mutate(perc = round(num/sum(num), digits = 3))
 
 # bar plot
 vic_sex_race %>% 
@@ -350,22 +366,33 @@ vic_sex_race %>%
 
 
 # To see the percentage of different race, we can draw a pie chart
-vic_sex_race %>% 
-  mutate(perc = scales::percent(num/sum(num))) %>% 
+
+# Let's get the position for the label of the pie charts first
+position = 
+  vic_sex_race %>% 
   filter(vic_sex != "U") %>%
-  ggplot(aes(x = "", y = perc, fill = vic_race)) +
-  geom_bar(width = 1, stat = "identity") +
-  geom_text(aes(label = perc),
-            position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
-  theme_void() + 
-  labs(title = "Pie chart for different victims' race in different sex") +
-  theme(legend.position = "right") +
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
+
+# pie chart
+vic_sex_race %>% 
+  filter(vic_sex != "U") %>%
+  ggplot(aes(x = "" , y = perc*100, fill = fct_inorder(vic_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Pastel1") +
+  ggrepel::geom_label_repel(data = position,
+                   aes(y = pos, label = paste0(perc*100, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Victim's race")) +
+  theme_void() +
+  labs(title = "Pie chart for different victim race in different sex") +
   facet_grid(.~vic_sex)
 
 ```
 
-Most of the victims are Black (M: 71.84%, F: 68.6%), and the number of male victims in shooting cases is much more than female victims.
+Most of the victims are Black (M: 71.8%, F: 68.6%), and the number of male victims in shooting cases is much more than female victims.
 
 
 ## Covid and shooting relations
