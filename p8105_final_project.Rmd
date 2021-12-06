@@ -209,6 +209,33 @@ shooting %>%
 ```
 
 
+### Make the heatmap based on time
+```{r}
+shooting_heatmap = shooting_initial %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour)
+
+dayHour = plyr::ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total shooting cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "",
+       x = "shooting cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap
+```
+
+
+
 ## Demographic Characteristics
 
 Based on the shooting dataset we obtained, we could study the demographic characteristics of the perpetrators and victims to see whether there exists some potential patterns/correlations or not.
@@ -517,29 +544,3 @@ set.seed(100)
 par(mfrow = c(2,2))
 plot(total_lm)
 ```
-
-### Make the heatmap based on time
-```{r}
-shooting_heatmap = shooting_initial %>%
-  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
-  mutate(occur_date = weekdays(occur_date)) %>%
-  separate(occur_time, into = c("hour", "minute", "second")) %>%
-  mutate(hour = as.factor(hour)) %>%
-  select(incident_key, occur_date, hour)
-
-dayHour = plyr::ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
-attach(dayHour)
-
-heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
-  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
-  scale_fill_gradient(low = col1, high = col2) +  
-  guides(fill = guide_legend(title = "Total shooting cases")) +
-  theme_bw() + 
-  theme_minimal() + 
-  labs(title = "",
-       x = "shooting cases Per Hour", y = "Day of Week") +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-
-heatmap
-```
-
