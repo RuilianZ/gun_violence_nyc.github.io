@@ -161,16 +161,17 @@ shooting_time = shooting %>%
 
 #divide day time to 4 groups: 0-6;6-12;12-18;18-24
 shooting_time = shooting_time %>% 
-  mutate(occur_time_hour_type = case_when(
+  mutate(occur_time_range = case_when(
     occur_time_hour >= 0 & occur_time_hour < 6 ~ "0-6",
     occur_time_hour >= 6 & occur_time_hour < 12 ~ "6-12",
     occur_time_hour >= 12 & occur_time_hour < 18 ~ "12-18",
     occur_time_hour >= 18 & occur_time_hour < 24 ~ "18-24"))
+shooting_time = shooting_time %>% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c("0-6","6-12","12-18","18-24")))
 
-ggplot(shooting_time, aes(x = occur_time_hour_type, y = case_numb, fill = occur_time_hour_type)) + geom_col(alpha = 1) + labs(x = "Occur Time Range",
+ggplot(shooting_time, aes(x = occur_time_range, y = case_numb, fill = occur_time_range)) + geom_col(alpha = 1) + labs(x = "Occur Time Range",
        y = "Frequency",
        title = "Distribution of Shooting Case by Day")
-
 ```
 
 ### Distribution of shooting case across month in 2020
