@@ -358,7 +358,7 @@ vic_age_group %>%
     x = "Victim's Age Group",
     y = "Number of Victims",
     title = "Number of Victims in Different Age Groups"
-  ) 
+  )
 ```
 
 As shown above, most victims are in the age group `18-24` and `25-44`.
@@ -426,8 +426,9 @@ Most of the victims are Black (M: 72%, F: 69%), and the number of male victims i
 
 
 
-## Covid and shooting relations
-Note: The date of shooting and covid datasets only overlap on February-December 2020, so we do the analysis base on the overlap.
+## COVID and shooting relations
+
+Note: The date of shooting and COVID datasets only overlap on February-December 2020, so we do the analysis base on the overlap.
 
 ```{r merge datasets and conunt incidence}
 shooting_mini =
@@ -456,50 +457,62 @@ shooting_covid =
   )
 ```
 
-First find the association between total covid cases and total shootings. 
+
+### Visualize Distribution
+
+First we want to see if there is an underlying association between total COVID cases and total shootings. 
+
 ```{r}
 shooting_covid %>% 
   ggplot(aes(x = total_case_count, y = total_n_shooting, group = borough, color = borough)) +
   geom_point() +
   labs(
-    title = "Distribution of shooting cases against Covid cases within each day",
-    x = "Total Covid cases",
-    y = "Total shooting cases"
-  )
+    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    x = "Total COVID Cases",
+    y = "Total Shooting Cases"
+  ) +
+  guides(fill = guide_legend(title = "Borough")) +
+  theme(legend.position = "right")
 ```
 
-See separately for each borough:
+See separately for each borough.
+
 ```{r}
 shooting_covid %>% 
   ggplot(aes(x = borough_case_count, y = borough_n_shooting, group = borough, color = borough)) +
   geom_point() +
   labs(
-    title = "Distribution of shooting cases against Covid cases within each day",
-    x = "Total Covid cases",
-    y = "Total shooting cases"
+    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    x = "Total COVID Cases",
+    y = "Total Shooting Cases"
   ) + 
-  facet_wrap(~ borough)
+  facet_wrap(~ borough) +
+  guides(fill = guide_legend(title = "Borough")) +
+  theme(legend.position = "right")
 ```
-We can see that for each borough, there is a general trend that higher number of shooting cases is associated with fewer covid cases, whereas the number of shooting cases decreases when covid case increases. This trend does not manifest in Staten Island, which may due to the limited size of data.
+
+We can see that for each borough, there is a general trend that higher number of shooting cases is associated with fewer COVID cases, whereas the number of shooting cases decreases when COVID case increases. This trend does not manifest in Staten Island, which may due to the limited size of data.
 
 Then explore by month.
+
 ```{r}
 shooting_covid %>% 
-#  mutate(month = month.name[month]) %>% 
   ggplot(aes(x = total_case_count, y = total_n_shooting, group = month, color = month)) +
   geom_point() +
   labs(
-    title = "Distribution of shooting cases against Covid cases within each day",
-    x = "Total Covid cases",
-    y = "Total shooting cases"
+    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    x = "Total COVID Cases",
+    y = "Total Shooting Cases"
   ) +
-  facet_wrap(~ month)
+  facet_wrap(~ month) +
+  guides(fill = guide_legend(title = "Month")) +
+  theme(legend.position = "right")
 ```
 
-We can see from the above plot that there is no general pattern of the association between total shooting and total covid cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few covid cases, in which the inner logic is deserved to be explored.
+We can see from the above plot that there is no general pattern of the association between total shooting and total COVID cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few COVID cases, which is consistent with the former analysis.
 
+Fit a linear regression model for total COVID case with total shooting as predictor.
 
-Fit a linear regression model for total covid case with total shooting as predictor.
 ```{r}
 total_lm = lm(total_n_shooting ~ total_case_count, data = shooting_covid) 
 
