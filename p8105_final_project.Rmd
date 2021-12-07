@@ -482,44 +482,20 @@ shooting_covid %>%
 ```
 We can see that for each borough, there is a general trend that higher number of shooting cases is associated with fewer covid cases, whereas the number of shooting cases decreases when covid case increases. This trend does not manifest in Staten Island, which may due to the limited size of data.
 
-Then look at the association between total covid cases and total victims in shooting.
-```{r}
-shooting_covid %>% 
-  ggplot(aes(x = total_case_count, y = total_n_victim, group = borough, color = borough)) +
-  geom_point() +
-  labs(
-    title = "Distribution of shooting victims against Covid cases within each day",
-    x = "Total Covid cases",
-    y = "Total shooting cases"
-  )
-```
-
-We can also see it separately by borough:
-```{r}
-shooting_covid %>% 
-  ggplot(aes(x = borough_case_count, y = borough_n_victim, group = borough, color = borough)) +
-  geom_point() +
-  labs(
-    title = "Distribution of shooting victims against Covid cases within each day",
-    x = "Total Covid cases",
-    y = "Total shooting cases"
-  ) + 
-  facet_wrap(~ borough)
-```
-
 Then explore by month.
 ```{r}
 shooting_covid %>% 
 #  mutate(month = month.name[month]) %>% 
-  ggplot(aes(x = total_case_count, y = total_n_victim, group = month, color = month)) +
+  ggplot(aes(x = total_case_count, y = total_n_shooting, group = month, color = month)) +
   geom_point() +
   labs(
-    title = "Distribution of shooting victims against Covid cases within each day",
+    title = "Distribution of shooting cases against Covid cases within each day",
     x = "Total Covid cases",
     y = "Total shooting cases"
   ) +
   facet_wrap(~ month)
 ```
+
 We can see from the above plot that there is no general pattern of the association between total shooting and total covid cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few covid cases, in which the inner logic is deserved to be explored.
 
 
@@ -537,15 +513,4 @@ plot(total_lm)
 
 We can see from the Residuals vs Fitted plot that the residuals is not equally distributed around the 0 horizontal line. In fact, the residuals has a pattern of decrease, indicating that the model has high goodness of fit, but violates the assumption of the normal distribution of the residual. Besides, from the Normal Q-Q plot we can see that most of the data fit the line when the theoretical quantile is under 2, indicating the data might have a normal distribution in a certain range.
 
-Then do it with total victims as predictor.
-```{r}
-total_lm = lm(total_n_victim ~ total_case_count, data = shooting_covid) 
-
-broom::tidy(total_lm) %>% 
-  knitr::kable()
-
-set.seed(100)
-par(mfrow = c(2,2))
-plot(total_lm)
-```
 
