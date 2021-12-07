@@ -262,8 +262,10 @@ sum_perp_age %>%
   geom_text(aes(label = perc),
             position = position_stack(vjust = 0.5)) +
   coord_polar("y", start=0) +
+  scale_fill_brewer(palette = "Pastel1") +
   theme_void() + 
-  labs(title = "Pie chart for different perpetrator age groups") +
+  guides(fill = guide_legend(title = "Perpetrator's Age Group")) +
+  labs(title = "Pie Chart for Different Perpetrator Age Groups") +
   theme(legend.position = "right")
 ```
 
@@ -282,19 +284,30 @@ perp_sex_race =
   group_by(perp_sex, perp_race) %>% 
   relocate(perp_sex, perp_race) %>% 
   arrange(perp_sex, perp_race) %>% 
-  summarise(num = n())
+  summarise(num = n()) %>% 
+  mutate(perc = round(num/sum(num), digits = 2))
+
+# Get the position for the label of the pie charts
+position1 = 
+  perp_sex_race %>% 
+  filter(perp_sex != "U") %>%
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
 
 # pie chart
 perp_sex_race %>% 
-  mutate(perc = scales::percent(num/sum(num))) %>% 
   filter(perp_sex != "U") %>%
-  ggplot(aes(x = "", y = perc, fill = perp_race)) +
-  geom_bar(width = 1, stat = "identity") +
-  geom_text(aes(label = perc), position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
-  theme_void() + 
-  labs(title = "Pie chart for different perpetrator race in different sex") +
-  theme(legend.position = "right") +
+  ggplot(aes(x = "" , y = perc*100, fill = fct_inorder(perp_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Pastel1") +
+  ggrepel::geom_label_repel(data = position1,
+                   aes(y = pos, label = paste0(perc*100, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Perpetrator's Race")) +
+  theme_void() +
+  labs(title = "Pie Chart For Different Perpetrator Race in Different Sex") +
   facet_grid(.~perp_sex)
 
 
@@ -305,11 +318,12 @@ perp_sex_race %>%
     stat = "identity", position=position_dodge()
   ) +
   labs(
-    x = "Perpetrator's race",
-    y = "Number of perpetrators",
-    title = "Number of perpetrators in different races"
+    x = "Perpetrator's Race",
+    y = "Number of Perpetrators",
+    title = "Number of Perpetrators in Different Races"
   ) +
   coord_flip() +
+  guides(fill = guide_legend(title = "Perpetrator's Race")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
 ```
 
@@ -330,14 +344,20 @@ vic_age_group =
   summarise(num = n())
 
 vic_age_group %>% 
-  ggplot(aes(x = vic_age_group, y = num)) +
-  geom_bar(
-    stat = "identity"
-  ) +
+  mutate(perc = scales::percent(num/sum(num))) %>% 
+  ggplot(aes(x = "", y = perc, fill = vic_age_group)) +
+  geom_bar(width = 1, stat = "identity") +
+  geom_text(aes(label = perc),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start=0) +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_void() + 
+  guides(fill = guide_legend(title = "Victim's Age Group")) +
+  theme(legend.position = "right") +
   labs(
-    x = "Victim's age group",
-    y = "Number of victims",
-    title = "Number of victims in different age groups"
+    x = "Victim's Age Group",
+    y = "Number of Victims",
+    title = "Number of Victims in Different Age Groups"
   ) 
 ```
 
@@ -352,7 +372,8 @@ vic_sex_race =
   group_by(vic_sex, vic_race) %>% 
   relocate(vic_sex, vic_race) %>% 
   arrange(vic_sex, vic_race) %>% 
-  summarise(num = n())
+  summarise(num = n()) %>% 
+  mutate(perc = round(num/sum(num), digits = 2))
 
 # bar plot
 vic_sex_race %>% 
@@ -361,31 +382,43 @@ vic_sex_race %>%
     stat = "identity", position=position_dodge()
   ) +
   labs(
-    x = "Victim's race",
-    y = "Number of victims",
-    title = "Number of victims in different races"
+    x = "Victim's Race",
+    y = "Number of Victims",
+    title = "Number of Victims in Different Races"
   ) +
   coord_flip() +
+  guides(fill = guide_legend(title = "Victim's Race")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
 
 
 # To see the percentage of different race, we can draw a pie chart
-vic_sex_race %>% 
-  mutate(perc = scales::percent(num/sum(num))) %>% 
+
+# Let's get the position for the label of the pie charts first
+position2 = 
+  vic_sex_race %>% 
   filter(vic_sex != "U") %>%
-  ggplot(aes(x = "", y = perc, fill = vic_race)) +
-  geom_bar(width = 1, stat = "identity") +
-  geom_text(aes(label = perc),
-            position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
-  theme_void() + 
-  labs(title = "Pie chart for different victims' race in different sex") +
-  theme(legend.position = "right") +
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
+
+# pie chart
+vic_sex_race %>% 
+  filter(vic_sex != "U") %>%
+  ggplot(aes(x = "" , y = perc*100, fill = fct_inorder(vic_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Pastel1") +
+  ggrepel::geom_label_repel(data = position2,
+                   aes(y = pos, label = paste0(perc*100, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = "Victim's Race")) +
+  theme_void() +
+  labs(title = "Pie Chart for Different Victim Race in Different Sex") +
   facet_grid(.~vic_sex)
 
 ```
 
-Most of the victims are Black (M: 71.84%, F: 68.6%), and the number of male victims in shooting cases is much more than female victims.
+Most of the victims are Black (M: 72%, F: 69%), and the number of male victims in shooting cases is much more than female victims.
 
 
 
