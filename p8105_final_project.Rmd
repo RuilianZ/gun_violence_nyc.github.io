@@ -26,20 +26,26 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
-Load the dataset NYPD shooting incident
+Load the historic and year-to-datedatasets of NYPD shooting incident
 ```{r}
 shooting_initial = 
-  read_csv("./data/NYPD_Shooting.csv") %>%
-  janitor::clean_names()
+  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
+
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %>% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
 ```
 check null
 ```{r}
-shooting_initial %>%
+shooting %>%
   summarise_all(~ sum(is.na(.)))
 ```
 For col boro
 ```{r}
-shooting = shooting_initial %>% 
+shooting = shooting %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
   mutate(location_desc = as.factor(location_desc)) %>%
