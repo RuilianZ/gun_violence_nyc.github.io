@@ -8,7 +8,9 @@ navbar:
     - text: "Proposal"
       href: proposal.html
     - text: "Data Exploration"
-      href: p8105_final_project.html      
+      href: p8105_final_project.html
+    - text: "Shiny Dashboard"
+      href: shiny_dashboard.html
     - icon: fa-envelope fa-lg
       href: mailto:<rz2570@cumc.columbia.edu>
     - icon: fa-github fa-lg
