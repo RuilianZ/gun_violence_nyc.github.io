@@ -8,24 +8,114 @@ output:
 runtime: shiny
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 library(flexdashboard)
+library(tidyverse)
+library(leaflet)
+library(rgdal)
+library(shiny)
 ```
+
+```{r, include = FALSE}
+shooting_initial = 
+  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
+shooting_2021 = shooting_2021 %>% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
+
+shooting = shooting %>% 
+  mutate(boro = as.factor(boro)) %>%
+  mutate(location_desc = replace_na(location_desc, "NONE")) %>%
+  mutate(location_desc = as.factor(location_desc)) %>%
+  separate(occur_date, into = c("month", "day", "year")) %>% 
+  mutate(month = as.numeric(month)) %>% 
+  arrange(year, month) %>% 
+ # mutate(month = month.name[month]) %>% 
+  mutate(year = as.character(year)) %>% 
+  mutate(boro = tolower(boro)) %>% 
+  mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
+  rename(borough = boro) %>% 
+  mutate(date = str_c(month, day, year, sep = "/")) %>% 
+  select(incident_key, date, everything())
+
+shooting_map = shooting %>% 
+  mutate_at(c("perp_age_group", "perp_sex", "perp_race"), funs(ifelse(is.na(.), "unknown", .))) %>% 
+  mutate(labels = str_c("<b>Incident Key: </b>", incident_key, 
+                    "<br>", "<b>Date: </b>", date,
+                    "<br>", "<b>Borough: </b>", borough,
+                    "<br>", "<b>Murdered: </b>", statistical_murder_flag,
+                    "<br>", "<b>Perpetrator's Race: </b>", perp_race,
+                    "<br>", "<b>Victim's Race: </b>", vic_race,
+                    "<br>", "<b>Perpetrator's Age: </b>", perp_age_group,
+                    "<br>", "<b>Victim's Age: </b>", vic_age_group
+                    ))
+
+nyc_boro = readOGR("./data/Borough_Boundaries/geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877.shp", layer = "geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877")
+```  
+
 
 Column {.sidebar}
 -----------------------------------------------------------------------
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
+boro = shooting %>% 
+  distinct(borough) %>% 
+  pull()
+
+selectInput(
+  "borough_choice",
+  label = h2("Select Borough"),
+  choices = boro,
+  selected = "manhattan"
+)
+
+max_year = shooting %>% 
+  mutate(year = as.numeric(year)) %>% 
+  distinct(year) %>% 
+  max()
+
+min_year = shooting %>% 
+  mutate(year = as.numeric(year)) %>% 
+  distinct(year) %>% 
+  min()
+
+sliderInput(
+  "year_choice",
+  label = h2("Year Range"),
+  min = min_year,
+  max = max_year,
+  value = c(2016,2021)
+)
 
 ```
 
-Column {data-width=650}
+
+
+Map of Shooting Incidents in NYC {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Shooting Incidents Across Space
 
-```{r}
+```{r, map_shooting}
 
+renderLeaflet({
+
+  shooting_map %>% 
+    filter(
+      borough == input$borough_choice,
+      year == input$year_choice
+    ) %>% 
+    leaflet() %>% 
+    addTiles() %>% 
+    addProviderTiles("CartoDB.Positron") %>% 
+    addMarkers(lng = ~longitude, lat = ~latitude, popup = ~labels,
+               clusterOptions = markerClusterOptions()) %>% 
+    addPolygons(data = nyc_boro,
+                weight = 0.85,
+                label = ~nyc_boro@data$boro_name)
+})
 ```
 
 Column {data-width=350}
@@ -42,4 +132,6 @@ Column {data-width=350}
 ```{r}
 
 ```
+
+
 
