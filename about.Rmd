@@ -1,9 +1,58 @@
 ---
-title: "About"
+title: "Our project"
 output: 
   html_document:
-    toc: true
-    toc_float: true
+    code_folding: hide
+    always_allow_html: true
 ---
 
+### Gun Shooting - Human Right Threat
+
+```{r, echo=FALSE, out.width="80%", fig.cap="gun violence", fig.align = 'center'}
+knitr::include_graphics("./data/gun_violence.jpg")
+```
+
+
+Gun violence has become a major threat to human rights. Every year, many people are killed by shooting. No place is safe, even if you are walking in the campus or near the hospital. The graduate Chinese student recently killed was found fatally shot just near the University of Chicago. As students who have learned data science, we cannot just claim the truth without inferring from real life data. So here, as students who are curious about this human right crisis, we focus on the shooting incidence data from NYPD in NYC from year 2006 to 2021.
+
+
+
+## COVID-19 influence on shooting cases
+
+```{r, echo=FALSE, out.width="70%", fig.cap="people with mask", fig.align = 'center'}
+knitr::include_graphics("./data/people_masked.jpg")
+```
+
+The global pandemic COVID-19 has influenced the world as a whole. The long duration of the virus has led to many closed stores or companies, a heavier living burden, the increasing unemployment rate, what's more, a potentially higher crime rate. Therefore, we use the dataset of COVID-19 daily cases counts of NYC as an indicator of the severity of COVID-19 spread and try to find the connection between that and the number of shooting cases.
+
+## Data
+We have mainly used two datasets -- NYPD Shooting Incident and COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths, both are from the NYC open data.
+
+NYPD Shooting Incident: Contains information about the incident number, occurrence date, time, the demographic characteristics of the perpetrator and victims geographic location, etc. of the shooting cases happen in NYC during year 2006 to 2021, and was extracted each quarter by the Office of Management Analysis and Planning. It could serve as a great source for government and police to understand some potential nature behind shooting incidents. Each row represents an unique victim, the same incident key may occur several times, meaning the incident may have multiple victims. There are many values missing for `perp_age_group`, `perp_sex` and `perp_race`, which is due to the fact that the information of the perpetrator was unknown or not available at the time of collection. Key variables used in our analysis are:
+
+* `incident_key`
+* `occur_date`, `occur_time`
+* `incident_key`
+* `statistical_murder_flag`
+* `perp_age_group`, `perp_sex`, `perp_race`
+* `vic_age_group`, `vic_sex`, `vic_race`
+* `latitude`, `longitude`
+
+
+COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths: Contains the COVID-related hospitalizations and confirmed, probable death among the whole NYC and each borough. Managed by the NYC Department of Health and Mental Hygiene Incident Command System for COVID-19 Response and is updated everyday. We clean the data by renaming and changing the types of some variables. In addition, we have added a variable `borough` to show the borough information more explicitly. Key variables are:
+
+* `month`, `day`, `year`
+* `borough`
+* `borough_case_count`
+* `total_case_count`
+
+
+## Discussion/ Some main findings
+
+* Based on the time based heatmap, we can see a significant characteristics of the time the shooting cases occur: mostly occurred during the midnight till early in the morning, with an obvious increase on Saturday and Sunday.
+* The year 2006 to 2019 has witnessed a gradually decreasing of number of shooting cases with some drastic decline on certain year. However, in year 2020, shooting cases increased dramatically to over 1800 cases. This may be related to COVID-19.
+* The month June, July and August have more shooting incidences occurred compared to the rest of the year, which has contradicted our original thought of massive amounts of shootings may happen at the end of the year.
+* Overall, Bronx and Brooklyn have more shooting cases.
+* Most of both the perpetrators and victims are in the age range `18-24` and `25-44`, and is Black or White Hispanic, male.
+* For each borough except Staten Island, there is a general trend that higher number of shooting cases is associated with fewer COVID cases.
 

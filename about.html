@@ -11,7 +11,7 @@
 
 
 
-<title>About</title>
+<title>Our project</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,10 +29,8 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -220,70 +218,10 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-
-
-
 <style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
+.code-folding-btn { margin-bottom: 4px; }
 </style>
+
 
 
 
@@ -293,16 +231,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -332,6 +260,9 @@ div.tocify {
   <a href="p8105_final_project.html">Data Exploration</a>
 </li>
 <li>
+  <a href="shooting_map.html">Map</a>
+</li>
+<li>
   <a href="shiny_dashboard.html">Shiny Dashboard</a>
 </li>
 <li>
@@ -353,19 +284,76 @@ div.tocify {
 
 <div id="header">
 
-
-
-<h1 class="title toc-ignore">About</h1>
-
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
 </div>
 
 
 
-
-
+<h1 class="title toc-ignore">Our project</h1>
 
 </div>
+
+
+<div id="gun-shooting---human-right-threat" class="section level3">
+<h3>Gun Shooting - Human Right Threat</h3>
+<div class="figure" style="text-align: center">
+<img src="data/gun_violence.jpg" alt="gun violence" width="80%" />
+<p class="caption">
+gun violence
+</p>
 </div>
+<p>Gun violence has become a major threat to human rights. Every year, many people are killed by shooting. No place is safe, even if you are walking in the campus or near the hospital. The graduate Chinese student recently killed was found fatally shot just near the University of Chicago. As students who have learned data science, we cannot just claim the truth without inferring from real life data. So here, as students who are curious about this human right crisis, we focus on the shooting incidence data from NYPD in NYC from year 2006 to 2021.</p>
+</div>
+<div id="covid-19-influence-on-shooting-cases" class="section level2">
+<h2>COVID-19 influence on shooting cases</h2>
+<div class="figure" style="text-align: center">
+<img src="data/people_masked.jpg" alt="people with mask" width="70%" />
+<p class="caption">
+people with mask
+</p>
+</div>
+<p>The global pandemic COVID-19 has influenced the world as a whole. The long duration of the virus has led to many closed stores or companies, a heavier living burden, the increasing unemployment rate, what’s more, a potentially higher crime rate. Therefore, we use the dataset of COVID-19 daily cases counts of NYC as an indicator of the severity of COVID-19 spread and try to find the connection between that and the number of shooting cases.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>We have mainly used two datasets – NYPD Shooting Incident and COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths, both are from the NYC open data.</p>
+<p>NYPD Shooting Incident: Contains information about the incident number, occurrence date, time, the demographic characteristics of the perpetrator and victims geographic location, etc. of the shooting cases happen in NYC during year 2006 to 2021, and was extracted each quarter by the Office of Management Analysis and Planning. It could serve as a great source for government and police to understand some potential nature behind shooting incidents. Each row represents an unique victim, the same incident key may occur several times, meaning the incident may have multiple victims. There are many values missing for <code>perp_age_group</code>, <code>perp_sex</code> and <code>perp_race</code>, which is due to the fact that the information of the perpetrator was unknown or not available at the time of collection. Key variables used in our analysis are:</p>
+<ul>
+<li><code>incident_key</code></li>
+<li><code>occur_date</code>, <code>occur_time</code></li>
+<li><code>incident_key</code></li>
+<li><code>statistical_murder_flag</code></li>
+<li><code>perp_age_group</code>, <code>perp_sex</code>, <code>perp_race</code></li>
+<li><code>vic_age_group</code>, <code>vic_sex</code>, <code>vic_race</code></li>
+<li><code>latitude</code>, <code>longitude</code></li>
+</ul>
+<p>COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths: Contains the COVID-related hospitalizations and confirmed, probable death among the whole NYC and each borough. Managed by the NYC Department of Health and Mental Hygiene Incident Command System for COVID-19 Response and is updated everyday. We clean the data by renaming and changing the types of some variables. In addition, we have added a variable <code>borough</code> to show the borough information more explicitly. Key variables are:</p>
+<ul>
+<li><code>month</code>, <code>day</code>, <code>year</code></li>
+<li><code>borough</code></li>
+<li><code>borough_case_count</code></li>
+<li><code>total_case_count</code></li>
+</ul>
+</div>
+<div id="discussion-some-main-findings" class="section level2">
+<h2>Discussion/ Some main findings</h2>
+<ul>
+<li>Based on the time based heatmap, we can see a significant characteristics of the time the shooting cases occur: mostly occurred during the midnight till early in the morning, with an obvious increase on Saturday and Sunday.</li>
+<li>The year 2006 to 2019 has witnessed a gradually decreasing of number of shooting cases with some drastic decline on certain year. However, in year 2020, shooting cases increased dramatically to over 1800 cases. This may be related to COVID-19.</li>
+<li>The month June, July and August have more shooting incidences occurred compared to the rest of the year, which has contradicted our original thought of massive amounts of shootings may happen at the end of the year.</li>
+<li>Overall, Bronx and Brooklyn have more shooting cases.</li>
+<li>Most of both the perpetrators and victims are in the age range <code>18-24</code> and <code>25-44</code>, and is Black or White Hispanic, male.</li>
+<li>For each borough except Staten Island, there is a general trend that higher number of shooting cases is associated with fewer COVID cases.</li>
+</ul>
+</div>
+
+
+
 
 </div>
 
@@ -397,36 +385,12 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-
 <script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
 });
 </script>
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
