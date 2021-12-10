@@ -1,0 +1,170 @@
+---
+title: "Map of Shooting Incidents"
+output: 
+  html_document:
+    code_folding: hide
+
+---
+
+```{r setup, message = FALSE, warning = FALSE}
+#Need to install "rgdal" package to successfully run the file.
+library(rgdal)
+library(leaflet)
+library(tidyverse)
+library(leaflet.extras)
+```
+
+```{r, message = FALSE, comment = FALSE, warning = FALSE}
+#Data import 
+shooting_initial = 
+  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
+
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %>% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021) %>%
+  mutate(boro = as.factor(boro)) %>%
+  mutate(location_desc = replace_na(location_desc, "NONE")) %>%
+  mutate(location_desc = as.factor(location_desc)) %>%
+  separate(occur_date, into = c("month", "day", "year")) %>% 
+  mutate(month = as.numeric(month)) %>% 
+  arrange(year, month) %>% 
+ # mutate(month = month.name[month]) %>% 
+  mutate(year = as.character(year)) %>% 
+  mutate(boro = tolower(boro)) %>% 
+  mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
+  rename(borough = boro) %>% 
+    mutate(date = str_c(month, day, year, sep = "/")) %>% 
+  select(incident_key, date, everything())
+
+nyc_boro = readOGR("./data/Borough_Boundaries/geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877.shp", layer = "geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877", verbose = FALSE)
+
+shooting_map = shooting %>% 
+  mutate_at(c("perp_age_group", "perp_sex", "perp_race"), funs(ifelse(is.na(.), "UNKNOWN", .))) %>% 
+  mutate(labels = str_c("<b>Incident Key: </b>", incident_key, 
+                    "<br>", "<b>Date: </b>", date,
+                    "<br>", "<b>Borough: </b>", borough,
+                    "<br>", "<b>Murdered: </b>", statistical_murder_flag,
+                    "<br>", "<b>Perpetrator's Race: </b>", perp_race,
+                    "<br>", "<b>Victim's Race: </b>", vic_race,
+                    "<br>", "<b>Perpetrator's Age: </b>", perp_age_group,
+                    "<br>", "<b>Victim's Age: </b>", vic_age_group
+                    ))
+```  
+
+## Shooting Incidents Across Space
+
+```{r, message = FALSE, warning = FALSE}
+polygon_color <- colorFactor(
+  palette = "viridis",
+  domain = as.factor(nyc_boro@data$boro_name))
+
+shooting_map %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addMarkers(lng = ~longitude, lat = ~latitude, popup = ~labels,
+             clusterOptions = markerClusterOptions()) %>% 
+  addPolygons(data = nyc_boro,
+              weight = 0.85,
+              fillColor = ~polygon_color(nyc_boro@data$boro_name),
+#              fillOpacity = 0.6,
+              color = "#BDBDC3",
+              label = ~nyc_boro@data$boro_name)
+```
+
+This is an interactive map of shooting incidents from January 2006 to September 2021 in NYC. Incidents' details will show up after clicking the icon. Please zoom in and out the map to see the total number of shooting incidents occurred in the area in the window. Borough's name will appear when hovering over each borough.
+
+## Map of Shooting Incidents Before and After COVID-19 in NYC
+
+```{r, message = FALSE, warning = FALSE}
+shooting_map_df = shooting_map %>% 
+  filter(year == c(2018,2019,2020,2021)) %>% 
+  split(.,~year)
+
+
+year_map <- leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addPolygons(data = nyc_boro,
+              weight = 0.85,
+              fillColor = ~polygon_color(nyc_boro@data$boro_name),
+#              fillOpacity = 0.6,
+              color = "#BDBDC3",
+              label = ~nyc_boro@data$boro_name)
+
+groupColors  <- colorFactor(
+  palette = "viridis",
+  domain = as.factor(names(shooting_map_df)))
+
+
+
+names(shooting_map_df) %>%
+  purrr::walk( function(df) {
+    year_map <<- year_map %>%
+      addCircleMarkers(data = shooting_map_df[[df]],
+                          lng = ~longitude, 
+                          lat = ~latitude,
+                          popup = ~labels,
+                          group = df,
+                          radius = 0.3,
+                          color =  ~groupColors(df)
+#                          clusterOptions = markerClusterOptions(),
+                ) 
+  })
+
+year_map %>%
+  addLayersControl(
+    overlayGroups = names(shooting_map_df),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+This map focuses on the shooting incidents from January 2018 to September 2021. Its purpose includes but not limited to observing the change of location and density of shooting incidents happened in the city before and after COVID-19. Year-to-year comparison can be made by selecting different years on the right upper corner.
+
+### Map of Shooting Incidents by Perpetrator's Race/Ethicity
+
+```{r, message = FALSE, warning = FALSE}
+race_map_df = shooting_map %>% 
+  filter(year == c(2019,2020,2021)) %>% 
+  mutate(perp_race = tolower(perp_race)) %>% 
+  split(.,~perp_race)
+
+raceColors  <- colorFactor(
+  palette = "viridis",
+  domain = as.factor(names(race_map_df)))
+
+race_map <- leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addPolygons(data = nyc_boro,
+              weight = 0.85,
+              fillColor = ~polygon_color(nyc_boro@data$boro_name),
+#              fillOpacity = 0.6,
+              color = "#BDBDC3",
+              label = ~nyc_boro@data$boro_name)
+
+names(race_map_df) %>%
+  purrr::walk( function(df) {
+    race_map <<- race_map %>%
+      addCircleMarkers(data = race_map_df[[df]],
+                          lng = ~longitude, 
+                          lat = ~latitude,
+                          popup = ~labels,
+                          group = df,
+                          radius = 0.3,
+                          color =  ~raceColors(df)
+#                          clusterOptions = markerClusterOptions(),
+                ) 
+  })
+
+race_map %>%
+  addLayersControl(
+    overlayGroups = names(race_map_df),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+This map shows the location of shooting incidents from January 2019 to September 2021 categorized by the ethnic group of the perpetrator. Selection of Ethnic group for exploration is based on given information from the original data.
