@@ -96,7 +96,7 @@ head(clean_covid)
 ```
 
 ### Make the heatmap based on time
-```{r}
+```{r heatmap}
 shooting_heatmap = shooting_initial %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
   mutate(occur_date = weekdays(occur_date)) %>%
@@ -123,6 +123,148 @@ heatmap
 ```
 
 According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
+
+Is this situation happened in every boro?
+
+In Brooklyn
+```{r heatmap_Brooklyn}
+heatmap_bn = shooting_initial %>%
+  filter(boro == "BROOKLYN") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_bn, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_Bn = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Brooklyn",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_Bn
+```
+In Bronx
+```{r heatmap_Bronx}
+heatmap_bx = shooting_initial %>%
+  filter(boro == "BRONX") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_bx, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_Bx = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Bronx",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_Bx
+```
+
+In Queens
+```{r heatmap_Queens}
+heatmap_q = shooting_initial %>%
+  filter(boro == "QUEENS") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_q, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_q = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Queens",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_q
+```
+
+In Manhattan
+```{r heatmap_Manhattan}
+heatmap_m = shooting_initial %>%
+  filter(boro == "MANHATTAN") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_m, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_m = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Manhattan",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_m
+```
+
+
+In Staten_island 
+```{r heatmap_Staten_island}
+heatmap_l = shooting_initial %>%
+  filter(boro == "STATEN ISLAND") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_l, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_l = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Staten_island",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_l
+```
 
 
 ## Shooting Incidents Across Time
@@ -303,7 +445,7 @@ sum_perp_age %>%
   geom_bar(width = 1, stat = "identity") +
   geom_text(aes(label = perc),
             position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
+  coord_polar("y", start = 0) +
   scale_fill_brewer(palette = "Pastel1") +
   theme_void() + 
   guides(fill = guide_legend(title = "Perpetrator's Age Group")) +
@@ -357,7 +499,7 @@ perp_sex_race %>%
 perp_sex_race %>% 
   ggplot(aes(x = perp_race, y = num, fill = perp_sex)) +
   geom_bar(
-    stat = "identity", position=position_dodge()
+    stat = "identity", position = position_dodge()
   ) +
   labs(
     x = "Perpetrator's Race",
@@ -366,7 +508,7 @@ perp_sex_race %>%
   ) +
   coord_flip() +
   guides(fill = guide_legend(title = "Perpetrator's Race")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
 ```
 
 From the `perp_sex_race` chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest rate are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%).
@@ -391,7 +533,7 @@ vic_age_group %>%
   geom_bar(width = 1, stat = "identity") +
   geom_text(aes(label = perc),
             position = position_stack(vjust = 0.5)) +
-  coord_polar("y", start=0) +
+  coord_polar("y", start = 0) +
   scale_fill_brewer(palette = "Pastel1") +
   theme_void() + 
   guides(fill = guide_legend(title = "Victim's Age Group")) +
@@ -421,7 +563,7 @@ vic_sex_race =
 vic_sex_race %>% 
   ggplot(aes(x = vic_race, y = num, fill = vic_sex)) +
   geom_bar(
-    stat = "identity", position=position_dodge()
+    stat = "identity", position = position_dodge()
   ) +
   labs(
     x = "Victim's Race",
@@ -430,7 +572,7 @@ vic_sex_race %>%
   ) +
   coord_flip() +
   guides(fill = guide_legend(title = "Victim's Race")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), legend.position = "right")
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
 
 
 # To see the percentage of different race, we can draw a pie chart
