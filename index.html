@@ -13,8 +13,8 @@
 
 <title>Gun Violence Continues in NYC?</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -33,6 +33,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -220,6 +221,9 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
 
 
@@ -353,17 +357,61 @@ div.tocify {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Gun Violence Continues in NYC?</h1>
+<h3 class="subtitle">let’s get to know gun violence in our NYC</h3>
 
 </div>
 
 
-<p>Hi there! This is the final project website for P8105.</p>
-<div id="proposal" class="section level1">
-<h1>Proposal</h1>
-<p>This is our project <a href="proposal.html">proposal</a></p>
+<h6 style="text-align: left;">
+Hao Zheng (hz2770) | Peilin Zhou (pz2281) | TXiao Ma(xm2276) | Yida Wang(yw3774) | Ruilian Zhang (rz2570)
+</h6>
+<p><br></br></p>
+<div id="gun-violence-in-nyc" class="section level4">
+<h4>Gun violence in NYC</h4>
+<p><img src="https://ksr-ugc.imgix.net/assets/025/753/880/485dfc57fe19bbcf1c3c533748d69740_original.jpg?ixlib=rb-4.0.2&amp;crop=faces&amp;w=1552&amp;h=873&amp;fit=crop&amp;v=1562703130&amp;auto=format&amp;frame=1&amp;q=92&amp;s=d5d092313f7bbb31d821834125a0b622" /></p>
+<p>Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also try to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.#ADD MORE#</p>
+</div>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>Recently, the tragedy of a Chinese grad student at Chicago University killed in a shooting near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.</p>
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Although open carry is not directly banned, New York City prohibits the possession of a “loaded” handgun outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.</p>
+<p>New York City has been the site of many Black Lives Matter protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020).</p>
+<p>The political issues have a great influence on gun violence as well, for example the mayor change and changes of crime police.</p>
+<p>Besides, COVID-19 literally changed newyorkers’ lives, which contain the frequency and distribution of shooting cases in NYC.</p>
+</div>
+<div id="datasets" class="section level2">
+<h2>Datasets</h2>
+<p>With this in mind, we use several datasets related to the New York City gun violence to look into this further.</p>
+<ul>
+<li><a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8">NYPD Shooting Incident - Data 2006-2021</a><br />
+</li>
+<li><a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78">NYPD Hate Crimes</a><br />
+<a href="https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3">COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths</a><br />
+*<a href="https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm">Borough Boundaries</a></li>
+</ul>
+</div>
+<div id="frindly-reminder" class="section level2">
+<h2>FRINDLY REMINDER</h2>
+<ul>
+<li>Keep an eye at midnight on weekends even it is Manhattan!</li>
+</ul>
+</div>
+<div id="come-with-us-to-know-more-information" class="section level2">
+<h2>Come with us to know more information!</h2>
 </div>
 
 
@@ -401,6 +449,11 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 <script>
 $(document).ready(function ()  {

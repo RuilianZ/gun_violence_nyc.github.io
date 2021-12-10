@@ -1,16 +1,67 @@
 ---
 title: "Gun Violence Continues in NYC?"
+subtitle: "let's get to know gun violence in our NYC"
+#formal version:"Exploring incidents of gun violence in New York City from 2006 to 2021"
 output: 
   html_document:
+    code_folding: hide
     toc: true
     toc_float: true
+  always_allow_html: true
 ---
 
-Hi there! This is the final project website for P8105.
 
-# Proposal
+```{r, include = FALSE}
+library(tidyverse)
+```
 
-This is our project [proposal](proposal.html)
+<h6 style="text-align: left;" markdown="1"> Hao Zheng (hz2770) |  Peilin Zhou (pz2281) |  TXiao Ma(xm2276) |  Yida Wang(yw3774) |  Ruilian Zhang (rz2570) </h6>
+
+<br></br>
+
+#### Gun violence in NYC
+![](https://ksr-ugc.imgix.net/assets/025/753/880/485dfc57fe19bbcf1c3c533748d69740_original.jpg?ixlib=rb-4.0.2&crop=faces&w=1552&h=873&fit=crop&v=1562703130&auto=format&frame=1&q=92&s=d5d092313f7bbb31d821834125a0b622)
+
+Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also try to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.#ADD MORE#
+ 
+
+## Motivation
+
+Recently, the tragedy of a Chinese grad student at Chicago University killed in a shooting near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
 
 
+
+## Background
+
+Although open carry is not directly banned, New York City prohibits the possession of a “loaded” handgun outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.
+
+New York City has been the site of many Black Lives Matter protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020). 
+
+The political issues have a great influence on gun violence as well, for example the mayor change and changes of crime police.
+
+Besides, COVID-19 literally changed newyorkers' lives, which contain the frequency and distribution of shooting cases in NYC.
+
+
+
+
+
+
+
+## Datasets
+
+
+With this in mind, we use several datasets related to the New York City gun violence to look into this further.
+
+* [NYPD Shooting Incident - Data 2006-2021](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8)  
+* [NYPD Hate Crimes](https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78)  
+[COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3)  
+*[Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
+
+
+
+## FRINDLY REMINDER
+
+- Keep an eye at midnight on weekends even it is Manhattan!
+
+## Come with us to know more information!
 
