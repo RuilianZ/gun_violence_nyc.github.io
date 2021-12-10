@@ -473,9 +473,9 @@ shooting_covid %>%
   ggplot(aes(x = total_case_count, y = total_n_shooting, group = borough, color = borough)) +
   geom_point() +
   labs(
-    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    title = "Distribution of Shooting Incident Against COVID Cases Within Each Day",
     x = "Total COVID Cases",
-    y = "Total Shooting Cases"
+    y = "Total Shooting Incident"
   ) +
   guides(fill = guide_legend(title = "Borough")) +
   theme(legend.position = "right")
@@ -488,9 +488,9 @@ shooting_covid %>%
   ggplot(aes(x = borough_case_count, y = borough_n_shooting, group = borough, color = borough)) +
   geom_point() +
   labs(
-    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    title = "Distribution of Shooting Incident Against COVID Cases Within Each Day",
     x = "Total COVID Cases",
-    y = "Total Shooting Cases"
+    y = "Total Shooting Incident"
   ) + 
   facet_wrap(~ borough) +
   guides(fill = guide_legend(title = "Borough")) +
@@ -506,9 +506,9 @@ shooting_covid %>%
   ggplot(aes(x = total_case_count, y = total_n_shooting, group = month, color = month)) +
   geom_point() +
   labs(
-    title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
+    title = "Distribution of Shooting Incident Against COVID Cases Within Each Day",
     x = "Total COVID Cases",
-    y = "Total Shooting Cases"
+    y = "Total Shooting Incident"
   ) +
   facet_wrap(~ month) +
   guides(fill = guide_legend(title = "Month")) +
@@ -516,6 +516,55 @@ shooting_covid %>%
 ```
 
 We can see from the above plot that there is no general pattern of the association between total shooting and total COVID cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few COVID cases, which is consistent with the former analysis.
+
+
+Use K-means to identify clusters.
+
+```{r fit kmeans}
+kmeans_df = 
+  shooting_covid %>% 
+  ungroup() %>% 
+  select(total_case_count, total_n_shooting)
+
+kmeans_fit = 
+  kmeans(x = kmeans_df, centers = 3)
+
+kmeans_df %>% 
+  broom::augment(kmeans_fit, .) %>%
+  ggplot(aes(x = total_case_count, y = total_n_shooting, color = .cluster)) +
+  geom_point() +
+  labs(
+    title = "K-means Clustering on Shooting Incident",
+    x = "Total COVID Cases",
+    y = "Total Shooting Incident"
+  ) +
+  guides(fill = guide_legend(title = "Cluster")) +
+  theme(legend.position = "right")
+```
+
+```{r more clusters}
+clusts =
+  tibble(k = 2:4) %>%
+  mutate(
+    km_fit =    map(k, ~kmeans(kmeans_df, .x)),
+    augmented = map(km_fit, ~broom::augment(.x, kmeans_df))
+  )
+
+clusts %>% 
+  select(-km_fit) %>% 
+  unnest(augmented) %>% 
+  ggplot(aes(x = total_case_count, y = total_n_shooting, color = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  facet_grid(~k) +
+    labs(
+    title = "K-means Clustering on Shooting Incident by Cluster Number",
+    x = "Total COVID Cases",
+    y = "Total Shooting Incident"
+  ) +
+  guides(fill = guide_legend(title = "Cluster")) +
+  theme(legend.position = "right")
+```
+
 
 Fit a linear regression model for total COVID case with total shooting as predictor.
 
