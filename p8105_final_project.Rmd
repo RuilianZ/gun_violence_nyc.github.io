@@ -127,6 +127,8 @@ According to the result of this heatmap, the midnight of weekends(Sunday and Sat
 
 ## Shooting Incidents Across Time
 
+For the shooting incidents across time, we use three different levels to analyze. 
+Firstly, we compared shooting case year by year.
 ### Distribution of Shooting Case of Years
 ```{r}
 shooting_year = shooting %>%
@@ -140,8 +142,11 @@ shooting_year %>%
          yaxis = list(title = "Frequency"))
 ```
 
+By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharply surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.
+
 
 ### Distribution of Shooting Case of Months
+Then we take a look of average shooting cases between months from 2006 to 2021 in the New York City.
 ```{r}
 shooting_month = shooting %>%
   mutate(month = as.factor(month)) %>% 
@@ -154,6 +159,10 @@ shooting_month %>%
           xaxis = list(title = "Month"),
           yaxis = list(title = "Frequency"))
 ```
+
+The distribution of the shooting incidence by month has a bell-shape. The shooting case concentrated in summer from May to September. The reason of this may related to the time of memorial day and the labor day.
+
+
 
 
 ### Distribution of Shooting Case of Time Range Across day
@@ -178,9 +187,22 @@ shooting_time = shooting_time %>%
 ggplot(shooting_time, aes(x = occur_time_range, y = case_numb, fill = occur_time_range)) + geom_col(alpha = 1) + labs(x = "Occur Time Range",
        y = "Frequency",
        title = "Distribution of Shooting Case by Day")
+
+#pie chart of ratio of shooting cases in a day
+ggplot(shooting_time, aes(x = "", y = case_numb, fill = occur_time_range)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start = 0) +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_void() + 
+  guides(fill = guide_legend(title = "occur Time range")) +
+  labs(title = "Pie Chart for Distribution of Shooting Case by Day") +
+  theme(legend.position = "right")
 ```
 
+From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.
+
 ### Distribution of shooting case across month in 2020
+We would like to focus the gun violence in the year of 2020 as a critical year of surge. 
 ### (since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
 ```{r}
 shooting_2020 = shooting %>%
@@ -192,12 +214,26 @@ shooting_2020 = shooting %>%
 ggplot(shooting_2020, aes(x = month, y = n_obs, fill = month)) + geom_col(alpha = 1) + labs(
   x = "Month",
   y = "Frequency",
-  title = "Distribution of Shooting Case by Day in NYC")
+  title = "Distribution of Shooting Case across month in 2020 in NYC")
 
 ```
+The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the city shut down early in the pandemic. The spike of shooting cases during June to August, which is mainly because of the death of George Floyd. 
 
 
+Since 2020 is the critical year, we would like to analyze the average shooting case by month between year 2019 and 2020.
+```{r}
+shooting_2019_2020 = shooting %>%
+  filter(year == "2019" | year == "2020") %>% 
+  mutate(month = as.factor(month)) %>% 
+  group_by(year, month) %>% 
+  summarise(frequency = n())
 
+ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_bar(stat = "identity", position = position_dodge(), alpha = 0.75)  + labs(
+  x = "Month",
+  y = "Frequency",
+  title = "Shooting Case Across Month in NYC in 2019 & 2020")
+```
+According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same. 
 
 
 
