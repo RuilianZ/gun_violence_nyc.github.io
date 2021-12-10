@@ -416,12 +416,12 @@ shooting %>%
 
 Based on the shooting dataset we obtained, we could study the demographic characteristics of the perpetrators and victims to see whether there exists some potential patterns/correlations or not.
 
-### perpetrators' characteristics
+### Perpetrators' Characteristics
 First, let's look at perpetrators' demographic information.
 
 According to the previously checked numbers of null values in each column, there are `8295` values missing in `perp_age_group` and `8261` values missing in both `perp_sex` and `perp_race`. The information missing maybe not available or unknown at the time of the report and should be considered as either “Unknown/Not Available/Not Reported.”
 
-```{r}
+```{r perpetrator age group}
 # group by perp_age_group and do a little summary
 sum_perp_age = 
   shooting %>% 
@@ -455,7 +455,7 @@ sum_perp_age %>%
 
 Therefore, except those with unknown age group, most perpetrators are in the age group `18-24` and `24-44`, which takes up 39.4% in total.
 
-```{r}
+```{r perpetrator sex and race}
 # Now look at perpetrators' sex and race
 perp_sex_race = 
   shooting %>% 
@@ -507,18 +507,18 @@ perp_sex_race %>%
     title = "Number of Perpetrators in Different Races"
   ) +
   coord_flip() +
-  guides(fill = guide_legend(title = "Perpetrator's Race")) +
+  guides(fill = guide_legend(title = "Perpetrator's Sex")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
 ```
 
 From the `perp_sex_race` chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest rate are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%).
 
 
-### Victims' characteristics
+### Victims' Characteristics
 There is no value missing in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`.
 
 What age groups are most victims in?
-```{r}
+```{r victim age group}
 vic_age_group =
   shooting %>% 
   mutate(as.factor(vic_age_group)) %>%
@@ -548,7 +548,7 @@ vic_age_group %>%
 As shown above, most victims are in the age group `18-24` and `25-44`.
 
 For victims' sex and race, similarly, first check the bar plot and pie chart.
-```{r}
+```{r victim sex and race}
 # The sex and race characteristics of victims
 vic_sex_race = 
   shooting %>% 
@@ -571,7 +571,7 @@ vic_sex_race %>%
     title = "Number of Victims in Different Races"
   ) +
   coord_flip() +
-  guides(fill = guide_legend(title = "Victim's Race")) +
+  guides(fill = guide_legend(title = "Victim's Sex")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
 
 
@@ -603,10 +603,6 @@ vic_sex_race %>%
 ```
 
 Most of the victims are Black (M: 72%, F: 69%), and the number of male victims in shooting cases is much more than female victims.
-
-
-
-
 
 
 

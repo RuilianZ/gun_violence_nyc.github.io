@@ -11,7 +11,7 @@ output:
 library(rgdal)
 library(leaflet)
 library(tidyverse)
-library(leaflet.extras)
+# library(leaflet.extras)
 ```
 
 ```{r, message = FALSE, comment = FALSE, warning = FALSE}
