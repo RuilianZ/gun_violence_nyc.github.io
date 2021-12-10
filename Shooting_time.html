@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Shooting Incidence Across Time</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="p8105_final_project.html">Data Exploration</a>
+</li>
+<li>
+  <a href="shooting_map.html">Map</a>
+</li>
+<li>
+  <a href="shiny_dashboard.html">Shiny Dashboard</a>
+</li>
+<li>
+  <a href="mailto:&lt;rz2570@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/RuilianZ/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Shooting Incidence Across Time</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(rvest)
+library(plotly)
+
+theme_set(theme_minimal() + theme(legend.position = &quot;bottom&quot;))
+options(
+  ggplot2.continuous.colour = &quot;viridis&quot;,
+  ggplot2.continuous.fill = &quot;viridis&quot;
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d</code></pre>
+<pre class="r"><code>shooting_initial = 
+  read_csv(&quot;./data/NYPD_Shooting.csv&quot;) %&gt;% janitor::clean_names()
+shooting_2021 = read_csv(&quot;./data/NYPD_shooting_New.csv&quot;) %&gt;% janitor::clean_names()
+
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %&gt;% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
+shooting %&gt;%
+  summarise_all(~ sum(is.na(.)))</code></pre>
+<pre><code>FALSE # A tibble: 1 × 19
+FALSE   incident_key occur_date occur_time  boro precinct jurisdiction_code
+FALSE          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
+FALSE 1            0          0          0     0        0                 3
+FALSE # … with 13 more variables: location_desc &lt;int&gt;, statistical_murder_flag &lt;int&gt;,
+FALSE #   perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;, perp_race &lt;int&gt;, vic_age_group &lt;int&gt;,
+FALSE #   vic_sex &lt;int&gt;, vic_race &lt;int&gt;, x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;,
+FALSE #   latitude &lt;int&gt;, longitude &lt;int&gt;, lon_lat &lt;int&gt;</code></pre>
+<pre class="r"><code>shooting = shooting %&gt;% 
+  mutate(boro = as.factor(boro)) %&gt;%
+  mutate(location_desc = replace_na(location_desc, &quot;NONE&quot;)) %&gt;%
+  mutate(location_desc = as.factor(location_desc)) %&gt;%
+  separate(occur_date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;)) %&gt;% 
+  mutate(month = as.numeric(month)) %&gt;% 
+  arrange(year, month) %&gt;% 
+ # mutate(month = month.name[month]) %&gt;% 
+  mutate(year = as.character(year)) %&gt;% 
+  mutate(boro = tolower(boro)) %&gt;% 
+  mutate(boro = if_else(boro == &quot;staten island&quot;, &quot;staten_island&quot;, boro)) %&gt;% 
+  rename(borough = boro) %&gt;% 
+    mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
+  select(incident_key, date, everything())</code></pre>
+<div id="shooting-incidents-across-time" class="section level2">
+<h2>Shooting Incidents Across Time</h2>
+<p>For the shooting incidents across time, we use three different levels to analyze. Firstly, we compared shooting case year by year. ### Distribution of Shooting Case of Years</p>
+<pre class="r"><code>shooting_year = shooting %&gt;%
+  group_by(year) %&gt;% 
+  summarise(n_obs = n())
+#visualization shooting incidence trend
+shooting_year %&gt;% 
+  plot_ly( x = ~year, y = ~n_obs, type = &quot;scatter&quot;, mode = &quot;lines+markers&quot;) %&gt;% 
+  layout(title = &quot;Shooting Incidence Trend from 2006 to 2020&quot;,
+         xaxis = list(title = &quot;Year&quot;),
+         yaxis = list(title = &quot;Frequency&quot;))</code></pre>
+<div id="htmlwidget-73f9a2c1030681116e34" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-73f9a2c1030681116e34">{"x":{"visdat":{"303d149ee56b":["function () ","plotlyVisDat"]},"cur_data":"303d149ee56b","attrs":{"303d149ee56b":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Shooting Incidence Trend from 2006 to 2020","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category","categoryorder":"array","categoryarray":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],"y":[2055,1887,1959,1828,1912,1939,1717,1339,1464,1434,1208,970,958,967,1948,1531],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharply surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.</p>
+<div id="distribution-of-shooting-case-of-months" class="section level3">
+<h3>Distribution of Shooting Case of Months</h3>
+<p>Then we take a look of average shooting cases between months from 2006 to 2021 in the New York City.</p>
+<pre class="r"><code>shooting_month = shooting %&gt;%
+  mutate(month = as.factor(month)) %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(n_obs = n())
+
+shooting_month %&gt;% 
+  plot_ly(x = ~month, y = ~n_obs, color = ~month, type = &quot;bar&quot;) %&gt;% 
+  layout( title = &quot;The Distribution of Shooting Incidence by Month&quot;,
+          xaxis = list(title = &quot;Month&quot;),
+          yaxis = list(title = &quot;Frequency&quot;))</code></pre>
+<div id="htmlwidget-29f3585cdff1e8d7dcb0" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-29f3585cdff1e8d7dcb0">{"x":{"visdat":{"303d63b8978e":["function () ","plotlyVisDat"]},"cur_data":"303d63b8978e","attrs":{"303d63b8978e":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"The Distribution of Shooting Incidence by Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1"],"y":[1600],"type":"bar","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2"],"y":[1238],"type":"bar","name":"2","marker":{"color":"rgba(211,164,122,1)","line":{"color":"rgba(211,164,122,1)"}},"textfont":{"color":"rgba(211,164,122,1)"},"error_y":{"color":"rgba(211,164,122,1)"},"error_x":{"color":"rgba(211,164,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["3"],"y":[1532],"type":"bar","name":"3","marker":{"color":"rgba(229,147,127,1)","line":{"color":"rgba(229,147,127,1)"}},"textfont":{"color":"rgba(229,147,127,1)"},"error_y":{"color":"rgba(229,147,127,1)"},"error_x":{"color":"rgba(229,147,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["4"],"y":[1827],"type":"bar","name":"4","marker":{"color":"rgba(156,159,194,1)","line":{"color":"rgba(156,159,194,1)"}},"textfont":{"color":"rgba(156,159,194,1)"},"error_y":{"color":"rgba(156,159,194,1)"},"error_x":{"color":"rgba(156,159,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["5"],"y":[2398],"type":"bar","name":"5","marker":{"color":"rgba(194,150,199,1)","line":{"color":"rgba(194,150,199,1)"}},"textfont":{"color":"rgba(194,150,199,1)"},"error_y":{"color":"rgba(194,150,199,1)"},"error_x":{"color":"rgba(194,150,199,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["6"],"y":[2656],"type":"bar","name":"6","marker":{"color":"rgba(223,155,177,1)","line":{"color":"rgba(223,155,177,1)"}},"textfont":{"color":"rgba(223,155,177,1)"},"error_y":{"color":"rgba(223,155,177,1)"},"error_x":{"color":"rgba(223,155,177,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["7"],"y":[3007],"type":"bar","name":"7","marker":{"color":"rgba(182,204,108,1)","line":{"color":"rgba(182,204,108,1)"}},"textfont":{"color":"rgba(182,204,108,1)"},"error_y":{"color":"rgba(182,204,108,1)"},"error_x":{"color":"rgba(182,204,108,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["8"],"y":[2999],"type":"bar","name":"8","marker":{"color":"rgba(209,217,69,1)","line":{"color":"rgba(209,217,69,1)"}},"textfont":{"color":"rgba(209,217,69,1)"},"error_y":{"color":"rgba(209,217,69,1)"},"error_x":{"color":"rgba(209,217,69,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["9"],"y":[2412],"type":"bar","name":"9","marker":{"color":"rgba(253,215,61,1)","line":{"color":"rgba(253,215,61,1)"}},"textfont":{"color":"rgba(253,215,61,1)"},"error_y":{"color":"rgba(253,215,61,1)"},"error_x":{"color":"rgba(253,215,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[2017],"type":"bar","name":"10","marker":{"color":"rgba(237,202,125,1)","line":{"color":"rgba(237,202,125,1)"}},"textfont":{"color":"rgba(237,202,125,1)"},"error_y":{"color":"rgba(237,202,125,1)"},"error_x":{"color":"rgba(237,202,125,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[1692],"type":"bar","name":"11","marker":{"color":"rgba(212,190,160,1)","line":{"color":"rgba(212,190,160,1)"}},"textfont":{"color":"rgba(212,190,160,1)"},"error_y":{"color":"rgba(212,190,160,1)"},"error_x":{"color":"rgba(212,190,160,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[1738],"type":"bar","name":"12","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>The distribution of the shooting incidence by month has a bell-shape. The shooting case concentrated in summer from May to September. The reason of this may related to the time of memorial day and the labor day.</p>
+</div>
+<div id="distribution-of-shooting-case-of-time-range-across-day" class="section level3">
+<h3>Distribution of Shooting Case of Time Range Across day</h3>
+<pre class="r"><code>shooting_time = shooting %&gt;% 
+##format the occur_time variable to only hours.
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = &quot;%H&quot;)) %&gt;% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %&gt;% 
+  group_by(occur_time_hour) %&gt;% 
+  summarise(case_numb = n())
+
+#divide day time to 4 groups: 0-6;6-12;12-18;18-24
+shooting_time = shooting_time %&gt;% 
+  mutate(occur_time_range = case_when(
+    occur_time_hour &gt;= 0 &amp; occur_time_hour &lt; 6 ~ &quot;0-6&quot;,
+    occur_time_hour &gt;= 6 &amp; occur_time_hour &lt; 12 ~ &quot;6-12&quot;,
+    occur_time_hour &gt;= 12 &amp; occur_time_hour &lt; 18 ~ &quot;12-18&quot;,
+    occur_time_hour &gt;= 18 &amp; occur_time_hour &lt; 24 ~ &quot;18-24&quot;))
+shooting_time = shooting_time %&gt;% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c(&quot;0-6&quot;,&quot;6-12&quot;,&quot;12-18&quot;,&quot;18-24&quot;)))
+
+ggplot(shooting_time, aes(x = occur_time_range, y = case_numb, fill = occur_time_range)) + geom_col(alpha = 1) + labs(x = &quot;Occur Time Range&quot;,
+       y = &quot;Frequency&quot;,
+       title = &quot;Distribution of Shooting Case by Day&quot;)</code></pre>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>#pie chart of ratio of shooting cases in a day
+ggplot(shooting_time, aes(x = &quot;&quot;, y = case_numb, fill = occur_time_range)) +
+  geom_bar(width = 1, stat = &quot;identity&quot;) +
+  coord_polar(&quot;y&quot;, start = 0) +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  theme_void() + 
+  guides(fill = guide_legend(title = &quot;occur Time range&quot;)) +
+  labs(title = &quot;Pie Chart for Distribution of Shooting Case by Day&quot;) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.</p>
+</div>
+<div id="distribution-of-shooting-case-across-month-in-2020" class="section level3">
+<h3>Distribution of shooting case across month in 2020</h3>
+<p>We would like to focus the gun violence in the year of 2020 as a critical year of surge. ### (since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)</p>
+<pre class="r"><code>shooting_2020 = shooting %&gt;%
+  filter(year == &quot;2020&quot;) %&gt;% 
+  mutate(month = as.factor(month)) %&gt;% 
+  group_by(month) %&gt;% 
+  summarise(n_obs = n())
+
+ggplot(shooting_2020, aes(x = month, y = n_obs, fill = month)) + geom_col(alpha = 1) + labs(
+  x = &quot;Month&quot;,
+  y = &quot;Frequency&quot;,
+  title = &quot;Distribution of Shooting Case across month in 2020 in NYC&quot;)</code></pre>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the city shut down early in the pandemic. The spike of shooting cases during June to August, which is mainly because of the death of George Floyd.</p>
+<p>Since 2020 is the critical year, we would like to analyze the average shooting case by month between year 2019 and 2020.</p>
+<pre class="r"><code>shooting_2019_2020 = shooting %&gt;%
+  filter(year == &quot;2019&quot; | year == &quot;2020&quot;) %&gt;% 
+  mutate(month = as.factor(month)) %&gt;% 
+  group_by(year, month) %&gt;% 
+  summarise(frequency = n())
+
+ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_bar(stat = &quot;identity&quot;, position = position_dodge(), alpha = 0.75)  + labs(
+  x = &quot;Month&quot;,
+  y = &quot;Frequency&quot;,
+  title = &quot;Shooting Case Across Month in NYC in 2019 &amp; 2020&quot;)</code></pre>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same.</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -15,7 +15,7 @@ output:
 library(tidyverse)
 ```
 
-<h6 style="text-align: left;" markdown="1"> Hao Zheng (hz2770) |  Peilin Zhou (pz2281) |  TXiao Ma(xm2276) |  Yida Wang(yw3774) |  Ruilian Zhang (rz2570) </h6>
+<h6 style="text-align: left;" markdown="1"> Hao Zheng (hz2770) |  Peilin Zhou (pz2281) |  Xiao Ma(xm2276) |  Yida Wang(yw3774) |  Ruilian Zhang (rz2570) </h6>
 
 <br></br>
 

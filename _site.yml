@@ -11,6 +11,8 @@ navbar:
       href: p8105_final_project.html
     - text: "Map"
       href: shooting_map.html
+    - text: "Time"
+      href: shooting_time.html
     - text: "Shiny Dashboard"
       href: shiny_dashboard.html
     - icon: fa-envelope fa-lg
