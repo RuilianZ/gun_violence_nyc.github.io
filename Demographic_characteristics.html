@@ -349,7 +349,10 @@ div.tocify {
       <a href="Demographic_characteristics.html">Demographic Characteristics</a>
     </li>
     <li>
-      <a href="shooting_time.html">Shooting and COVID</a>
+      <a href="heatmap.html">Heatmap of Each Borough</a>
+    </li>
+    <li>
+      <a href="shooting_and_covid.html">Shooting and COVID</a>
     </li>
     <li>
       <a href="regression_model.html">Regression Analysis</a>
@@ -413,18 +416,7 @@ shooting_2021 = read_csv(&quot;./data/NYPD_shooting_New.csv&quot;) %&gt;% janito
 shooting_2021 = shooting_2021 %&gt;% 
   rename(lon_lat = new_georeferenced_column)
 
-shooting = rbind(shooting_initial, shooting_2021)
-shooting %&gt;%
-  summarise_all(~ sum(is.na(.)))</code></pre>
-<pre><code>FALSE # A tibble: 1 × 19
-FALSE   incident_key occur_date occur_time  boro precinct jurisdiction_code
-FALSE          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
-FALSE 1            0          0          0     0        0                 3
-FALSE # … with 13 more variables: location_desc &lt;int&gt;, statistical_murder_flag &lt;int&gt;,
-FALSE #   perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;, perp_race &lt;int&gt;, vic_age_group &lt;int&gt;,
-FALSE #   vic_sex &lt;int&gt;, vic_race &lt;int&gt;, x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;,
-FALSE #   latitude &lt;int&gt;, longitude &lt;int&gt;, lon_lat &lt;int&gt;</code></pre>
-<pre class="r"><code>shooting = shooting %&gt;% 
+shooting = rbind(shooting_initial, shooting_2021) %&gt;% 
   mutate(boro = as.factor(boro)) %&gt;%
   mutate(location_desc = replace_na(location_desc, &quot;NONE&quot;)) %&gt;%
   mutate(location_desc = as.factor(location_desc)) %&gt;%

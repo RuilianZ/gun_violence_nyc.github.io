@@ -1,24 +1,28 @@
-name: "Gun Violence Continues in NYC?"
+name: "Website Settings"
 output_dir: "."
 navbar:
   title: "Home"
   right:
     - text: "About"
       href: about.html
-    - text: "Proposal"
-      href: proposal.html
-    - text: "Data Exploration"
+    - text: "Report"
       href: p8105_final_project.html
-    - text: "Map"
-      href: shooting_map.html
-    - text: "Time"
-      href: shooting_time.html
-    - text: "Demographic characteristics"
-      href: Demographic_characteristics.html  
+    - text: "Sections"
+      menu:
+      - text: "Shooting Map of NYC"
+        href: shooting_map.html
+      - text: "Shooting Across Time"
+        href: shooting_time.html
+      - text: "Demographic Characteristics"
+        href: Demographic_characteristics.html
+      - text: "Heatmap of Each Borough"
+        href: heatmap.html
+      - text: "Shooting and COVID"
+        href: shooting_and_covid.html 
+      - text: "Regression Analysis"
+        href: regression_model.html
     - text: "Shiny Dashboard"
       href: shiny_dashboard.html
-    - text: "Regression Analysis"
-      href: regression_model.html
     - icon: fa-envelope fa-lg
       href: mailto:<rz2570@cumc.columbia.edu>
     - icon: fa-github fa-lg
