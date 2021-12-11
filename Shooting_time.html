@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -231,6 +234,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -238,6 +304,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -261,25 +337,34 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="proposal.html">Proposal</a>
+  <a href="p8105_final_project.html">Report</a>
 </li>
-<li>
-  <a href="p8105_final_project.html">Data Exploration</a>
-</li>
-<li>
-  <a href="shooting_map.html">Map</a>
-</li>
-<li>
-  <a href="shooting_time.html">Time</a>
-</li>
-<li>
-  <a href="Demographic_characteristics.html">Demographic characteristics</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Sections
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="shooting_map.html">Shooting Map of NYC</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting Across Time</a>
+    </li>
+    <li>
+      <a href="Demographic_characteristics.html">Demographic Characteristics</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting and COVID</a>
+    </li>
+    <li>
+      <a href="regression_model.html">Regression Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="shiny_dashboard.html">Shiny Dashboard</a>
-</li>
-<li>
-  <a href="regression_model.html">Regression Analysis</a>
 </li>
 <li>
   <a href="mailto:&lt;rz2570@cumc.columbia.edu&gt;">
@@ -337,15 +422,14 @@ shooting_2021 = shooting_2021 %&gt;%
 shooting = rbind(shooting_initial, shooting_2021)
 shooting %&gt;%
   summarise_all(~ sum(is.na(.)))</code></pre>
-<pre><code>FALSE # A tibble: 1 x 19
+<pre><code>FALSE # A tibble: 1 × 19
 FALSE   incident_key occur_date occur_time  boro precinct jurisdiction_code
 FALSE          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
 FALSE 1            0          0          0     0        0                 3
-FALSE # ... with 13 more variables: location_desc &lt;int&gt;,
-FALSE #   statistical_murder_flag &lt;int&gt;, perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;,
-FALSE #   perp_race &lt;int&gt;, vic_age_group &lt;int&gt;, vic_sex &lt;int&gt;, vic_race &lt;int&gt;,
-FALSE #   x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;, latitude &lt;int&gt;, longitude &lt;int&gt;,
-FALSE #   lon_lat &lt;int&gt;</code></pre>
+FALSE # … with 13 more variables: location_desc &lt;int&gt;, statistical_murder_flag &lt;int&gt;,
+FALSE #   perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;, perp_race &lt;int&gt;, vic_age_group &lt;int&gt;,
+FALSE #   vic_sex &lt;int&gt;, vic_race &lt;int&gt;, x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;,
+FALSE #   latitude &lt;int&gt;, longitude &lt;int&gt;, lon_lat &lt;int&gt;</code></pre>
 <pre class="r"><code>shooting = shooting %&gt;% 
   mutate(boro = as.factor(boro)) %&gt;%
   mutate(location_desc = replace_na(location_desc, &quot;NONE&quot;)) %&gt;%
@@ -372,8 +456,8 @@ shooting_year %&gt;%
   layout(title = &quot;Shooting Incidence Trend from 2006 to 2020&quot;,
          xaxis = list(title = &quot;Year&quot;),
          yaxis = list(title = &quot;Frequency&quot;))</code></pre>
-<div id="htmlwidget-1f6714b9d4740c10184b" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1f6714b9d4740c10184b">{"x":{"visdat":{"2b8c677d5bd6":["function () ","plotlyVisDat"]},"cur_data":"2b8c677d5bd6","attrs":{"2b8c677d5bd6":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Shooting Incidence Trend from 2006 to 2020","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category","categoryorder":"array","categoryarray":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],"y":[2055,1887,1959,1828,1912,1939,1717,1339,1464,1434,1208,970,958,967,1948,1531],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-5fdc557b746a21ea0d28" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5fdc557b746a21ea0d28">{"x":{"visdat":{"14221aa0f2e3":["function () ","plotlyVisDat"]},"cur_data":"14221aa0f2e3","attrs":{"14221aa0f2e3":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Shooting Incidence Trend from 2006 to 2020","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category","categoryorder":"array","categoryarray":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],"y":[2055,1887,1959,1828,1912,1939,1717,1339,1464,1434,1208,970,958,967,1948,1531],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharply surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.</p>
 <div id="distribution-of-shooting-case-of-months" class="section level3">
 <h3>Distribution of Shooting Case of Months</h3>
@@ -388,8 +472,8 @@ shooting_month %&gt;%
   layout( title = &quot;The Distribution of Shooting Incidence by Month&quot;,
           xaxis = list(title = &quot;Month&quot;),
           yaxis = list(title = &quot;Frequency&quot;))</code></pre>
-<div id="htmlwidget-da2e4969d250181a2fda" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-da2e4969d250181a2fda">{"x":{"visdat":{"2b8c65465a02":["function () ","plotlyVisDat"]},"cur_data":"2b8c65465a02","attrs":{"2b8c65465a02":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"The Distribution of Shooting Incidence by Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1"],"y":[1600],"type":"bar","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2"],"y":[1238],"type":"bar","name":"2","marker":{"color":"rgba(211,164,122,1)","line":{"color":"rgba(211,164,122,1)"}},"textfont":{"color":"rgba(211,164,122,1)"},"error_y":{"color":"rgba(211,164,122,1)"},"error_x":{"color":"rgba(211,164,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["3"],"y":[1532],"type":"bar","name":"3","marker":{"color":"rgba(229,147,127,1)","line":{"color":"rgba(229,147,127,1)"}},"textfont":{"color":"rgba(229,147,127,1)"},"error_y":{"color":"rgba(229,147,127,1)"},"error_x":{"color":"rgba(229,147,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["4"],"y":[1827],"type":"bar","name":"4","marker":{"color":"rgba(156,159,194,1)","line":{"color":"rgba(156,159,194,1)"}},"textfont":{"color":"rgba(156,159,194,1)"},"error_y":{"color":"rgba(156,159,194,1)"},"error_x":{"color":"rgba(156,159,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["5"],"y":[2398],"type":"bar","name":"5","marker":{"color":"rgba(194,150,199,1)","line":{"color":"rgba(194,150,199,1)"}},"textfont":{"color":"rgba(194,150,199,1)"},"error_y":{"color":"rgba(194,150,199,1)"},"error_x":{"color":"rgba(194,150,199,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["6"],"y":[2656],"type":"bar","name":"6","marker":{"color":"rgba(223,155,177,1)","line":{"color":"rgba(223,155,177,1)"}},"textfont":{"color":"rgba(223,155,177,1)"},"error_y":{"color":"rgba(223,155,177,1)"},"error_x":{"color":"rgba(223,155,177,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["7"],"y":[3007],"type":"bar","name":"7","marker":{"color":"rgba(182,204,108,1)","line":{"color":"rgba(182,204,108,1)"}},"textfont":{"color":"rgba(182,204,108,1)"},"error_y":{"color":"rgba(182,204,108,1)"},"error_x":{"color":"rgba(182,204,108,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["8"],"y":[2999],"type":"bar","name":"8","marker":{"color":"rgba(209,217,69,1)","line":{"color":"rgba(209,217,69,1)"}},"textfont":{"color":"rgba(209,217,69,1)"},"error_y":{"color":"rgba(209,217,69,1)"},"error_x":{"color":"rgba(209,217,69,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["9"],"y":[2412],"type":"bar","name":"9","marker":{"color":"rgba(253,215,61,1)","line":{"color":"rgba(253,215,61,1)"}},"textfont":{"color":"rgba(253,215,61,1)"},"error_y":{"color":"rgba(253,215,61,1)"},"error_x":{"color":"rgba(253,215,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[2017],"type":"bar","name":"10","marker":{"color":"rgba(237,202,125,1)","line":{"color":"rgba(237,202,125,1)"}},"textfont":{"color":"rgba(237,202,125,1)"},"error_y":{"color":"rgba(237,202,125,1)"},"error_x":{"color":"rgba(237,202,125,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[1692],"type":"bar","name":"11","marker":{"color":"rgba(212,190,160,1)","line":{"color":"rgba(212,190,160,1)"}},"textfont":{"color":"rgba(212,190,160,1)"},"error_y":{"color":"rgba(212,190,160,1)"},"error_x":{"color":"rgba(212,190,160,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[1738],"type":"bar","name":"12","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-c79ce156ca4e67f0072f" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c79ce156ca4e67f0072f">{"x":{"visdat":{"142245cec568":["function () ","plotlyVisDat"]},"cur_data":"142245cec568","attrs":{"142245cec568":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"The Distribution of Shooting Incidence by Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1"],"y":[1600],"type":"bar","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2"],"y":[1238],"type":"bar","name":"2","marker":{"color":"rgba(211,164,122,1)","line":{"color":"rgba(211,164,122,1)"}},"textfont":{"color":"rgba(211,164,122,1)"},"error_y":{"color":"rgba(211,164,122,1)"},"error_x":{"color":"rgba(211,164,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["3"],"y":[1532],"type":"bar","name":"3","marker":{"color":"rgba(229,147,127,1)","line":{"color":"rgba(229,147,127,1)"}},"textfont":{"color":"rgba(229,147,127,1)"},"error_y":{"color":"rgba(229,147,127,1)"},"error_x":{"color":"rgba(229,147,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["4"],"y":[1827],"type":"bar","name":"4","marker":{"color":"rgba(156,159,194,1)","line":{"color":"rgba(156,159,194,1)"}},"textfont":{"color":"rgba(156,159,194,1)"},"error_y":{"color":"rgba(156,159,194,1)"},"error_x":{"color":"rgba(156,159,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["5"],"y":[2398],"type":"bar","name":"5","marker":{"color":"rgba(194,150,199,1)","line":{"color":"rgba(194,150,199,1)"}},"textfont":{"color":"rgba(194,150,199,1)"},"error_y":{"color":"rgba(194,150,199,1)"},"error_x":{"color":"rgba(194,150,199,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["6"],"y":[2656],"type":"bar","name":"6","marker":{"color":"rgba(223,155,177,1)","line":{"color":"rgba(223,155,177,1)"}},"textfont":{"color":"rgba(223,155,177,1)"},"error_y":{"color":"rgba(223,155,177,1)"},"error_x":{"color":"rgba(223,155,177,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["7"],"y":[3007],"type":"bar","name":"7","marker":{"color":"rgba(182,204,108,1)","line":{"color":"rgba(182,204,108,1)"}},"textfont":{"color":"rgba(182,204,108,1)"},"error_y":{"color":"rgba(182,204,108,1)"},"error_x":{"color":"rgba(182,204,108,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["8"],"y":[2999],"type":"bar","name":"8","marker":{"color":"rgba(209,217,69,1)","line":{"color":"rgba(209,217,69,1)"}},"textfont":{"color":"rgba(209,217,69,1)"},"error_y":{"color":"rgba(209,217,69,1)"},"error_x":{"color":"rgba(209,217,69,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["9"],"y":[2412],"type":"bar","name":"9","marker":{"color":"rgba(253,215,61,1)","line":{"color":"rgba(253,215,61,1)"}},"textfont":{"color":"rgba(253,215,61,1)"},"error_y":{"color":"rgba(253,215,61,1)"},"error_x":{"color":"rgba(253,215,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[2017],"type":"bar","name":"10","marker":{"color":"rgba(237,202,125,1)","line":{"color":"rgba(237,202,125,1)"}},"textfont":{"color":"rgba(237,202,125,1)"},"error_y":{"color":"rgba(237,202,125,1)"},"error_x":{"color":"rgba(237,202,125,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[1692],"type":"bar","name":"11","marker":{"color":"rgba(212,190,160,1)","line":{"color":"rgba(212,190,160,1)"}},"textfont":{"color":"rgba(212,190,160,1)"},"error_y":{"color":"rgba(212,190,160,1)"},"error_x":{"color":"rgba(212,190,160,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[1738],"type":"bar","name":"12","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 <p>The distribution of the shooting incidence by month has a bell-shape. The shooting case concentrated in summer from May to September. The reason of this may related to the time of memorial day and the labor day.</p>
 </div>
 <div id="distribution-of-shooting-case-of-time-range-across-day" class="section level3">
@@ -460,6 +544,8 @@ ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_ba
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -497,6 +583,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
