@@ -72,6 +72,7 @@ library(leaflet)
 library(rgdal)
 library(lubridate)
 library(plotly)
+library(modelr)
 col1 = "#d8e1cf" 
 col2 = "#438484"
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -927,5 +928,100 @@ plot(total_lm)
 ```
 
 We can see from the Residuals vs Fitted plot that the residuals is not equally distributed around the 0 horizontal line. In fact, the residuals has a pattern of decrease, indicating that the model has high goodness of fit, but violates the assumption of the normal distribution of the residual. Besides, from the Normal Q-Q plot we can see that most of the data fit the line when the theoretical quantile is under 2, indicating the data might have a normal distribution in a certain range.
+
+## Regression Analysis
+
+The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.
+
+### Model selection
+
+Fit a linear regression model for total shooting case with total COVID case as predictor.
+
+```{r, message = FALSE, warning = FALSE,comment = FALSE}
+original_lm = lm(total_case_count ~ total_n_shooting + borough + borough_case_count + borough_n_shooting + borough_n_victim, data = shooting_covid) 
+
+broom::tidy(original_lm) %>% 
+  knitr::kable()
+
+set.seed(100)
+par(mfrow = c(2,2))
+plot(original_lm)
+```
+According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook's distance from the residual vs leverage plot. 
+
+
+Use Stepwise regression to find the reduced model
+
+```{r, message = FALSE, warning = FALSE,comment = FALSE}
+step_lm = step(original_lm ,direction = "backward")
+broom::tidy(step_lm) %>% 
+  knitr::kable()
+```
+
+Since the p-value of borough_n_shooting is greater than 0.05, hence it is insignificant. 
+
+```{r, message = FALSE, warning = FALSE,comment = FALSE}
+set.seed(100)
+par(mfrow = c(2,2))
+plot(step_lm)
+```
+
+According to the plot, there is nmo obvious difference between reduced model and original model. From the Residuals vs Leverage plot, we could observed that the spread of standardized residuals shouldn’t change as a function of leverage: here it appears to decrease, indicating heteroskedasticity. Secondly, points with high leverage may be influential, and there are some point outside the Cook's distance dotted line, which would have high influence.
+
+
+```{r, message = FALSE, warning = FALSE,comment = FALSE}
+shooting_covid %>% 
+  add_residuals(step_lm) %>% 
+  add_predictions(step_lm) %>% 
+  ggplot(aes(x = pred, y = resid)) + 
+  geom_point(alpha = 0.5) +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  ggtitle("Residuals Against Fitted Values plot") +
+  geom_abline(intercept = 0, slope = 0, color = "red")
+```
+
+From the plot, we observed that it have some outliers with residuals greater than 2000. It clustered around the lower single digits of the y = 0 and looks like a nonconstant variance plot.
+
+
+### Model Comparasion
+cross validation and the plot for RMSE 
+
+```{r, message = FALSE, warning = FALSE,comment = FALSE}
+cv = crossv_mc(shooting_covid, 100) %>% 
+    mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  ) %>% 
+  mutate(
+    model1 = map(train, ~lm(total_case_count ~ total_n_shooting + borough + borough_case_count + 
+    borough_n_shooting + borough_n_victim, data = .x)),
+    model2 = map(train, ~lm(total_case_count ~ total_n_shooting + borough + borough_case_count + 
+    borough_n_shooting, data = .x))) %>% 
+  mutate(
+    rmse_model1 = map2_dbl(model1, test, ~rmse(model = .x, data = .y)),
+    rmse_model2 = map2_dbl(model2, test, ~rmse(model = .x, data = .y))
+    )
+
+cv %>% 
+  select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model",
+    values_to = "rmse",
+    names_prefix = "rmse_" 
+  ) %>% 
+  ggplot(aes(x = model, y = rmse)) +  geom_violin(fill = "orange",alpha = 0.5) +
+  geom_boxplot(alpha = 0.5, color = "white") 
+```
+
+According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2. 
+
+
+### Conclusion
+#### Regression Conclusion
+
+Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Disability, smoking, unemployment rate positively associate with the firearm crude death rate. Law strength negatively associate with crude death rate.
+
 
 
