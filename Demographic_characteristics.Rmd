@@ -231,7 +231,7 @@ bar_perp_sex_race =
   labs(
     x = "Perpetrator's Race",
     y = "Number of Perpetrators",
-    title = "Number of Perpetrators in Different Races"
+    title = "Distribution of Perpetrators' Race"
   ) +
   guides(fill = guide_legend(title = "Perpetrator's Sex")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
@@ -246,7 +246,7 @@ bar_vic_sex_race =
   labs(
     x = "Victim's Race",
     y = "Number of Victims",
-    title = "Number of Victims in Different Races"
+    title = "Distribution of Victims' Race"
   ) +
   guides(fill = guide_legend(title = "Victim's Sex")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")

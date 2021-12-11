@@ -9,8 +9,12 @@ output:
 
 # Motivation
 
-Recently, the tragedy of a Chinese grad student at Chicago University killed in a [shooting incident](https://chicago.cbslocal.com/2021/11/16/university-of-chicago-protest-violence/) near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
+* A report of the spatial, temporal analysis, and potential relation to other factors of the distribution of shooting incidents in NYC, also analysis the connection between shooting cases and COVID-19.
+* A website with all the work and results presented.
 
+# Related Work
+
+Recently, the tragedy of a Chinese grad student at Chicago University killed in a [shooting incident](https://chicago.cbslocal.com/2021/11/16/university-of-chicago-protest-violence/) near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
 
 # Background
 
@@ -25,10 +29,24 @@ Besides, COVID-19 literally changed [lifestyle of New Yorkers](https://www.nytim
 
 # Data
 
-* [NYPD Shooting Incident - Data 2006-2021](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8)  
-* [NYPD Hate Crimes](https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78)  
-* [COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3)  
-* [Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
+We have mainly used two datasets -- NYPD Shooting Incident and COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths, both are from the NYC open data.
+
+NYPD Shooting Incident: Contains information about the incident number, occurrence date, time, the demographic characteristics of the perpetrator and victims geographic location, etc. of the shooting cases happen in NYC during year 2006 to 2021, and was extracted each quarter by the Office of Management Analysis and Planning. It could serve as a great source for government and police to understand some potential nature behind shooting incidents. Each row represents an unique victim, the same incident key may occur several times, meaning the incident may have multiple victims. There are many values missing for `perp_age_group`, `perp_sex` and `perp_race`, which is due to the fact that the information of the perpetrator was unknown or not available at the time of collection. Key variables used in our analysis are:
+
+* `incident_key`
+* `occur_date`, `occur_time`
+* `incident_key`
+* `statistical_murder_flag`
+* `perp_age_group`, `perp_sex`, `perp_race`
+* `vic_age_group`, `vic_sex`, `vic_race`
+* `latitude`, `longitude`
+
+COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths: Contains the COVID-related hospitalizations and confirmed, probable death among the whole NYC and each borough. Managed by the NYC Department of Health and Mental Hygiene Incident Command System for COVID-19 Response and is updated everyday. We clean the data by renaming and changing the types of some variables. In addition, we have added a variable `borough` to show the borough information more explicitly. Key variables are:
+
+* `month`, `day`, `year`
+* `borough`
+* `borough_case_count`
+* `total_case_count`
 
 
 # Initial Questions
@@ -46,7 +64,7 @@ Besides, COVID-19 literally changed [lifestyle of New Yorkers](https://www.nytim
 
 ## Data Import and Cleaning
 
-```{r setup, message = FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(rvest)
 library(knitr)
@@ -65,7 +83,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 Load the historic and year-to-datedatasets of NYPD shooting incident
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_initial = 
   read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
 shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
@@ -77,12 +95,12 @@ shooting_2021 = shooting_2021 %>%
 shooting = rbind(shooting_initial, shooting_2021)
 ```
 check null
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting %>%
   summarise_all(~ sum(is.na(.)))
 ```
 For col boro
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting = shooting %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
@@ -102,12 +120,12 @@ Next, clean the COVID-19 case count data
 
 Importing COVID-19 case count data
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
 ```
 
 The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
-```{r}
+```{r, message = FALSE, warning = FALSE}
 clean_covid = covid_counts %>% 
    janitor::clean_names() %>% 
    rename(date = date_of_interest) %>% 
@@ -133,7 +151,7 @@ clean_covid = covid_counts %>%
 
 ## Heatmap
 
-```{r heatmap}
+```{r heatmap, message = FALSE}
 shooting_heatmap = shooting_initial %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
   mutate(occur_date = weekdays(occur_date)) %>%
@@ -309,7 +327,7 @@ heatmap_l
 For the shooting incidents across time, we use three different levels to analyze. 
 Firstly, we compared shooting case year by year.
 ### Distribution of Shooting Case of Years
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_year = shooting %>%
   group_by(year) %>% 
   summarise(n_obs = n())
@@ -326,7 +344,7 @@ By observing the data set, the shooting incidence gradually decrease from 2055 c
 
 ### Distribution of Shooting Case of Months
 Then we take a look of average shooting cases between months from 2006 to 2021 in the New York City.
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_month = shooting %>%
   mutate(month = as.factor(month)) %>% 
   group_by(month) %>% 
@@ -345,7 +363,7 @@ The distribution of the shooting incidence by month has a bell-shape. The shooti
 
 
 ### Distribution of Shooting Case of Time Range Across day
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_time = shooting %>% 
 ##format the occur_time variable to only hours.
   mutate(occur_time_hour = format(as.POSIXct(occur_time), format = "%H")) %>% 
@@ -382,7 +400,7 @@ From the bar chart, it is obvious that most of the shooting cases happens in the
 
 ### Distribution of shooting case across month in 2020
 We would like to focus the gun violence in the year of 2020 as a critical year of surge. (Since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_2020 = shooting %>%
   filter(year == "2020") %>% 
   mutate(month = as.factor(month)) %>% 
@@ -399,7 +417,7 @@ The major rise in gun violence in the city began in 2020, after a period in whic
 
 
 Since 2020 is the critical year, we would like to analyze the average shooting case by month between year 2019 and 2020.
-```{r}
+```{r, message = FALSE, warning = FALSE}
 shooting_2019_2020 = shooting %>%
   filter(year == "2019" | year == "2020") %>% 
   mutate(month = as.factor(month)) %>% 
@@ -557,7 +575,7 @@ According to the previously checked numbers of null values in each column, there
 
 The same shooting incident may have several victims but corresponding to the same perpetrator. Therefore, for the perpetrators' characteristics, we filter the data to make sure the incident key is unique to avoid counting the same perpetrators several times.
 
-```{r perpetrator age group}
+```{r perpetrator age group, message = FALSE, warning = FALSE}
 # group by perp_age_group and do a little summary
 sum_perp_age = 
   shooting %>% 
@@ -591,7 +609,7 @@ sum_perp_age %>%
 
 Therefore, except those with unknown age group, most perpetrators are in the age group `18-24` and `24-44`, which takes up 39.4% in total. We can see that most of them are quite young or in their middle age. The large percentage of unknown values may also because some of the perpetrators are still unknown/uncaught, which leaves a potential threat to the community.
 
-```{r perpetrator sex and race}
+```{r perpetrator sex and race, message = FALSE, warning = FALSE}
 # Now look at perpetrators' sex and race
 perp_sex_race = 
   shooting %>% 
@@ -656,7 +674,7 @@ Another important demographic information in shooting incidents is about the vic
 There is only a very limited amount of missing values in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`, which makes sense cause it's easier to gather the victims' information compared to the criminals in shootings.
 
 What age groups are most victims in?
-```{r victim age group}
+```{r victim age group, message = FALSE, warning = FALSE}
 vic_age_group =
   shooting %>% 
   mutate(as.factor(vic_age_group)) %>%
@@ -686,7 +704,7 @@ vic_age_group %>%
 As shown above, most victims are in the age group `18-24` and `25-44`.
 
 For victims' sex and race, similarly, first check the bar plot and pie chart.
-```{r victim sex and race}
+```{r victim sex and race, message = FALSE, warning = FALSE}
 # The sex and race characteristics of victims
 vic_sex_race = 
   shooting %>% 
