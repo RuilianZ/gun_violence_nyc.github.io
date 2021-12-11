@@ -7,7 +7,7 @@ output:
     toc_float: true
 ---
 
-The maps below provide general information of the shooting incidents in New York City, including the geolocation, total number of incidents in an area, and background information. Data used for generating the maps are provided by [NYC open data](https://opendata.cityofnewyork.us/). Be interactive and explore the features that interest you the most!
+The maps below provide general information of the shooting incidents in New York City, including the geolocation, total number of incidents in an area, and background information. GIS data of [Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm) were obtained from [NYC open data](https://opendata.cityofnewyork.us/). Be interactive and explore the features that interest you the most!
 
 ```{r setup, message = FALSE, warning = FALSE}
 #Need to install "rgdal" package to successfully run the file.
