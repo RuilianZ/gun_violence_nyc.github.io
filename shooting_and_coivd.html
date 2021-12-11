@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -224,6 +227,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -231,6 +297,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -253,10 +329,12 @@ $(document).ready(function () {
         <li>
   <a href="about.html">About</a>
 </li>
-<li class="dropdown-header">Sections</li>
+<li>
+  <a href="p8105_final_project.html">Report</a>
+</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Report
+    Sections
      
     <span class="caret"></span>
   </a>
@@ -271,7 +349,10 @@ $(document).ready(function () {
       <a href="Demographic_characteristics.html">Demographic Characteristics</a>
     </li>
     <li>
-      <a href="shooting_time.html">Shooting and COVID</a>
+      <a href="heatmap.html">Heatmap of Each Borough</a>
+    </li>
+    <li>
+      <a href="shooting_and_covid.html">Shooting and COVID</a>
     </li>
     <li>
       <a href="regression_model.html">Regression Analysis</a>
@@ -369,10 +450,130 @@ clean_covid = covid_counts %&gt;%
   relocate(case_count, .after = borough_case_count) %&gt;% 
   rename(total_case_count = case_count) %&gt;% 
   mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
-  select(date, everything())</code></pre>
+  select(date, everything())
+
+shooting_mini =
+  shooting %&gt;% 
+  filter(year == &quot;2020&quot;) %&gt;% 
+  select(c(&quot;date&quot;, &quot;incident_key&quot;, &quot;borough&quot;))
+
+shooting_covid = 
+  merge(x = shooting_mini, y = clean_covid, by = c(&quot;date&quot;, &quot;borough&quot;)) %&gt;% 
+  relocate(&quot;date&quot;, &quot;month&quot;, &quot;day&quot;, &quot;year&quot;, everything()) %&gt;% 
+  group_by(date) %&gt;% 
+  add_count(borough, name = &quot;borough_n_victim&quot;) %&gt;% # victim number equals to the count of incident_key (includind duplicate)
+  distinct() %&gt;% 
+  add_count(borough, name = &quot;borough_n_shooting&quot;) %&gt;% # shooting number equals to the count of distinct incident_key
+  select(-incident_key) %&gt;% 
+  distinct() %&gt;% 
+  add_count(date, wt = borough_n_victim, name = &quot;total_n_victim&quot;) %&gt;% 
+  add_count(date, wt = borough_n_shooting, name = &quot;total_n_shooting&quot;) %&gt;% 
+  mutate(
+    borough = recode(borough, 
+                     &quot;bronx&quot; = &quot;Bronx&quot;,
+                     &quot;brooklyn&quot; = &quot;Brooklyn&quot;,
+                     &quot;manhattan&quot; = &quot;Manhattan&quot;,
+                     &quot;queens&quot; = &quot;Queens&quot;,
+                     &quot;staten_island&quot; = &quot;Staten Island&quot;)
+  )</code></pre>
+<div id="visualize-distribution" class="section level2">
+<h2>Visualize Distribution</h2>
+<p>First we want to see if there is an underlying association between total COVID cases and total shootings.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_shooting, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of Shooting Incident Against COVID Cases Within Each Day&quot;,
+    x = &quot;Total COVID Cases&quot;,
+    y = &quot;Total Shooting Incident&quot;
+  ) +
+  guides(fill = guide_legend(title = &quot;Borough&quot;)) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="shooting_and_coivd_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>See separately for each borough.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = borough_case_count, y = borough_n_shooting, group = borough, color = borough)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of Shooting Incident Against COVID Cases Within Each Day&quot;,
+    x = &quot;Total COVID Cases&quot;,
+    y = &quot;Total Shooting Incident&quot;
+  ) + 
+  facet_wrap(~ borough) +
+  guides(fill = guide_legend(title = &quot;Borough&quot;)) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="shooting_and_coivd_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can see that for each borough, there is a general trend that higher number of shooting cases is associated with fewer COVID cases, whereas the number of shooting cases decreases when COVID case increases. This trend does not manifest in Staten Island, which may due to the limited size of data.</p>
+<p>Then explore by month.</p>
+<pre class="r"><code>shooting_covid %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_shooting, group = month, color = month)) +
+  geom_point() +
+  labs(
+    title = &quot;Distribution of Shooting Incident Against COVID Cases Within Each Day&quot;,
+    x = &quot;Total COVID Cases&quot;,
+    y = &quot;Total Shooting Incident&quot;
+  ) +
+  facet_wrap(~ month) +
+  guides(fill = guide_legend(title = &quot;Month&quot;)) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="shooting_and_coivd_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>We can see from the above plot that there is no general pattern of the association between total shooting and total COVID cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few COVID cases, which is consistent with the former analysis.</p>
+</div>
+<div id="k-means-clusters" class="section level2">
+<h2>K-means Clusters</h2>
+<p>Based on the scatter plots above, we want to see whether there are specific groups within a certain range of COVID cases and shooting incidents. Therefore, we use K-means clustering to identify clusters.</p>
+<pre class="r"><code>kmeans_df = 
+  shooting_covid %&gt;% 
+  ungroup() %&gt;% 
+  select(total_case_count, total_n_shooting)
+
+kmeans_fit = 
+  kmeans(x = kmeans_df, centers = 3)
+
+kmeans_df %&gt;% 
+  broom::augment(kmeans_fit, .) %&gt;%
+  ggplot(aes(x = total_case_count, y = total_n_shooting, color = .cluster)) +
+  geom_point() +
+  labs(
+    title = &quot;K-means Clustering on Shooting Incident&quot;,
+    x = &quot;Total COVID Cases&quot;,
+    y = &quot;Total Shooting Incident&quot;
+  ) +
+  guides(fill = guide_legend(title = &quot;Cluster&quot;)) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="shooting_and_coivd_files/figure-html/fit%20kmeans-1.png" width="672" /></p>
+<p>We can see that the data is separated into three groups, among which the first group has a small COVID case number and a wide range of shooting incidents, the second group has medium values for both metric, and the third group has the largest COVID case number as well as relatively small shooting incidents. These groups might indicate the association between shooting and COVID varies by the seriousness of COVID status.</p>
+<pre class="r"><code>clusts =
+  tibble(k = 2:4) %&gt;%
+  mutate(
+    km_fit =    map(k, ~kmeans(kmeans_df, .x)),
+    augmented = map(km_fit, ~broom::augment(.x, kmeans_df))
+  )
+
+clusts %&gt;% 
+  select(-km_fit) %&gt;% 
+  unnest(augmented) %&gt;% 
+  ggplot(aes(x = total_case_count, y = total_n_shooting, color = .cluster)) +
+  geom_point(aes(color = .cluster)) +
+  facet_grid(~k) +
+    labs(
+    title = &quot;K-means Clustering on Shooting Incident by Cluster Number&quot;,
+    x = &quot;Total COVID Cases&quot;,
+    y = &quot;Total Shooting Incident&quot;
+  ) +
+  guides(fill = guide_legend(title = &quot;Cluster&quot;)) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="shooting_and_coivd_files/figure-html/more%20clusters-1.png" width="672" /></p>
+<p>The plots above shows k-means clusters with different group numbers, we can see that as the number of group increases, the range of both metrics shrinks by gradient.</p>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -410,6 +611,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -1,9 +1,50 @@
 ---
-title: "P8105_final_project"
-author: "Hao Zheng (hz2770), Peilin Zhou (pz2281), Xiao Ma(xm2276), Yida Wang(yw3774), Ruilian Zhang (rz2570)"
-date: "11/11/2021"
-output: html_document
+title: "Report"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 ---
+
+# Motivation
+
+Recently, the tragedy of a Chinese grad student at Chicago University killed in a [shooting incident](https://chicago.cbslocal.com/2021/11/16/university-of-chicago-protest-violence/) near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
+
+
+# Background
+
+Although open carry is not directly banned, New York City [prohibits the possession of a “loaded” handgun](https://www.usconcealedcarry.com/resources/ccw_reciprocity_map/nyc-gun-laws/#:~:text=New%20York%20prohibits%20the%20possession,York%20Pistol%20License%20(NYPL).) outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.
+
+New York City has been the site of many [Black Lives Matter](https://www.nytimes.com/interactive/2020/07/03/us/george-floyd-protests-crowd-size.html) protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020). 
+
+The political issues have a great influence on gun violence as well, for example the change of mayor and [changes of crime police](https://www1.nyc.gov/office-of-the-mayor/news/158-21/recovery-all-us-mayor-de-blasio-outlines-next-phase-comprehensive-police-reform-effort).
+
+Besides, COVID-19 literally changed [lifestyle of New Yorkers](https://www.nytimes.com/2020/09/23/nyregion/new-york-city-coronavirus-six-months.html), which contain the frequency and distribution of shooting cases in NYC.
+
+
+# Data
+
+* [NYPD Shooting Incident - Data 2006-2021](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8)  
+* [NYPD Hate Crimes](https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78)  
+* [COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3)  
+* [Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
+
+
+# Initial Questions
+
+* What is the specific time period during the day and the year when shooting crimes are more likely to occur?  
+* Are there any boroughs or precincts with a significantly higher chance of shootings?  
+* What are the perpetrators’ and victims’ demographic characteristics?
+* Whether there is an association between the number of shooting cases and COVID-19?  
+* Whether the occurrence of shooting incidents is related to the number of COVID-19 cases in a certain borough?  
+
+
+
+# Exploratory Analysis
+
+
+## Data Import and Cleaning
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -49,7 +90,6 @@ shooting = shooting %>%
   separate(occur_date, into = c("month", "day", "year")) %>% 
   mutate(month = as.numeric(month)) %>% 
   arrange(year, month) %>% 
- # mutate(month = month.name[month]) %>% 
   mutate(year = as.character(year)) %>% 
   mutate(boro = tolower(boro)) %>% 
   mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
@@ -88,11 +128,11 @@ clean_covid = covid_counts %>%
   rename(total_case_count = case_count) %>% 
   mutate(date = str_c(month, day, year, sep = "/")) %>% 
   select(date, everything())
-
-head(clean_covid)
 ```
 
-### Make the heatmap based on time
+
+## Heatmap
+
 ```{r heatmap}
 shooting_heatmap = shooting_initial %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -235,7 +275,7 @@ heatmap_m
 ```
 
 
-In Staten_island 
+In Staten Island 
 ```{r heatmap_Staten_Island, message = FALSE}
 heatmap_l = shooting_initial %>%
   filter(boro == "STATEN ISLAND") %>%
@@ -341,8 +381,7 @@ ggplot(shooting_time, aes(x = "", y = case_numb, fill = occur_time_range)) +
 From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.
 
 ### Distribution of shooting case across month in 2020
-We would like to focus the gun violence in the year of 2020 as a critical year of surge. 
-### (since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
+We would like to focus the gun violence in the year of 2020 as a critical year of surge. (Since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
 ```{r}
 shooting_2020 = shooting %>%
   filter(year == "2020") %>% 
@@ -415,7 +454,7 @@ shooting_map %>%
 
 This is an interactive map of shooting incidents from January 2006 to September 2021 in NYC. Incidents' details will show up after clicking the icon. Please zoom in and out the map to see the total number of shooting incidents occurred in the area in the window. Borough's name will appear when hovering over each borough.
 
-## Map of Shooting Incidents Before and After COVID-19 in NYC
+### Map of Shooting Incidents Before and After COVID-19 in NYC
 
 ```{r, message = FALSE, warning = FALSE}
 shooting_map_df = shooting_map %>% 
@@ -705,7 +744,7 @@ Most of the victims are Black (M: 72%, F: 69%), and the number of male victims i
 
 
 
-## COVID and shooting relations
+## COVID and Shooting Incidence
 
 Note: The date of shooting and COVID datasets only overlap on February-December 2020, so we do the analysis base on the overlap.
 
@@ -791,7 +830,9 @@ shooting_covid %>%
 We can see from the above plot that there is no general pattern of the association between total shooting and total COVID cases. But for the months in the middle of the year, especially in June, July and August, we can see that the number shooting cases is high when there are few COVID cases, which is consistent with the former analysis.
 
 
-Use K-means to identify clusters.
+### K-means Clusters
+
+Based on the scatter plots above, we want to see whether there are specific groups within a certain range of COVID cases and shooting incidents. Therefore, we use K-means clustering to identify clusters.
 
 ```{r fit kmeans}
 kmeans_df = 
@@ -814,6 +855,9 @@ kmeans_df %>%
   guides(fill = guide_legend(title = "Cluster")) +
   theme(legend.position = "right")
 ```
+
+We can see that the data is separated into three groups, among which the first group has a small COVID case number and a wide range of shooting incidents, the second group has medium values for both metric, and the third group has the largest COVID case number as well as relatively small shooting incidents. These groups might indicate the association between shooting and COVID varies by the seriousness of COVID status.
+
 
 ```{r more clusters}
 clusts =
@@ -838,12 +882,24 @@ clusts %>%
   theme(legend.position = "right")
 ```
 
+The plots above shows k-means clusters with different group numbers, we can see that as the number of group increases, the range of both metrics shrinks by gradient.
+
+
+
+# Additional Analysis
+
+## Regression Analysis
 
 Fit a linear regression model for total COVID case with total shooting as predictor.
 
 ```{r}
 total_lm = lm(total_n_shooting ~ total_case_count, data = shooting_covid) 
+```
 
+
+## Model Diagnosis
+
+```{r}
 broom::tidy(total_lm) %>% 
   knitr::kable()
 

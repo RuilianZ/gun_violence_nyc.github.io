@@ -3,6 +3,8 @@ title: "Heatmap"
 output: 
   html_document:
     code_folding: hide
+    toc: true
+    toc_float: true
 ---
 
 ```{r, message = FALSE, warning = FALSE}
@@ -46,7 +48,7 @@ shooting = rbind(shooting_initial, shooting_2021) %>%
 ```
 
 
-### Make the heatmap based on time
+## Make the heatmap based on time
 ```{r heatmap}
 shooting_heatmap = shooting_initial %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
