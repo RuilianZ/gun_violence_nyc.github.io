@@ -25,6 +25,8 @@ navbar:
       href: https://yidawang.shinyapps.io/Myshinyapp/
     - icon: fa-envelope fa-lg
       href: mailto:<rz2570@cumc.columbia.edu>
+    - icon: fa-play-circle fa-lg
+      href: https://youtu.be/UytmNDDa0fY    
     - icon: fa-github fa-lg
       href: https://github.com/RuilianZ/gun_violence_nyc.github.io
 output:
