@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    # source_code: embed
+    source_code: embed
 runtime: shiny
 ---
 
@@ -19,8 +19,8 @@ library(plotly)
 
 ```{r, include = FALSE}
 shooting_initial = 
-  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
-shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
+  read_csv("nypd_shooting.csv") %>% janitor::clean_names()
+shooting_2021 = read_csv("nypd_shooting_new.csv") %>% janitor::clean_names()
 shooting_2021 = shooting_2021 %>% 
   rename(lon_lat = new_georeferenced_column)
 
@@ -53,7 +53,7 @@ shooting_map = shooting %>%
                     "<br>", "<b>Victim's Age: </b>", vic_age_group
                     ))
 
-nyc_boro = readOGR("./data/Borough_Boundaries/geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877.shp", layer = "geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877")
+nyc_boro = readOGR("geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877.shp", layer = "geo_export_2204bc6b-9c17-46ed-8a67-7245a1e15877")
 ```  
 
 
@@ -105,7 +105,7 @@ sliderInput(
 ```
 
 ```{r import and merge covid data}
-covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
+covid_counts = read.csv("covid19_data.csv", sep = ";") %>% as_tibble()
 
 clean_covid = covid_counts %>% 
    janitor::clean_names() %>% 
@@ -233,6 +233,9 @@ renderPlotly({
   
 })
 ```
+
+
+
 
 
 
