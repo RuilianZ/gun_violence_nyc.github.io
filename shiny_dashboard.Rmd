@@ -72,6 +72,18 @@ selectInput(
   selected = "manhattan"
 )
 
+race = shooting %>% 
+  mutate(perp_race = ifelse(is.na(perp_race), "UNKNOWN", perp_race)) %>% 
+  distinct(perp_race) %>% 
+  pull()
+
+selectInput(
+  "perprace_choice",
+  label = h2("Select Perpetrators' Race"),
+  choices = race,
+  selected = "Black"
+)
+
 max_year = shooting %>% 
   mutate(year = as.numeric(year)) %>% 
   distinct(year) %>% 
@@ -182,10 +194,25 @@ renderLeaflet({
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Perpetrators' race across space
 
-```{r}
+```{r map perpetrator race}
+renderLeaflet({
 
+  shooting_map %>% 
+    filter(
+      perp_race == input$perprace_choice,
+      year == input$year_choice
+    ) %>% 
+    leaflet() %>% 
+    addTiles() %>% 
+    addProviderTiles("CartoDB.Positron") %>% 
+    addMarkers(lng = ~longitude, lat = ~latitude, popup = ~labels,
+               clusterOptions = markerClusterOptions()) %>% 
+    addPolygons(data = nyc_boro,
+                weight = 0.85,
+                label = ~nyc_boro@data$boro_name)
+})
 ```
 
 ### Shooting incidence and COVID Cases

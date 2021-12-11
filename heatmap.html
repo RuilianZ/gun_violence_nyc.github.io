@@ -582,8 +582,8 @@ heatmap_m = ggplot(dayHour, aes(hour, occur_date)) +
 heatmap_m</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap_Manhattan-1.png" width="672" /></p>
 </div>
-<div id="in-staten_island" class="section level3">
-<h3>In Staten_island</h3>
+<div id="in-staten-island" class="section level3">
+<h3>In Staten Island</h3>
 <p>Obviously, this is the safest borough considering shooting cases. The highest total shooting number is 25. The highest risk time is 3 to 4 a.m. on Saturday. Monday evening at 19 is high risk as well except weekends.</p>
 <pre class="r"><code>heatmap_l = shooting_initial %&gt;%
   filter(boro == &quot;STATEN ISLAND&quot;) %&gt;%
