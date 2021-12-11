@@ -1,0 +1,218 @@
+---
+title: "Heatmap"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(rvest)
+library(knitr)
+library(leaflet)
+library(rgdal)
+library(lubridate)
+library(plotly)
+col1 = "#d8e1cf" 
+col2 = "#438484"
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+shooting_initial = 
+  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
+
+shooting_2021 = shooting_2021 %>% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021) %>% 
+  mutate(boro = as.factor(boro)) %>%
+  mutate(location_desc = replace_na(location_desc, "NONE")) %>%
+  mutate(location_desc = as.factor(location_desc)) %>%
+  separate(occur_date, into = c("month", "day", "year")) %>% 
+  mutate(month = as.numeric(month)) %>% 
+  arrange(year, month) %>% 
+  mutate(year = as.character(year)) %>% 
+  mutate(boro = tolower(boro)) %>% 
+  mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
+  rename(borough = boro) %>% 
+    mutate(date = str_c(month, day, year, sep = "/")) %>% 
+  select(incident_key, date, everything())
+```
+
+
+### Make the heatmap based on time
+```{r heatmap}
+shooting_heatmap = shooting_initial %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(shooting_heatmap, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap
+```
+
+According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
+
+Is this situation happened in every boro?
+
+In Brooklyn
+```{r heatmap_Brooklyn, message = FALSE}
+heatmap_bn = shooting_initial %>%
+  filter(boro == "BROOKLYN") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_bn, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_Bn = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Brooklyn",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_Bn
+```
+In Bronx
+```{r heatmap_Bronx, message = FALSE}
+heatmap_bx = shooting_initial %>%
+  filter(boro == "BRONX") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_bx, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_Bx = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Bronx",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_Bx
+```
+
+In Queens
+```{r heatmap_Queens, message = FALSE}
+heatmap_q = shooting_initial %>%
+  filter(boro == "QUEENS") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_q, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_q = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Queens",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_q
+```
+
+In Manhattan
+```{r heatmap_Manhattan, message = FALSE}
+heatmap_m = shooting_initial %>%
+  filter(boro == "MANHATTAN") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_m, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_m = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Manhattan",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_m
+```
+
+
+In Staten_island 
+```{r heatmap_Staten_Island, message = FALSE}
+heatmap_l = shooting_initial %>%
+  filter(boro == "STATEN ISLAND") %>%
+  mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
+  mutate(occur_date = weekdays(occur_date)) %>%
+  separate(occur_time, into = c("hour", "minute", "second")) %>%
+  mutate(hour = as.factor(hour)) %>%
+  select(incident_key, occur_date, hour) %>%
+  mutate(occur_date = as.factor(occur_date),
+         occur_date = fct_relevel(occur_date, "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"))
+
+dayHour = plyr::ddply(heatmap_l, c( "hour", "occur_date"), summarise, N = length(incident_key))
+attach(dayHour)
+
+heatmap_l = ggplot(dayHour, aes(hour, occur_date)) + 
+  geom_tile(aes(fill = N),colour = "white", na.rm = TRUE) +
+  scale_fill_gradient(low = col1, high = col2) +  
+  guides(fill = guide_legend(title = "Total Shooting Cases")) +
+  theme_bw() + 
+  theme_minimal() + 
+  labs(title = "Time Based Heatmap in Staten Island",
+       x = "Shooting Cases Per Hour", y = "Day of Week") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+heatmap_l
+```
