@@ -202,7 +202,7 @@ heatmap_m
 ```
 
 
-### In Staten_island 
+### In Staten Island 
 Obviously, this is the safest borough considering shooting cases. The highest total shooting number is 25. The highest risk time is 3 to 4 a.m. on Saturday. Monday evening at 19 is high risk as well except weekends.
 
 ```{r heatmap_Staten_Island, message = FALSE}

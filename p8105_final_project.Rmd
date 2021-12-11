@@ -85,6 +85,8 @@ COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths: contains the COVID
 
 ## Data Import and Cleaning
 
+Set up and import NYPD shooting data and COVID-19 data.
+
 ```{r setup, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(rvest)
@@ -103,26 +105,32 @@ options(
 )
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-```
-Load the historic and year-to-datedatasets of NYPD shooting incident
-```{r, message = FALSE, warning = FALSE}
-shooting_initial = 
-  read_csv("./data/NYPD_Shooting.csv") %>% janitor::clean_names()
-shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_names()
 
+shooting_initial = 
+  read_csv("./data/NYPD_Shooting.csv") %>% 
+  janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% 
+  janitor::clean_names()
+
+covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% 
+  as_tibble()
+
+```
+Cleaning NYPD shooting data:
+
+Format the data to use appropriate variable names and use `separate()` to break up the variable occur_date into year, month and day. Based on the result of checking null values in each columns below, we filled in missing values with appropriate data name. Also, create character and ordered factors for variables.
+
+```{r, message = FALSE, warning = FALSE}
 #A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
 shooting_2021 = shooting_2021 %>% 
   rename(lon_lat = new_georeferenced_column)
 
 shooting = rbind(shooting_initial, shooting_2021)
-```
-check null values in each column
-```{r, message = FALSE, warning = FALSE}
+
+#check null values in each column
 shooting %>%
   summarise_all(~ sum(is.na(.))) %>% knitr::kable()
-```
-For col boro
-```{r, message = FALSE, warning = FALSE}
+
 shooting = shooting %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
@@ -136,13 +144,13 @@ shooting = shooting %>%
   rename(borough = boro) %>% 
     mutate(date = str_c(month, day, year, sep = "/")) %>% 
   select(incident_key, date, everything())
-```  
+```
+
 
 Cleaning COVID-19 data:
 
 The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day. Irrelevant variables are excluded by `select()`. Borough information and case count in each borough are extracted by pivoting the variables in the raw datasets that contained information of both borough and case count into longer format.
 ```{r, message = FALSE, warning = FALSE}
-covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
 clean_covid = covid_counts %>% 
    janitor::clean_names() %>% 
    rename(date = date_of_interest) %>% 
@@ -320,7 +328,7 @@ heatmap_m
 ```
 
 
-### In Staten_island 
+### In Staten Island 
 Obviously, this is the safest borough considering shooting cases. The highest total shooting number is 25. The highest risk time is 3 to 4 a.m. on Saturday. Monday evening at 19 is high risk as well except weekends.
 
 ```{r heatmap_Staten_Island, message = FALSE}
