@@ -90,7 +90,7 @@ clean_covid = covid_counts %>%
 ```{r merge datasets and conunt incidence, message = FALSE, warning = FALSE,comment = FALSE}
 shooting_mini =
   shooting %>% 
-  filter(year == "2020") %>% 
+  filter(year == "2020"| year == "2021") %>% 
   select(c("date", "incident_key", "borough"))
 
 shooting_covid = 

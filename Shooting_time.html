@@ -13,8 +13,8 @@
 
 <title>Shooting Incidence Across Time</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -37,10 +37,10 @@
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
-<script src="site_libs/plotly-binding-4.10.0.9000/plotly.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
 <script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
-<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
-<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 <link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -450,11 +450,15 @@ shooting_year %&gt;%
   layout(title = &quot;Shooting Incidence Trend from 2006 to 2021&quot;,
          xaxis = list(title = &quot;Year&quot;),
          yaxis = list(title = &quot;Frequency&quot;))</code></pre>
-<div id="htmlwidget-99f062d51ad15d8e20af" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-99f062d51ad15d8e20af">{"x":{"visdat":{"21b522c286e7":["function () ","plotlyVisDat"]},"cur_data":"21b522c286e7","attrs":{"21b522c286e7":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Shooting Incidence Trend from 2006 to 2021","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category","categoryorder":"array","categoryarray":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],"y":[2055,1887,1959,1828,1912,1939,1717,1339,1464,1434,1208,970,958,967,1948,1531],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p>By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharply surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.</p>
+<div id="htmlwidget-09cb5b9b48f88d3c0d20" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-09cb5b9b48f88d3c0d20">{"x":{"visdat":{"62aa708255a2":["function () ","plotlyVisDat"]},"cur_data":"62aa708255a2","attrs":{"62aa708255a2":{"x":{},"y":{},"mode":"lines+markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Shooting Incidence Trend from 2006 to 2021","xaxis":{"domain":[0,1],"automargin":true,"title":"Year","type":"category","categoryorder":"array","categoryarray":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"],"y":[2055,1887,1959,1828,1912,1939,1717,1339,1464,1434,1208,970,958,967,1948,1531],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharp surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.</p>
 </div>
 <div id="distribution-of-shooting-case-of-months" class="section level3">
+<h3>Distribution of Shooting Case of Months</h3>
+<p>Then we take a look at average shooting cases between months from 2006 to 2021 in New York City.</p>
+</div>
+<div id="distribution-of-shooting-case-of-months-1" class="section level3">
 <h3>Distribution of Shooting Case of Months</h3>
 <p>Then we take a look of average shooting cases between months from 2006 to 2021 in the New York City.</p>
 <pre class="r"><code>shooting_month = shooting %&gt;%
@@ -467,9 +471,9 @@ shooting_month %&gt;%
   layout( title = &quot;The Distribution of Shooting Incidence by Month&quot;,
           xaxis = list(title = &quot;Month&quot;),
           yaxis = list(title = &quot;Frequency&quot;))</code></pre>
-<div id="htmlwidget-c903b94dead6179636e0" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c903b94dead6179636e0">{"x":{"visdat":{"21b555dd38f":["function () ","plotlyVisDat"]},"cur_data":"21b555dd38f","attrs":{"21b555dd38f":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"The Distribution of Shooting Incidence by Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1"],"y":[1600],"type":"bar","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2"],"y":[1238],"type":"bar","name":"2","marker":{"color":"rgba(211,164,122,1)","line":{"color":"rgba(211,164,122,1)"}},"textfont":{"color":"rgba(211,164,122,1)"},"error_y":{"color":"rgba(211,164,122,1)"},"error_x":{"color":"rgba(211,164,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["3"],"y":[1532],"type":"bar","name":"3","marker":{"color":"rgba(229,147,127,1)","line":{"color":"rgba(229,147,127,1)"}},"textfont":{"color":"rgba(229,147,127,1)"},"error_y":{"color":"rgba(229,147,127,1)"},"error_x":{"color":"rgba(229,147,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["4"],"y":[1827],"type":"bar","name":"4","marker":{"color":"rgba(156,159,194,1)","line":{"color":"rgba(156,159,194,1)"}},"textfont":{"color":"rgba(156,159,194,1)"},"error_y":{"color":"rgba(156,159,194,1)"},"error_x":{"color":"rgba(156,159,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["5"],"y":[2398],"type":"bar","name":"5","marker":{"color":"rgba(194,150,199,1)","line":{"color":"rgba(194,150,199,1)"}},"textfont":{"color":"rgba(194,150,199,1)"},"error_y":{"color":"rgba(194,150,199,1)"},"error_x":{"color":"rgba(194,150,199,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["6"],"y":[2656],"type":"bar","name":"6","marker":{"color":"rgba(223,155,177,1)","line":{"color":"rgba(223,155,177,1)"}},"textfont":{"color":"rgba(223,155,177,1)"},"error_y":{"color":"rgba(223,155,177,1)"},"error_x":{"color":"rgba(223,155,177,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["7"],"y":[3007],"type":"bar","name":"7","marker":{"color":"rgba(182,204,108,1)","line":{"color":"rgba(182,204,108,1)"}},"textfont":{"color":"rgba(182,204,108,1)"},"error_y":{"color":"rgba(182,204,108,1)"},"error_x":{"color":"rgba(182,204,108,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["8"],"y":[2999],"type":"bar","name":"8","marker":{"color":"rgba(209,217,69,1)","line":{"color":"rgba(209,217,69,1)"}},"textfont":{"color":"rgba(209,217,69,1)"},"error_y":{"color":"rgba(209,217,69,1)"},"error_x":{"color":"rgba(209,217,69,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["9"],"y":[2412],"type":"bar","name":"9","marker":{"color":"rgba(253,215,61,1)","line":{"color":"rgba(253,215,61,1)"}},"textfont":{"color":"rgba(253,215,61,1)"},"error_y":{"color":"rgba(253,215,61,1)"},"error_x":{"color":"rgba(253,215,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[2017],"type":"bar","name":"10","marker":{"color":"rgba(237,202,125,1)","line":{"color":"rgba(237,202,125,1)"}},"textfont":{"color":"rgba(237,202,125,1)"},"error_y":{"color":"rgba(237,202,125,1)"},"error_x":{"color":"rgba(237,202,125,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[1692],"type":"bar","name":"11","marker":{"color":"rgba(212,190,160,1)","line":{"color":"rgba(212,190,160,1)"}},"textfont":{"color":"rgba(212,190,160,1)"},"error_y":{"color":"rgba(212,190,160,1)"},"error_x":{"color":"rgba(212,190,160,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[1738],"type":"bar","name":"12","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p>The distribution of the shooting incidence by month has a bell-shape. The shooting cases concentrated in summer from May to September. The reason of this may related to the timing of memorial day and the labor day, some perpetrator would like to choose special holidays to raise more attention.</p>
+<div id="htmlwidget-5fd048782efd9c82530e" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5fd048782efd9c82530e">{"x":{"visdat":{"62aa3651e9ec":["function () ","plotlyVisDat"]},"cur_data":"62aa3651e9ec","attrs":{"62aa3651e9ec":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"The Distribution of Shooting Incidence by Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","type":"category","categoryorder":"array","categoryarray":["1","2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Frequency"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["1"],"y":[1600],"type":"bar","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["2"],"y":[1238],"type":"bar","name":"2","marker":{"color":"rgba(211,164,122,1)","line":{"color":"rgba(211,164,122,1)"}},"textfont":{"color":"rgba(211,164,122,1)"},"error_y":{"color":"rgba(211,164,122,1)"},"error_x":{"color":"rgba(211,164,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["3"],"y":[1532],"type":"bar","name":"3","marker":{"color":"rgba(229,147,127,1)","line":{"color":"rgba(229,147,127,1)"}},"textfont":{"color":"rgba(229,147,127,1)"},"error_y":{"color":"rgba(229,147,127,1)"},"error_x":{"color":"rgba(229,147,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["4"],"y":[1827],"type":"bar","name":"4","marker":{"color":"rgba(156,159,194,1)","line":{"color":"rgba(156,159,194,1)"}},"textfont":{"color":"rgba(156,159,194,1)"},"error_y":{"color":"rgba(156,159,194,1)"},"error_x":{"color":"rgba(156,159,194,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["5"],"y":[2398],"type":"bar","name":"5","marker":{"color":"rgba(194,150,199,1)","line":{"color":"rgba(194,150,199,1)"}},"textfont":{"color":"rgba(194,150,199,1)"},"error_y":{"color":"rgba(194,150,199,1)"},"error_x":{"color":"rgba(194,150,199,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["6"],"y":[2656],"type":"bar","name":"6","marker":{"color":"rgba(223,155,177,1)","line":{"color":"rgba(223,155,177,1)"}},"textfont":{"color":"rgba(223,155,177,1)"},"error_y":{"color":"rgba(223,155,177,1)"},"error_x":{"color":"rgba(223,155,177,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["7"],"y":[3007],"type":"bar","name":"7","marker":{"color":"rgba(182,204,108,1)","line":{"color":"rgba(182,204,108,1)"}},"textfont":{"color":"rgba(182,204,108,1)"},"error_y":{"color":"rgba(182,204,108,1)"},"error_x":{"color":"rgba(182,204,108,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["8"],"y":[2999],"type":"bar","name":"8","marker":{"color":"rgba(209,217,69,1)","line":{"color":"rgba(209,217,69,1)"}},"textfont":{"color":"rgba(209,217,69,1)"},"error_y":{"color":"rgba(209,217,69,1)"},"error_x":{"color":"rgba(209,217,69,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["9"],"y":[2412],"type":"bar","name":"9","marker":{"color":"rgba(253,215,61,1)","line":{"color":"rgba(253,215,61,1)"}},"textfont":{"color":"rgba(253,215,61,1)"},"error_y":{"color":"rgba(253,215,61,1)"},"error_x":{"color":"rgba(253,215,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[2017],"type":"bar","name":"10","marker":{"color":"rgba(237,202,125,1)","line":{"color":"rgba(237,202,125,1)"}},"textfont":{"color":"rgba(237,202,125,1)"},"error_y":{"color":"rgba(237,202,125,1)"},"error_x":{"color":"rgba(237,202,125,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[1692],"type":"bar","name":"11","marker":{"color":"rgba(212,190,160,1)","line":{"color":"rgba(212,190,160,1)"}},"textfont":{"color":"rgba(212,190,160,1)"},"error_y":{"color":"rgba(212,190,160,1)"},"error_x":{"color":"rgba(212,190,160,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[1738],"type":"bar","name":"12","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>The distribution of the shooting incidence by month has a bell shape. The shooting cases concentrated in summer from May to September. The reason for this may be related to the timing of memorial day and labor day, some perpetrators would like to choose special holidays to raise more attention.</p>
 </div>
 <div id="distribution-of-shooting-case-of-time-range-across-day" class="section level3">
 <h3>Distribution of Shooting Case of Time Range Across day</h3>
@@ -495,23 +499,69 @@ ggplot(shooting_time, aes(x = occur_time_range, y = case_numb, fill = occur_time
        title = &quot;Distribution of Shooting Case by Day&quot;)</code></pre>
 <p><img src="Shooting_time_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>#pie chart of ratio of shooting cases in a day
-ggplot(shooting_time, aes(x = &quot;&quot;, y = case_numb, fill = occur_time_range)) +
-  geom_bar(width = 1, stat = &quot;identity&quot;) +
+shooting_time2 = shooting %&gt;% 
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = &quot;%H&quot;)) %&gt;% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %&gt;% 
+  group_by(occur_time_hour) %&gt;% 
+  add_count(incident_key, name = &quot;n_shooting&quot;) %&gt;% 
+  distinct() %&gt;% 
+  mutate(occur_time_range = case_when(
+    occur_time_hour &gt;= 0 &amp; occur_time_hour &lt; 6 ~ &quot;0-6&quot;,
+    occur_time_hour &gt;= 6 &amp; occur_time_hour &lt; 12 ~ &quot;6-12&quot;,
+    occur_time_hour &gt;= 12 &amp; occur_time_hour &lt; 18 ~ &quot;12-18&quot;,
+    occur_time_hour &gt;= 18 &amp; occur_time_hour &lt; 24 ~ &quot;18-24&quot;))
+shooting_time2 = shooting_time2 %&gt;% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c(&quot;0-6&quot;,&quot;6-12&quot;,&quot;12-18&quot;,&quot;18-24&quot;))) %&gt;% add_count(occur_time_range, wt = n_shooting, name = &quot;total_n_shooting&quot;)
+
+shooting_time2 = shooting_time2 %&gt;% 
+  group_by(occur_time_range) %&gt;% # Variable to be transformed
+  count() %&gt;% 
+  mutate(total_n = c(1537 + 4394 + 9232 + 9953)) %&gt;% 
+  mutate(perc = `n` / `total_n`) %&gt;% 
+  arrange(perc) %&gt;%
+  mutate(labels = scales::percent(perc))
+
+
+ggplot(shooting_time2, aes(x = &quot;&quot;, y = n, fill = occur_time_range)) +
+  geom_bar(width = 1, stat = &quot;identity&quot;) + 
+  geom_label(aes(label = labels),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
   coord_polar(&quot;y&quot;, start = 0) +
   scale_fill_brewer(palette = &quot;Pastel1&quot;) +
-  theme_void() + 
+  theme_void() +
   guides(fill = guide_legend(title = &quot;occur Time range&quot;)) +
   labs(title = &quot;Pie Chart for Distribution of Shooting Case by Day&quot;) +
   theme(legend.position = &quot;right&quot;)</code></pre>
 <p><img src="Shooting_time_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
-<p>From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.</p>
+<p>Most shooting cases happen in the evening and late at night, concentrated in 18-24 and 0-6. The pie chart clearly shows the occupy of shootings time range take place in a day.</p>
+<pre class="r"><code>shooting_time_hour = shooting %&gt;% 
+##format the occur_time variable to only hours.
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = &quot;%H&quot;)) %&gt;% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %&gt;% 
+  group_by(occur_time_hour,vic_sex,borough,vic_race,vic_age_group,perp_sex,perp_race) %&gt;%
+  add_count(borough, name = &quot;n_shooting&quot;) %&gt;%
+  summarise(case_numb = n())
+
+#divide day time to 4 groups: 0-6;6-12;12-18;18-24
+shooting_time_hour = shooting_time_hour %&gt;% 
+  mutate(occur_time_range = case_when(
+    occur_time_hour &gt;= 0 &amp; occur_time_hour &lt; 6 ~ &quot;0-6&quot;,
+    occur_time_hour &gt;= 6 &amp; occur_time_hour &lt; 12 ~ &quot;6-12&quot;,
+    occur_time_hour &gt;= 12 &amp; occur_time_hour &lt; 18 ~ &quot;12-18&quot;,
+    occur_time_hour &gt;= 18 &amp; occur_time_hour &lt; 24 ~ &quot;18-24&quot;))
+shooting_time_hour = shooting_time_hour %&gt;% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c(&quot;0-6&quot;,&quot;6-12&quot;,&quot;12-18&quot;,&quot;18-24&quot;)))
+
+ggplot(shooting_time_hour, aes(x = occur_time_range, y = case_numb, fill = vic_sex)) + geom_bar(stat = &quot;identity&quot;, position = position_dodge()) + labs(x = &quot;Occur Time Range&quot;,
+       y = &quot;Frequency&quot;,
+       title = &quot;Distribution of Shooting Case Across Time-Range Between Vic_Sex&quot;)</code></pre>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>We observed that no matter in what time range, male victims are overwhelmingly higher than female victims and this is due to more males involved in shooting cases. There is no obvious difference in number between time range for female victims, which means females are vulnerable all the time. For males, there is a distinct raise from 6-12 to 18-24.</p>
 </div>
-<div id="distribution-of-shooting-case-across-month-in-2020" class="section level3">
-<h3>Distribution of shooting case across month in 2020</h3>
-<p>We would like to focus the gun violence in the year of 2020 as a critical year of surge.</p>
-</div>
-<div id="since-the-covid-19-starts-from-march-2020-to-see-if-there-any-relation-between-shooting-and-covid." class="section level3">
-<h3>(since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)</h3>
+<div id="distribution-of-shooting-case-across-the-month-in-2020" class="section level3">
+<h3>Distribution of shooting case across the month in 2020</h3>
+<p>We would like to focus the gun violence in the year 2020 as a critical year of a surge. (Since the covid-19 starts from March 2020, to see if there is any relation between shooting and COVID.)</p>
 <pre class="r"><code>shooting_2020 = shooting %&gt;%
   filter(year == &quot;2020&quot;) %&gt;% 
   mutate(month = as.factor(month)) %&gt;% 
@@ -522,9 +572,8 @@ ggplot(shooting_2020, aes(x = month, y = n_obs, fill = month)) + geom_col(alpha 
   x = &quot;Month&quot;,
   y = &quot;Frequency&quot;,
   title = &quot;Distribution of Shooting Case across month in 2020 in NYC&quot;)</code></pre>
-<p><img src="Shooting_time_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the city shut down early in the pandemic. The spike of shooting cases during June to August, which is mainly because of the death of George Floyd.</p>
-<p>Since 2020 is the critical year, we would like to analyze the average shooting case by month between year 2019 and 2020.</p>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-6-1.png" width="672" /> The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the intact of shelter-in-place orders and social distancing requirements in the pandemic. Yet starting in the summer, shooting cases reach the spike during June to August, which may also be fueled by the death of George Floyd.</p>
+<p>Since 2020 is the critical year, we would like to analyze the average shooting case by month between 2019 and 2020.</p>
 <pre class="r"><code>shooting_2019_2020 = shooting %&gt;%
   filter(year == &quot;2019&quot; | year == &quot;2020&quot;) %&gt;% 
   mutate(month = as.factor(month)) %&gt;% 
@@ -535,8 +584,12 @@ ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_ba
   x = &quot;Month&quot;,
   y = &quot;Frequency&quot;,
   title = &quot;Shooting Case Across Month in NYC in 2019 &amp; 2020&quot;)</code></pre>
-<p><img src="Shooting_time_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same, which reinforce that the number of shooting cases is high is summer.</p>
+<p><img src="Shooting_time_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Besides year-on-year growth between 2019 to 2020, the distribution of shooting case across the month is the same, which reinforce that the number of shooting cases is high in summer. On the other side, it clearly indicates that gun violence surged after March(the time that CDC announced the pandemic). This rise is that the pandemic aggravated the very factors driving gun violence.</p>
+</div>
+<div id="summary" class="section level3">
+<h3>Summary</h3>
+<p>After almost one and a half-decade decrease in shooting cases in New York City, there is a sharp growth in the year 2020. The collision of these COVID-19 pandemics and gun shoot offers possibility amid great loss. There was hope that shelter-in-place order would not only reduce the spread of COVID-19 but also help reduce city-based gun violence. However, under the prolonged emotional and financial stress, shootings increased to record levels in 2020.</p>
 </div>
 </div>
 

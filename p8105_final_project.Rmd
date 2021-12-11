@@ -364,6 +364,7 @@ heatmap_l
 For the shooting incidents across time, we use three different levels to analyze. 
 Firstly, we compared shooting case year by year.
 ### Distribution of Shooting Case of Years
+
 ```{r, message = FALSE, warning = FALSE}
 shooting_year = shooting %>%
   group_by(year) %>% 
@@ -376,11 +377,11 @@ shooting_year %>%
          yaxis = list(title = "Frequency"))
 ```
 
-By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharply surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.
+By observing the data set, the shooting incidence gradually decrease from 2055 cases in 2006 to 967 cases in 2019. However, due to the Covid-19 pandemic and responses to large-scale protests over the killing of George Floyd, there is a sharp surge of shooting incidents in 2020 which have 1948 cases. Since the data for 2021 is only from January to September 30th, we are not sure whether there is a decrease in the year 2021 compared to 2020.
 
 
 ### Distribution of Shooting Case of Months
-Then we take a look of average shooting cases between months from 2006 to 2021 in the New York City.
+Then we take a look at average shooting cases between months from 2006 to 2021 in New York City.
 ```{r, message = FALSE, warning = FALSE}
 shooting_month = shooting %>%
   mutate(month = as.factor(month)) %>% 
@@ -393,10 +394,7 @@ shooting_month %>%
           xaxis = list(title = "Month"),
           yaxis = list(title = "Frequency"))
 ```
-
-The distribution of the shooting incidence by month has a bell-shape. The shooting case concentrated in summer from May to September. The reason of this may related to the time of memorial day and the labor day.
-
-
+The distribution of the shooting incidence by month has a bell shape. The shooting case concentrated in summer from May to September. The reason for this may be related to the time of memorial day and labor day.
 
 
 ### Distribution of Shooting Case of Time Range Across day
@@ -423,20 +421,73 @@ ggplot(shooting_time, aes(x = occur_time_range, y = case_numb, fill = occur_time
        title = "Distribution of Shooting Case by Day")
 
 #pie chart of ratio of shooting cases in a day
-ggplot(shooting_time, aes(x = "", y = case_numb, fill = occur_time_range)) +
-  geom_bar(width = 1, stat = "identity") +
+shooting_time2 = shooting %>% 
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = "%H")) %>% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %>% 
+  group_by(occur_time_hour) %>% 
+  add_count(incident_key, name = "n_shooting") %>% 
+  distinct() %>% 
+  mutate(occur_time_range = case_when(
+    occur_time_hour >= 0 & occur_time_hour < 6 ~ "0-6",
+    occur_time_hour >= 6 & occur_time_hour < 12 ~ "6-12",
+    occur_time_hour >= 12 & occur_time_hour < 18 ~ "12-18",
+    occur_time_hour >= 18 & occur_time_hour < 24 ~ "18-24"))
+shooting_time2 = shooting_time2 %>% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c("0-6","6-12","12-18","18-24"))) %>% add_count(occur_time_range, wt = n_shooting, name = "total_n_shooting")
+
+shooting_time2 = shooting_time2 %>% 
+  group_by(occur_time_range) %>% # Variable to be transformed
+  count() %>% 
+  mutate(total_n = c(1537 + 4394 + 9232 + 9953)) %>% 
+  mutate(perc = `n` / `total_n`) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc))
+
+
+ggplot(shooting_time2, aes(x = "", y = n, fill = occur_time_range)) +
+  geom_bar(width = 1, stat = "identity") + 
+  geom_label(aes(label = labels),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
   coord_polar("y", start = 0) +
   scale_fill_brewer(palette = "Pastel1") +
-  theme_void() + 
+  theme_void() +
   guides(fill = guide_legend(title = "occur Time range")) +
   labs(title = "Pie Chart for Distribution of Shooting Case by Day") +
   theme(legend.position = "right")
 ```
 
-From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.
+Most shooting cases happen in the evening and late at night, concentrated in 18-24 and 0-6. The pie chart clearly shows the occupy of shootings time range take place in a day.
 
-### Distribution of shooting case across month in 2020
-We would like to focus the gun violence in the year of 2020 as a critical year of surge. (Since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
+```{r}
+shooting_time_hour = shooting %>% 
+##format the occur_time variable to only hours.
+  mutate(occur_time_hour = format(as.POSIXct(occur_time), format = "%H")) %>% 
+  mutate(occur_time_hour = as.numeric(occur_time_hour)) %>% 
+  group_by(occur_time_hour,vic_sex,borough,vic_race,vic_age_group,perp_sex,perp_race) %>%
+  add_count(borough, name = "n_shooting") %>%
+  summarise(case_numb = n())
+
+#divide day time to 4 groups: 0-6;6-12;12-18;18-24
+shooting_time_hour = shooting_time_hour %>% 
+  mutate(occur_time_range = case_when(
+    occur_time_hour >= 0 & occur_time_hour < 6 ~ "0-6",
+    occur_time_hour >= 6 & occur_time_hour < 12 ~ "6-12",
+    occur_time_hour >= 12 & occur_time_hour < 18 ~ "12-18",
+    occur_time_hour >= 18 & occur_time_hour < 24 ~ "18-24"))
+shooting_time_hour = shooting_time_hour %>% 
+  mutate(occur_time_range = factor(occur_time_range, levels = c("0-6","6-12","12-18","18-24")))
+
+ggplot(shooting_time_hour, aes(x = occur_time_range, y = case_numb, fill = vic_sex)) + geom_bar(stat = "identity", position = position_dodge()) + labs(x = "Occur Time Range",
+       y = "Frequency",
+       title = "Distribution of Shooting Case Across Time-Range Between Vic_Sex")
+```
+
+We observed that no matter in what time range, male victims are overwhelmingly higher than female victims and this is due to more males involved in shooting cases. There is no obvious difference in number between time range for female victims, which means females are vulnerable all the time. For males, there is a distinct raise from 6-12 to 18-24.
+
+
+### Distribution of shooting case across the month in 2020
+We would like to focus the gun violence in the year 2020 as a critical year of a surge. (Since the covid-19 starts from March 2020, to see if there is any relation between shooting and COVID.)
 ```{r, message = FALSE, warning = FALSE}
 shooting_2020 = shooting %>%
   filter(year == "2020") %>% 
@@ -450,10 +501,9 @@ ggplot(shooting_2020, aes(x = month, y = n_obs, fill = month)) + geom_col(alpha 
   title = "Distribution of Shooting Case across month in 2020 in NYC")
 
 ```
-The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the city shut down early in the pandemic. The spike of shooting cases during June to August, which is mainly because of the death of George Floyd. 
+The major rise in gun violence in the city began in 2020, after a period in which violent crime dropped to its lowest levels in more than six decades. For the first half of the year, Gun violence is relatively low as the intact of shelter-in-place orders and social distancing requirements in the pandemic. Yet starting in the summer, shooting cases reach the spike during June to August, which may also be fueled by the death of George Floyd. 
 
-
-Since 2020 is the critical year, we would like to analyze the average shooting case by month between year 2019 and 2020.
+Since 2020 is the critical year, we would like to analyze the average shooting case by month between 2019 and 2020.
 ```{r, message = FALSE, warning = FALSE}
 shooting_2019_2020 = shooting %>%
   filter(year == "2019" | year == "2020") %>% 
@@ -466,7 +516,10 @@ ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_ba
   y = "Frequency",
   title = "Shooting Case Across Month in NYC in 2019 & 2020")
 ```
-According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same, which reinforce that the number of shooting cases is high is summer.
+Besides year-on-year growth between 2019 to 2020, the distribution of shooting case across the month is the same, which reinforce that the number of shooting cases is high in summer. On the other side, it clearly indicates that gun violence surged after March(the time that CDC announced the pandemic). This rise is that the pandemic aggravated the very factors driving gun violence. 
+
+### Summary
+After almost one and a half-decade decrease in shooting cases in New York City, there is a sharp growth in the year 2020. The collision of these COVID-19 pandemics and gun shoot offers possibility amid great loss. There was hope that shelter-in-place order would not only reduce the spread of COVID-19 but also help reduce city-based gun violence. However, under the prolonged emotional and financial stress, shootings increased to record levels in 2020.
 
 
 
@@ -1024,6 +1077,35 @@ The goal of this section was to find whether there is any relationship between t
 
 Fit a linear regression model for total shooting case with total COVID case as predictor.
 
+```{r,message = FALSE, warning = FALSE,comment = FALSE}
+shooting_mini =
+  shooting %>% 
+  filter(year == "2020"|year == "2021") %>% 
+  select(c("date", "incident_key", "borough"))
+
+shooting_covid = 
+  merge(x = shooting_mini, y = clean_covid, by = c("date", "borough")) %>% 
+  relocate("date", "month", "day", "year", everything()) %>% 
+  group_by(date) %>% 
+  add_count(borough, name = "borough_n_victim") %>% # victim number equals to the count of incident_key (includind duplicate)
+  distinct() %>% 
+  add_count(borough, name = "borough_n_shooting") %>% # shooting number equals to the count of distinct incident_key
+  select(-incident_key) %>% 
+  distinct() %>% 
+  add_count(date, wt = borough_n_victim, name = "total_n_victim") %>% 
+  add_count(date, wt = borough_n_shooting, name = "total_n_shooting") %>% 
+  mutate(
+    borough = recode(borough, 
+                     "bronx" = "Bronx",
+                     "brooklyn" = "Brooklyn",
+                     "manhattan" = "Manhattan",
+                     "queens" = "Queens",
+                     "staten_island" = "Staten Island")
+  )
+```
+```
+
+
 ```{r, message = FALSE, warning = FALSE,comment = FALSE}
 original_lm = lm(total_case_count ~ total_n_shooting + borough + borough_case_count + borough_n_shooting + borough_n_victim, data = shooting_covid) 
 
@@ -1102,7 +1184,7 @@ cv %>%
   geom_boxplot(alpha = 0.5, color = "white") 
 ```
 
-According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2. 
+According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits a little bit better than model 1. The two models are similar since we only drop one parameter for model 2. 
 
 
 
