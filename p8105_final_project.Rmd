@@ -335,7 +335,7 @@ shooting_year = shooting %>%
 #visualization shooting incidence trend
 shooting_year %>% 
   plot_ly( x = ~year, y = ~n_obs, type = "scatter", mode = "lines+markers") %>% 
-  layout(title = "Shooting Incidence Trend from 2006 to 2020",
+  layout(title = "Shooting Incidence Trend from 2006 to 2021",
          xaxis = list(title = "Year"),
          yaxis = list(title = "Frequency"))
 ```
@@ -1018,10 +1018,21 @@ cv %>%
 According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2. 
 
 
-### Conclusion
-#### Regression Conclusion
+
+### Regression Conclusion
 
 Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Disability, smoking, unemployment rate positively associate with the firearm crude death rate. Law strength negatively associate with crude death rate.
 
 
 
+
+## Disscussion
+
+### Main Findings
+
+* Based on the time based heatmap, we can see a significant characteristics of the time the shooting cases occur: mostly occurred during the midnight till early in the morning, with an obvious increase on Saturday and Sunday.
+* The year 2006 to 2019 has witnessed a gradually decreasing of number of shooting cases with some drastic decline on certain year. However, in year 2020, shooting cases increased dramatically to over 1800 cases. This may be related to COVID-19.
+* The month June, July and August have more shooting incidences occurred compared to the rest of the year, which has contradicted our original thought of massive amounts of shootings may happen at the end of the year.
+* Overall, Bronx and Brooklyn have more shooting cases.
+* Most of both the perpetrators and victims are in the age range `18-24` and `25-44`, and is Black or White Hispanic, male.
+* For each borough except Staten Island, there is a general trend that higher number of shooting cases is associated with fewer COVID cases.
