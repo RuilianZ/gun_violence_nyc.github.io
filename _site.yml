@@ -18,7 +18,7 @@ navbar:
       - text: "Heatmap of Each Borough"
         href: heatmap.html
       - text: "Shooting and COVID"
-        href: shooting_and_covid.html 
+        href: shooting_covid.html 
       - text: "Regression Analysis"
         href: regression_model.html
     - text: "Shiny Dashboard"
