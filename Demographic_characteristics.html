@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Demographic characteristics</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="p8105_final_project.html">Data Exploration</a>
+</li>
+<li>
+  <a href="shooting_map.html">Map</a>
+</li>
+<li>
+  <a href="shooting_time.html">Time</a>
+</li>
+<li>
+  <a href="Demographic_characteristics.html">Demographic characteristics</a>
+</li>
+<li>
+  <a href="shiny_dashboard.html">Shiny Dashboard</a>
+</li>
+<li>
+  <a href="mailto:&lt;rz2570@cumc.columbia.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/RuilianZ/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Demographic characteristics</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)
+library(rvest)
+library(plotly)
+library(patchwork)
+
+theme_set(theme_minimal() + theme(legend.position = &quot;bottom&quot;))
+options(
+  ggplot2.continuous.colour = &quot;viridis&quot;,
+  ggplot2.continuous.fill = &quot;viridis&quot;
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d</code></pre>
+<pre class="r"><code>shooting_initial = 
+  read_csv(&quot;./data/NYPD_Shooting.csv&quot;) %&gt;% janitor::clean_names()
+shooting_2021 = read_csv(&quot;./data/NYPD_shooting_New.csv&quot;) %&gt;% janitor::clean_names()
+
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %&gt;% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
+shooting %&gt;%
+  summarise_all(~ sum(is.na(.)))</code></pre>
+<pre><code>FALSE # A tibble: 1 x 19
+FALSE   incident_key occur_date occur_time  boro precinct jurisdiction_code
+FALSE          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
+FALSE 1            0          0          0     0        0                 3
+FALSE # ... with 13 more variables: location_desc &lt;int&gt;,
+FALSE #   statistical_murder_flag &lt;int&gt;, perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;,
+FALSE #   perp_race &lt;int&gt;, vic_age_group &lt;int&gt;, vic_sex &lt;int&gt;, vic_race &lt;int&gt;,
+FALSE #   x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;, latitude &lt;int&gt;, longitude &lt;int&gt;,
+FALSE #   lon_lat &lt;int&gt;</code></pre>
+<pre class="r"><code>shooting = shooting %&gt;% 
+  mutate(boro = as.factor(boro)) %&gt;%
+  mutate(location_desc = replace_na(location_desc, &quot;NONE&quot;)) %&gt;%
+  mutate(location_desc = as.factor(location_desc)) %&gt;%
+  separate(occur_date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;)) %&gt;% 
+  mutate(month = as.numeric(month)) %&gt;% 
+  arrange(year, month) %&gt;% 
+ # mutate(month = month.name[month]) %&gt;% 
+  mutate(year = as.character(year)) %&gt;% 
+  mutate(boro = tolower(boro)) %&gt;% 
+  mutate(boro = if_else(boro == &quot;staten island&quot;, &quot;staten_island&quot;, boro)) %&gt;% 
+  rename(borough = boro) %&gt;% 
+    mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
+  select(incident_key, date, everything())</code></pre>
+<p>Based on the shooting dataset we obtained, we could study the demographic characteristics of the perpetrators and victims to see whether there exists some potential patterns or not.</p>
+<div id="perpetrators-characteristics" class="section level2">
+<h2>Perpetrators’ Characteristics</h2>
+<p>First, let’s look at perpetrators’ demographic information.</p>
+<p>According to the previously checked numbers of null values in each column, there are <code>8295</code> values missing in <code>perp_age_group</code> and <code>8261</code> values missing in both <code>perp_sex</code> and <code>perp_race</code>. The information missing maybe not available or unknown at the time of the report and should be considered as either “Unknown/Not Available/Not Reported.”</p>
+<p>The same shooting incident may have several victims but corresponding to the same perpetrator. Therefore, for the perpetrators’ characteristics, we filter the data to make sure the incident key is unique to avoid counting the same perpetrators several times.</p>
+<pre class="r"><code># group by perp_age_group and do a little summary
+sum_perp_age = 
+  shooting %&gt;% 
+  mutate(
+    perp_age_group = ifelse(is.na(perp_age_group), &quot;UNKNOWN&quot;, perp_age_group),
+    perp_age_group = as.factor(perp_age_group)
+  ) %&gt;% 
+  # count distinct incident case
+  distinct(incident_key, .keep_all = TRUE) %&gt;% 
+  group_by(perp_age_group) %&gt;% 
+  arrange(perp_age_group) %&gt;%
+  relocate(perp_age_group) %&gt;% 
+  # filter the abnormal value
+  filter(!(perp_age_group %in% c(&quot;1020&quot;, &quot;224&quot;, &quot;940&quot;))) %&gt;% 
+  summarize(number = n())
+
+# Visualize by a pie chart
+sum_perp_age %&gt;% 
+  mutate(perc = scales::percent(number/sum(number))) %&gt;% 
+  ggplot(aes(x = &quot;&quot;, y = perc, fill = perp_age_group)) +
+  geom_bar(width = 1, stat = &quot;identity&quot;) +
+  geom_text(aes(label = perc),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar(&quot;y&quot;, start = 0) +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  theme_void() + 
+  guides(fill = guide_legend(title = &quot;Perpetrator&#39;s Age Group&quot;)) +
+  labs(title = &quot;Pie Chart for Different Perpetrator Age Groups&quot;) +
+  theme(legend.position = &quot;right&quot;)</code></pre>
+<p><img src="Demographic_characteristics_files/figure-html/perpetrator%20age%20group-1.png" width="672" /></p>
+<p>Therefore, except those with unknown age group, most perpetrators are in the age group <code>18-24</code> and <code>24-44</code>, which takes up 39.4% in total. We can see that most of them are quite young or in their middle age. The large percentage of unknown values may also because some of the perpetrators are still unknown/uncaught, which leaves a potential threat to the community.</p>
+<p>Now look at perpetrators’ sex and race. Here, we only focus on perpetrators with known sex.</p>
+<pre class="r"><code>perp_sex_race = 
+  shooting %&gt;% 
+  distinct(incident_key, .keep_all = TRUE) %&gt;% 
+  mutate(
+    perp_sex = ifelse(is.na(perp_sex), &quot;U&quot;, perp_sex),
+    perp_race = ifelse(is.na(perp_race), &quot;UNKNOWN&quot;, perp_race)
+  ) %&gt;% 
+  mutate(perp_race = fct_infreq(as.factor(perp_race))) %&gt;%
+  group_by(perp_sex, perp_race) %&gt;% 
+  relocate(perp_sex, perp_race) %&gt;% 
+  arrange(perp_sex, perp_race) %&gt;% 
+  summarise(num = n()) %&gt;% 
+  mutate(perc = round(num/sum(num), digits = 2))
+
+perp_sex_race %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">perp_sex</th>
+<th align="left">perp_race</th>
+<th align="right">num</th>
+<th align="right">perc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">UNKNOWN</td>
+<td align="right">3</td>
+<td align="right">0.01</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">BLACK</td>
+<td align="right">136</td>
+<td align="right">0.67</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">WHITE HISPANIC</td>
+<td align="right">39</td>
+<td align="right">0.19</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">BLACK HISPANIC</td>
+<td align="right">9</td>
+<td align="right">0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">WHITE</td>
+<td align="right">12</td>
+<td align="right">0.06</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">ASIAN / PACIFIC ISLANDER</td>
+<td align="right">2</td>
+<td align="right">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">UNKNOWN</td>
+<td align="right">286</td>
+<td align="right">0.03</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">BLACK</td>
+<td align="right">7602</td>
+<td align="right">0.74</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">WHITE HISPANIC</td>
+<td align="right">1370</td>
+<td align="right">0.13</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">BLACK HISPANIC</td>
+<td align="right">776</td>
+<td align="right">0.08</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">WHITE</td>
+<td align="right">197</td>
+<td align="right">0.02</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">ASIAN / PACIFIC ISLANDER</td>
+<td align="right">83</td>
+<td align="right">0.01</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">U</td>
+<td align="left">UNKNOWN</td>
+<td align="right">9225</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">U</td>
+<td align="left">BLACK</td>
+<td align="right">15</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">U</td>
+<td align="left">BLACK HISPANIC</td>
+<td align="right">2</td>
+<td align="right">0.00</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Get the position for the label of the pie charts
+position1 = 
+  perp_sex_race %&gt;% 
+  filter(perp_sex != &quot;U&quot;) %&gt;%
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
+
+# pie chart
+perp_sex_race %&gt;% 
+  filter(perp_sex != &quot;U&quot;) %&gt;%
+  ggplot(aes(x = &quot;&quot; , y = perc*100, fill = fct_inorder(perp_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = &quot;y&quot;) +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  ggrepel::geom_label_repel(data = position1,
+                   aes(y = pos, label = paste0(perc*100, &quot;%&quot;)),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = &quot;Perpetrator&#39;s Race&quot;)) +
+  theme_void() +
+  labs(title = &quot;Pie Chart For Different Perpetrator Race in Different Sex&quot;) +
+  facet_grid(.~perp_sex)</code></pre>
+<p><img src="Demographic_characteristics_files/figure-html/perpetrator%20sex%20and%20race-1.png" width="672" /></p>
+<p>From the <code>perp_sex_race</code> chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest percentage are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%). Two races with lowest percentage are American Indian/Alaskan Native (nearly 0% for both male and female perpetrators) and Asian/Pacific Islanders (M: 1%, F: 1%). The race information of perpetrators does not vary a lot in different sex.</p>
+</div>
+<div id="victims-characteristics" class="section level2">
+<h2>Victims’ Characteristics</h2>
+<p>Another important demographic information in shooting incidents is about the victim. What kind of characteristics do they hold? Is there some people more likely to become the victims in such tragedies?</p>
+<p>There is only a very limited amount of missing values in the victims’ demographic characteristics: <code>vic_age_group</code>, <code>vic_sex</code> and <code>vic_race</code>, which makes sense cause it’s easier to gather the victims’ information compared to the criminals in shootings.</p>
+<p>What age groups are most victims in?</p>
+<pre class="r"><code>vic_age_group =
+  shooting %&gt;% 
+  mutate(as.factor(vic_age_group)) %&gt;%
+  group_by(vic_age_group) %&gt;% 
+  relocate(vic_age_group) %&gt;% 
+  arrange(vic_age_group) %&gt;% 
+  summarise(num = n())
+
+
+vic_age_group %&gt;% 
+  mutate(perc = scales::percent(num/sum(num))) %&gt;% 
+  ggplot(aes(x = &quot;&quot;, y = perc, fill = vic_age_group)) +
+  geom_bar(width = 1, stat = &quot;identity&quot;) +
+  geom_text(aes(label = perc),
+            position = position_stack(vjust = 0.5)) +
+  coord_polar(&quot;y&quot;, start = 0) +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  theme_void() + 
+  guides(fill = guide_legend(title = &quot;Victim&#39;s Age Group&quot;)) +
+  theme(legend.position = &quot;right&quot;) +
+  labs(
+    x = &quot;Victim&#39;s Age Group&quot;,
+    y = &quot;Number of Victims&quot;,
+    title = &quot;Number of Victims in Different Age Groups&quot;
+  )</code></pre>
+<p><img src="Demographic_characteristics_files/figure-html/victim%20age%20group-1.png" width="672" /></p>
+<p>As shown above, most victims are in the age group <code>18-24</code> and <code>25-44</code>.</p>
+<p>For victims’ sex and race, similarly, check the pie chart.</p>
+<pre class="r"><code># The sex and race characteristics of victims
+vic_sex_race = 
+  shooting %&gt;% 
+  mutate(vic_race = fct_infreq(as.factor(vic_race))) %&gt;% 
+  group_by(vic_sex, vic_race) %&gt;% 
+  relocate(vic_sex, vic_race) %&gt;% 
+  arrange(vic_sex, vic_race) %&gt;% 
+  summarise(num = n()) %&gt;% 
+  mutate(perc = round(num/sum(num), digits = 2))
+
+vic_sex_race %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">vic_sex</th>
+<th align="left">vic_race</th>
+<th align="right">num</th>
+<th align="right">perc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">BLACK</td>
+<td align="right">1604</td>
+<td align="right">0.68</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">WHITE HISPANIC</td>
+<td align="right">409</td>
+<td align="right">0.17</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">BLACK HISPANIC</td>
+<td align="right">215</td>
+<td align="right">0.09</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">WHITE</td>
+<td align="right">105</td>
+<td align="right">0.04</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">ASIAN / PACIFIC ISLANDER</td>
+<td align="right">30</td>
+<td align="right">0.01</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">UNKNOWN</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
+<td align="right">1</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">BLACK</td>
+<td align="right">16337</td>
+<td align="right">0.72</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">WHITE HISPANIC</td>
+<td align="right">3262</td>
+<td align="right">0.14</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">BLACK HISPANIC</td>
+<td align="right">2218</td>
+<td align="right">0.10</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">WHITE</td>
+<td align="right">541</td>
+<td align="right">0.02</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">ASIAN / PACIFIC ISLANDER</td>
+<td align="right">316</td>
+<td align="right">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">UNKNOWN</td>
+<td align="right">57</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
+<td align="right">8</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="odd">
+<td align="left">U</td>
+<td align="left">BLACK</td>
+<td align="right">4</td>
+<td align="right">0.33</td>
+</tr>
+<tr class="even">
+<td align="left">U</td>
+<td align="left">UNKNOWN</td>
+<td align="right">8</td>
+<td align="right">0.67</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># To see the percentage of different race, we can draw a pie chart
+
+# Let&#39;s get the position for the label of the pie charts first
+position2 = 
+  vic_sex_race %&gt;% 
+  filter(vic_sex != &quot;U&quot;) %&gt;%
+  mutate(csum = rev(cumsum(rev(perc*100))), 
+         pos = perc*100/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), perc*100/2, pos))
+
+# pie chart
+vic_sex_race %&gt;% 
+  filter(vic_sex != &quot;U&quot;) %&gt;%
+  ggplot(aes(x = &quot;&quot; , y = perc*100, fill = fct_inorder(vic_race))) +
+  geom_col(width = 1, color = 1) +
+  coord_polar(theta = &quot;y&quot;) +
+  scale_fill_brewer(palette = &quot;Pastel1&quot;) +
+  ggrepel::geom_label_repel(data = position2,
+                   aes(y = pos, label = paste0(perc*100, &quot;%&quot;)),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  guides(fill = guide_legend(title = &quot;Victim&#39;s Race&quot;)) +
+  theme_void() +
+  labs(title = &quot;Pie Chart for Different Victim Race in Different Sex&quot;) +
+  facet_grid(.~vic_sex)</code></pre>
+<p><img src="Demographic_characteristics_files/figure-html/victim%20sex%20and%20race-1.png" width="672" /></p>
+<p>Most of the victims are Black (M: 72%, F: 69%), and the number of male victims in shooting cases is much more than female victims.</p>
+<p>Put the sex, race information of both the perpetrators and victims together to compare.</p>
+<pre class="r"><code># Perpetrators&#39;
+bar_perp_sex_race =
+  perp_sex_race %&gt;% 
+  ggplot(aes(x = perp_race, y = num, fill = perp_sex)) +
+  geom_bar(
+    stat = &quot;identity&quot;, position = position_dodge()
+  ) +
+  labs(
+    x = &quot;Perpetrator&#39;s Race&quot;,
+    y = &quot;Number of Perpetrators&quot;,
+    title = &quot;Number of Perpetrators in Different Races&quot;
+  ) +
+  guides(fill = guide_legend(title = &quot;Perpetrator&#39;s Sex&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = &quot;right&quot;)
+
+# Victims
+bar_vic_sex_race = 
+  vic_sex_race %&gt;% 
+  ggplot(aes(x = vic_race, y = num, fill = vic_sex)) +
+  geom_bar(
+    stat = &quot;identity&quot;, position = position_dodge()
+  ) +
+  labs(
+    x = &quot;Victim&#39;s Race&quot;,
+    y = &quot;Number of Victims&quot;,
+    title = &quot;Number of Victims in Different Races&quot;
+  ) +
+  guides(fill = guide_legend(title = &quot;Victim&#39;s Sex&quot;)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = &quot;right&quot;)
+
+bar_perp_sex_race + bar_vic_sex_race</code></pre>
+<p><img src="Demographic_characteristics_files/figure-html/comparation-1.png" width="672" /></p>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>Most of both the perpetrators and victims are in the age range <code>18-24</code> and <code>25-44</code>, and is Black or White Hispanic, male. It’s interesting to find so many similarity in these two populations with completely different fate.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

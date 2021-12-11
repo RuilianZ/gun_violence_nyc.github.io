@@ -519,6 +519,8 @@ First, let's look at perpetrators' demographic information.
 
 According to the previously checked numbers of null values in each column, there are `8295` values missing in `perp_age_group` and `8261` values missing in both `perp_sex` and `perp_race`. The information missing maybe not available or unknown at the time of the report and should be considered as either “Unknown/Not Available/Not Reported.”
 
+The same shooting incident may have several victims but corresponding to the same perpetrator. Therefore, for the perpetrators' characteristics, we filter the data to make sure the incident key is unique to avoid counting the same perpetrators several times.
+
 ```{r perpetrator age group}
 # group by perp_age_group and do a little summary
 sum_perp_age = 
@@ -551,7 +553,7 @@ sum_perp_age %>%
   theme(legend.position = "right")
 ```
 
-Therefore, except those with unknown age group, most perpetrators are in the age group `18-24` and `24-44`, which takes up 39.4% in total.
+Therefore, except those with unknown age group, most perpetrators are in the age group `18-24` and `24-44`, which takes up 39.4% in total. We can see that most of them are quite young or in their middle age. The large percentage of unknown values may also because some of the perpetrators are still unknown/uncaught, which leaves a potential threat to the community.
 
 ```{r perpetrator sex and race}
 # Now look at perpetrators' sex and race
@@ -609,11 +611,13 @@ perp_sex_race %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1), legend.position = "right")
 ```
 
-From the `perp_sex_race` chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest rate are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%).
+From the `perp_sex_race` chart and the pie charts, most of the perpetrators are males (98.11%), and two races with highest percentage are Black (M: 74%, F:67%) and White Hispanic(M: 13%, F: 19%). Two races with lowest percentage are American Indian/Alaskan Native (nearly 0% for both male and female perpetrators) and Asian/Pacific Islanders (M: 1%, F: 1%). The race information of perpetrators does not vary a lot in different sex. 
 
 
 ### Victims' Characteristics
-There is no value missing in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`.
+Another important demographic information in shooting incidents is about the victim. What kind of characteristics do they hold? Is there some people more likely to become the victims in such tragedies?
+
+There is only a very limited amount of missing values in the victims' demographic characteristics: `vic_age_group`, `vic_sex` and `vic_race`, which makes sense cause it's easier to gather the victims' information compared to the criminals in shootings.
 
 What age groups are most victims in?
 ```{r victim age group}

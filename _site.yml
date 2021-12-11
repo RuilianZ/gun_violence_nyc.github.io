@@ -14,7 +14,7 @@ navbar:
     - text: "Time"
       href: shooting_time.html
     - text: "Demographic characteristics"
-      href: Demographic-characteristics.html  
+      href: Demographic_characteristics.html  
     - text: "Shiny Dashboard"
       href: shiny_dashboard.html
     - icon: fa-envelope fa-lg
