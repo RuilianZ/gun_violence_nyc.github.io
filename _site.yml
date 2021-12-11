@@ -12,7 +12,7 @@ navbar:
       - text: "Shooting Map of NYC"
         href: shooting_map.html
       - text: "Shooting Across Time"
-        href: shooting_time.html
+        href: Shooting_time.html
       - text: "Demographic Characteristics"
         href: Demographic_characteristics.html
       - text: "Heatmap of Each Borough"
