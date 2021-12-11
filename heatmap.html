@@ -13,8 +13,8 @@
 
 <title>Heatmap</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -459,9 +459,16 @@ heatmap = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap-1.png" width="672" /></p>
-<p>According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.</p>
-<p>Is this situation happened in every boro?</p>
-<p>In Brooklyn</p>
+<p>According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases and the total shooting cases even reach 500 for an hour. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.</p>
+</div>
+<div id="is-this-situation-happened-in-every-borough" class="section level2">
+<h2>Is this situation happened in every borough?</h2>
+</div>
+<div id="lets-have-a-look" class="section level2">
+<h2>Let’s have a look!</h2>
+<div id="in-brooklyn" class="section level3">
+<h3>In Brooklyn</h3>
+<p>It is very similar to the heatmap above, and the total number of shooting cases is very high as well, which means Brooklyn is one of the main shooting happened place in NYC and it kind of a representative shooting incidents distribution in NYC.</p>
 <pre class="r"><code>heatmap_bn = shooting_initial %&gt;%
   filter(boro == &quot;BROOKLYN&quot;) %&gt;%
   mutate(occur_date = as.Date(occur_date,&#39;%m/%d/%Y&#39;)) %&gt;%
@@ -486,7 +493,11 @@ heatmap_Bn = ggplot(dayHour, aes(hour, occur_date)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 heatmap_Bn</code></pre>
-<p><img src="heatmap_files/figure-html/heatmap_Brooklyn-1.png" width="672" /> In Bronx</p>
+<p><img src="heatmap_files/figure-html/heatmap_Brooklyn-1.png" width="672" /></p>
+</div>
+<div id="in-bronx" class="section level3">
+<h3>In Bronx</h3>
+<p>We can see that there is a slight difference between Brooklyn and the whole New York City, which is the total shooting cases decrease apparently. The highest case is 150 but in the total heatmap reach 500. Weekends(Sunday and Saturday) midnight still have the highest risk of shooting cases.</p>
 <pre class="r"><code>heatmap_bx = shooting_initial %&gt;%
   filter(boro == &quot;BRONX&quot;) %&gt;%
   mutate(occur_date = as.Date(occur_date,&#39;%m/%d/%Y&#39;)) %&gt;%
@@ -512,7 +523,10 @@ heatmap_Bx = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap_Bx</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap_Bronx-1.png" width="672" /></p>
-<p>In Queens</p>
+</div>
+<div id="in-queens" class="section level3">
+<h3>In Queens</h3>
+<p>The distribution of shooting incidents is similiar but the number of cases is below 100 in queens. Also, you can have morning jog on Wednesday and Tuesday without any stress at 6(just kiding).</p>
 <pre class="r"><code>heatmap_q = shooting_initial %&gt;%
   filter(boro == &quot;QUEENS&quot;) %&gt;%
   mutate(occur_date = as.Date(occur_date,&#39;%m/%d/%Y&#39;)) %&gt;%
@@ -538,7 +552,10 @@ heatmap_q = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap_q</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap_Queens-1.png" width="672" /></p>
-<p>In Manhattan</p>
+</div>
+<div id="in-manhattan" class="section level3">
+<h3>In Manhattan</h3>
+<p>Weekends still have higher risk and the highest total shooting cases drop to 80.</p>
 <pre class="r"><code>heatmap_m = shooting_initial %&gt;%
   filter(boro == &quot;MANHATTAN&quot;) %&gt;%
   mutate(occur_date = as.Date(occur_date,&#39;%m/%d/%Y&#39;)) %&gt;%
@@ -564,7 +581,10 @@ heatmap_m = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap_m</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap_Manhattan-1.png" width="672" /></p>
-<p>In Staten_island</p>
+</div>
+<div id="in-staten_island" class="section level3">
+<h3>In Staten_island</h3>
+<p>Obviously, this is the safest borough considering shooting cases. The highest total shooting number is 25. The highest risk time is 3 to 4 a.m. on Saturday. Monday evening at 19 is high risk as well except weekends.</p>
 <pre class="r"><code>heatmap_l = shooting_initial %&gt;%
   filter(boro == &quot;STATEN ISLAND&quot;) %&gt;%
   mutate(occur_date = as.Date(occur_date,&#39;%m/%d/%Y&#39;)) %&gt;%
@@ -590,6 +610,7 @@ heatmap_l = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap_l</code></pre>
 <p><img src="heatmap_files/figure-html/heatmap_Staten_island-1.png" width="672" /></p>
+</div>
 </div>
 
 

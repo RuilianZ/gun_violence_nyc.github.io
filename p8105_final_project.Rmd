@@ -178,11 +178,13 @@ heatmap = ggplot(dayHour, aes(hour, occur_date)) +
 heatmap
 ```
 
-According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
+According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases and the total shooting cases even reach 500 for an hour. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
 
-Is this situation happened in every boro?
+## Is this situation happened in every borough?
+## Let's have a look!
 
-In Brooklyn
+### In Brooklyn
+It is very similar to the heatmap above, and the total number of shooting cases is very high as well, which means Brooklyn is one of the main shooting happened place in NYC and it kind of a representative shooting incidents distribution in NYC.
 ```{r heatmap_Brooklyn, message = FALSE}
 heatmap_bn = shooting_initial %>%
   filter(boro == "BROOKLYN") %>%
@@ -209,7 +211,11 @@ heatmap_Bn = ggplot(dayHour, aes(hour, occur_date)) +
 
 heatmap_Bn
 ```
-In Bronx
+
+### In Bronx
+
+We can see that there is a slight difference between Brooklyn and the whole New York City, which is the total shooting cases decrease apparently. The highest case is 150 but in the total heatmap reach 500. Weekends(Sunday and Saturday) midnight still have the highest risk of shooting cases.
+
 ```{r heatmap_Bronx, message = FALSE}
 heatmap_bx = shooting_initial %>%
   filter(boro == "BRONX") %>%
@@ -237,7 +243,9 @@ heatmap_Bx = ggplot(dayHour, aes(hour, occur_date)) +
 heatmap_Bx
 ```
 
-In Queens
+### In Queens
+
+The distribution of shooting incidents is similiar but the number of cases is below 100 in queens. Also, you can have morning jog on Wednesday and Tuesday without any stress at 6(just kiding).
 ```{r heatmap_Queens, message = FALSE}
 heatmap_q = shooting_initial %>%
   filter(boro == "QUEENS") %>%
@@ -265,7 +273,10 @@ heatmap_q = ggplot(dayHour, aes(hour, occur_date)) +
 heatmap_q
 ```
 
-In Manhattan
+### In Manhattan
+
+Weekends still have higher risk and the highest total shooting cases drop to 80.
+
 ```{r heatmap_Manhattan, message = FALSE}
 heatmap_m = shooting_initial %>%
   filter(boro == "MANHATTAN") %>%
@@ -294,7 +305,9 @@ heatmap_m
 ```
 
 
-In Staten Island 
+### In Staten_island 
+Obviously, this is the safest borough considering shooting cases. The highest total shooting number is 25. The highest risk time is 3 to 4 a.m. on Saturday. Monday evening at 19 is high risk as well except weekends.
+
 ```{r heatmap_Staten_Island, message = FALSE}
 heatmap_l = shooting_initial %>%
   filter(boro == "STATEN ISLAND") %>%
