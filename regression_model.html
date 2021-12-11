@@ -397,9 +397,18 @@ div.tocify {
 
 
 <p>Here is the regression analysis of shooting incidence.</p>
+<div id="regression-analysis" class="section level2">
+<h2>Regression Analysis</h2>
+<p>The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.</p>
+<div id="model-selection" class="section level3">
+<h3>Model selection</h3>
+<p>Import the data set</p>
 <pre class="r"><code>library(tidyverse)
 library(rvest)
 library(knitr)
+library(leaflet)
+library(rgdal)
+library(lubridate)
 library(plotly)
 library(modelr)
 theme_set(theme_minimal() + theme(legend.position = &quot;bottom&quot;))
@@ -409,49 +418,37 @@ options(
 )
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-#Load the dataset NYPD shooting incident
-shooting = 
-  read_csv(&quot;./data/NYPD_Shooting.csv&quot;) %&gt;%
+
+shooting_initial = 
+  read_csv(&quot;./data/NYPD_Shooting.csv&quot;) %&gt;% 
+  janitor::clean_names()
+shooting_2021 = read_csv(&quot;./data/NYPD_shooting_New.csv&quot;) %&gt;% 
   janitor::clean_names()
 
-#For col boro
+covid_counts = read.csv(&quot;./data/COVID19_data.csv&quot;, sep = &quot;;&quot;) %&gt;% 
+  as_tibble()</code></pre>
+<pre class="r"><code>#Cleaning NYPD shooting data:
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %&gt;% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
+
+
 shooting = shooting %&gt;% 
   mutate(boro = as.factor(boro)) %&gt;%
   mutate(location_desc = replace_na(location_desc, &quot;NONE&quot;)) %&gt;%
   mutate(location_desc = as.factor(location_desc)) %&gt;%
-  mutate(location_desc = fct_relevel(location_desc, c(&quot;NONE&quot;, &quot;MULTI DWELL - PUBLIC HOUS&quot;, &quot;MULTI DWELL - APT BUILD&quot;, &quot;PVT HOUSE&quot;, &quot;GROCERY/BODEGA&quot;, &quot;BAR/NIGHT CLUB&quot;, &quot;HOSPITAL&quot;, &quot;COMMERCIAL BLDG&quot;, &quot;DEPT STORE&quot;, &quot;GAS STATION&quot;, &quot;HOTEL/MOTEL&quot;, &quot;SMALL MERCHANT&quot;, &quot;RESTAURANT/DINER&quot;, &quot;CLOTHING BOUTIQUE&quot;, &quot;FACTORY/WAREHOUSE&quot;, &quot;SOCIAL CLUB/POLICY LOCATI&quot;))) %&gt;%
-  mutate(location_desc = recode(location_desc, 
-                                &quot;NONE&quot; = &quot;none&quot;,
-                                &quot;MULTI DWELL - PUBLIC HOUS&quot; = &quot;public_house&quot;, 
-                                &quot;MULTI DWELL - APT BUILD&quot; = &quot;apt_building&quot;, 
-                                &quot;PVT HOUSE&quot; = &quot;pirvate_house&quot;, 
-                                &quot;GROCERY/BODEGA&quot; = &quot;grocery_bodega&quot;, 
-                                &quot;BAR/NIGHT CLUB&quot; = &quot;bar_club&quot;,
-                                &quot;HOSPITAL&quot; = &quot;hospital&quot;,
-                                &quot;COMMERCIAL BLDG&quot; = &quot;commercial&quot;,
-                                &quot;DEPT STORE&quot; = &quot;dept_store&quot;,
-                                &quot;GAS_STATION&quot; = &quot;gas_station&quot;,
-                                &quot;HOTEL/MOTEL&quot; = &quot;hotel&quot;,
-                                &quot;SMALL MERCHANT&quot; = &quot;merchant&quot;,
-                                &quot;RESTAURANT/DINER&quot; = &quot;restaurant&quot;,
-                                &quot;CLOTHING BOUTIQUE&quot; = &quot;clothing&quot;,
-                                &quot;FACTORY/WAREHOUSE&quot; = &quot;factory&quot;,
-                                &quot;SOCIAL CLUB/POLICY LOCATI&quot; = &quot;club&quot;
-                                )) %&gt;%
   separate(occur_date, into = c(&quot;month&quot;, &quot;day&quot;, &quot;year&quot;)) %&gt;% 
   mutate(month = as.numeric(month)) %&gt;% 
   arrange(year, month) %&gt;% 
- # mutate(month = month.name[month]) %&gt;% 
   mutate(year = as.character(year)) %&gt;% 
   mutate(boro = tolower(boro)) %&gt;% 
   mutate(boro = if_else(boro == &quot;staten island&quot;, &quot;staten_island&quot;, boro)) %&gt;% 
   rename(borough = boro) %&gt;% 
     mutate(date = str_c(month, day, year, sep = &quot;/&quot;)) %&gt;% 
-  select(incident_key, date, everything())
-#Next, clean the COVID-19 case count data
-#Importing COVID-19 case count data
-covid_counts = read.csv(&quot;./data/COVID19_data.csv&quot;, sep = &quot;;&quot;) %&gt;% as_tibble()
-##The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
+  select(incident_key, date, everything())</code></pre>
+<pre class="r"><code>#Cleaning COVID-19 data:
 clean_covid = covid_counts %&gt;% 
    janitor::clean_names() %&gt;% 
    rename(date = date_of_interest) %&gt;% 
@@ -474,7 +471,7 @@ clean_covid = covid_counts %&gt;%
   select(date, everything())</code></pre>
 <pre class="r"><code>shooting_mini =
   shooting %&gt;% 
-  filter(year == &quot;2020&quot;| year == &quot;2021&quot;) %&gt;% 
+  filter(year == &quot;2020&quot;|year == &quot;2021&quot;) %&gt;% 
   select(c(&quot;date&quot;, &quot;incident_key&quot;, &quot;borough&quot;))
 
 shooting_covid = 
@@ -496,9 +493,6 @@ shooting_covid =
                      &quot;queens&quot; = &quot;Queens&quot;,
                      &quot;staten_island&quot; = &quot;Staten Island&quot;)
   )</code></pre>
-<p>The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.</p>
-<div id="model-selection" class="section level2">
-<h2>Model selection</h2>
 <p>Fit a linear regression model for total shooting case with total COVID case as predictor.</p>
 <pre class="r"><code>original_lm = lm(total_case_count ~ total_n_shooting + borough + borough_case_count + borough_n_shooting + borough_n_victim, data = shooting_covid) 
 
@@ -517,97 +511,98 @@ broom::tidy(original_lm) %&gt;%
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">338.54947</td>
-<td align="right">53.8712414</td>
-<td align="right">6.284419</td>
+<td align="right">478.1548259</td>
+<td align="right">40.0054689</td>
+<td align="right">11.9522365</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">total_n_shooting</td>
-<td align="right">-22.84892</td>
-<td align="right">6.6417297</td>
-<td align="right">-3.440206</td>
-<td align="right">0.0006272</td>
+<td align="right">-24.7036600</td>
+<td align="right">5.2755661</td>
+<td align="right">-4.6826557</td>
+<td align="right">0.0000032</td>
 </tr>
 <tr class="odd">
 <td align="left">boroughBrooklyn</td>
-<td align="right">-485.55153</td>
-<td align="right">49.9741152</td>
-<td align="right">-9.716061</td>
+<td align="right">-666.7442317</td>
+<td align="right">35.5886923</td>
+<td align="right">-18.7347213</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">boroughManhattan</td>
-<td align="right">184.94922</td>
-<td align="right">55.4239069</td>
-<td align="right">3.336994</td>
-<td align="right">0.0009064</td>
+<td align="right">131.1137585</td>
+<td align="right">38.4884466</td>
+<td align="right">3.4065744</td>
+<td align="right">0.0006835</td>
 </tr>
 <tr class="odd">
 <td align="left">boroughQueens</td>
-<td align="right">-358.40454</td>
-<td align="right">54.9730146</td>
-<td align="right">-6.519645</td>
+<td align="right">-481.3870213</td>
+<td align="right">39.2140066</td>
+<td align="right">-12.2758948</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">boroughStaten Island</td>
-<td align="right">480.09819</td>
-<td align="right">85.4432598</td>
-<td align="right">5.618912</td>
+<td align="right">454.2573885</td>
+<td align="right">67.1371414</td>
+<td align="right">6.7661116</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">borough_case_count</td>
-<td align="right">3.86830</td>
-<td align="right">0.0659028</td>
-<td align="right">58.697050</td>
+<td align="right">3.8644461</td>
+<td align="right">0.0456028</td>
+<td align="right">84.7414634</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">borough_n_shooting</td>
-<td align="right">65.30967</td>
-<td align="right">29.8450194</td>
-<td align="right">2.188294</td>
-<td align="right">0.0290848</td>
+<td align="right">33.2137603</td>
+<td align="right">20.9758702</td>
+<td align="right">1.5834271</td>
+<td align="right">0.1136338</td>
 </tr>
 <tr class="odd">
 <td align="left">borough_n_victim</td>
-<td align="right">-19.26937</td>
-<td align="right">17.0724084</td>
-<td align="right">-1.128685</td>
-<td align="right">0.2595424</td>
+<td align="right">-0.2836356</td>
+<td align="right">11.9414982</td>
+<td align="right">-0.0237521</td>
+<td align="right">0.9810550</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code>set.seed(100)
 par(mfrow = c(2,2))
 plot(original_lm)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-1-1.png" width="672" /> According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook’s distance from the residual vs leverage plot.</p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook’s distance from the residual vs leverage plot.</p>
 <p>Use Stepwise regression to find the reduced model</p>
 <pre class="r"><code>step_lm = step(original_lm ,direction = &quot;backward&quot;)</code></pre>
-<pre><code>FALSE Start:  AIC=6491
+<pre><code>FALSE Start:  AIC=12409.09
 FALSE total_case_count ~ total_n_shooting + borough + borough_case_count + 
 FALSE     borough_n_shooting + borough_n_victim
 FALSE 
-FALSE                      Df Sum of Sq       RSS    AIC
-FALSE - borough_n_victim    1    217636  90590906 6490.3
-FALSE &lt;none&gt;                             90373271 6491.0
-FALSE - borough_n_shooting  1    818080  91191350 6493.8
-FALSE - total_n_shooting    1   2021870  92395141 6500.9
-FALSE - borough             4  39043008 129416279 6676.2
-FALSE - borough_case_count  1 588595414 678968685 7573.9
+FALSE                      Df  Sum of Sq        RSS   AIC
+FALSE - borough_n_victim    1         95  172775448 12407
+FALSE &lt;none&gt;                              172775352 12409
+FALSE - borough_n_shooting  1     424280  173199632 12410
+FALSE - total_n_shooting    1    3710569  176485921 12429
+FALSE - borough             4  110588216  283363568 12911
+FALSE - borough_case_count  1 1215200568 1387975920 14553
 FALSE 
-FALSE Step:  AIC=6490.3
+FALSE Step:  AIC=12407.09
 FALSE total_case_count ~ total_n_shooting + borough + borough_case_count + 
 FALSE     borough_n_shooting
 FALSE 
-FALSE                      Df Sum of Sq       RSS    AIC
-FALSE &lt;none&gt;                             90590906 6490.3
-FALSE - borough_n_shooting  1    778718  91369625 6492.9
-FALSE - total_n_shooting    1   1937594  92528501 6499.7
-FALSE - borough             4  38876916 129467822 6674.4
-FALSE - borough_case_count  1 589871555 680462461 7573.1</code></pre>
+FALSE                      Df  Sum of Sq        RSS   AIC
+FALSE &lt;none&gt;                              172775448 12407
+FALSE - borough_n_shooting  1     969547  173744995 12411
+FALSE - total_n_shooting    1    3712700  176488147 12427
+FALSE - borough             4  110770433  283545881 12909
+FALSE - borough_case_count  1 1216019271 1388794719 14552</code></pre>
 <pre class="r"><code>broom::tidy(step_lm) %&gt;% 
   knitr::kable()</code></pre>
 <table>
@@ -623,59 +618,59 @@ FALSE - borough_case_count  1 589871555 680462461 7573.1</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">339.348098</td>
-<td align="right">53.8805130</td>
-<td align="right">6.298160</td>
+<td align="right">478.136141</td>
+<td align="right">39.9781711</td>
+<td align="right">11.959930</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">total_n_shooting</td>
-<td align="right">-22.309721</td>
-<td align="right">6.6262386</td>
-<td align="right">-3.366876</td>
-<td align="right">0.0008154</td>
+<td align="right">-24.699956</td>
+<td align="right">5.2706824</td>
+<td align="right">-4.686292</td>
+<td align="right">0.0000032</td>
 </tr>
 <tr class="odd">
 <td align="left">boroughBrooklyn</td>
-<td align="right">-482.383723</td>
-<td align="right">49.9081326</td>
-<td align="right">-9.665433</td>
+<td align="right">-666.685798</td>
+<td align="right">35.4861933</td>
+<td align="right">-18.787188</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">boroughManhattan</td>
-<td align="right">184.832789</td>
-<td align="right">55.4381320</td>
-<td align="right">3.334037</td>
-<td align="right">0.0009158</td>
+<td align="right">131.140984</td>
+<td align="right">38.4525589</td>
+<td align="right">3.410462</td>
+<td align="right">0.0006739</td>
 </tr>
 <tr class="odd">
 <td align="left">boroughQueens</td>
-<td align="right">-360.004827</td>
-<td align="right">54.9689274</td>
-<td align="right">-6.549242</td>
+<td align="right">-481.372234</td>
+<td align="right">39.1898880</td>
+<td align="right">-12.283072</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">boroughStaten Island</td>
-<td align="right">478.634546</td>
-<td align="right">85.4554940</td>
-<td align="right">5.600980</td>
+<td align="right">454.285754</td>
+<td align="right">67.0936888</td>
+<td align="right">6.770916</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">borough_case_count</td>
-<td align="right">3.870615</td>
-<td align="right">0.0658879</td>
-<td align="right">58.745467</td>
+<td align="right">3.864474</td>
+<td align="right">0.0455655</td>
+<td align="right">84.811484</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">borough_n_shooting</td>
-<td align="right">38.446997</td>
-<td align="right">18.0126077</td>
-<td align="right">2.134449</td>
-<td align="right">0.0332642</td>
+<td align="right">32.836864</td>
+<td align="right">13.7117452</td>
+<td align="right">2.394798</td>
+<td align="right">0.0168088</td>
 </tr>
 </tbody>
 </table>
@@ -683,7 +678,7 @@ FALSE - borough_case_count  1 589871555 680462461 7573.1</code></pre>
 <pre class="r"><code>set.seed(100)
 par(mfrow = c(2,2))
 plot(step_lm)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>According to the plot, there is nmo obvious difference between reduced model and original model. From the Residuals vs Leverage plot, we could observed that the spread of standardized residuals shouldn’t change as a function of leverage: here it appears to decrease, indicating heteroskedasticity. Secondly, points with high leverage may be influential, and there are some point outside the Cook’s distance dotted line, which would have high influence.</p>
 <pre class="r"><code>shooting_covid %&gt;% 
   add_residuals(step_lm) %&gt;% 
@@ -694,11 +689,11 @@ plot(step_lm)</code></pre>
   ylab(&quot;Residuals&quot;) +
   ggtitle(&quot;Residuals Against Fitted Values plot&quot;) +
   geom_abline(intercept = 0, slope = 0, color = &quot;red&quot;)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>From the plot, we observed that it have some outliers with residuals greater than 2000. It clustered around the lower single digits of the y = 0 and looks like a nonconstant variance plot.</p>
 </div>
-<div id="model-comparasion" class="section level2">
-<h2>Model Comparasion</h2>
+<div id="model-comparasion" class="section level3">
+<h3>Model Comparasion</h3>
 <p>cross validation and the plot for RMSE</p>
 <pre class="r"><code>cv = crossv_mc(shooting_covid, 100) %&gt;% 
     mutate(
@@ -725,18 +720,13 @@ cv %&gt;%
   ) %&gt;% 
   ggplot(aes(x = model, y = rmse)) +  geom_violin(fill = &quot;orange&quot;,alpha = 0.5) +
   geom_boxplot(alpha = 0.5, color = &quot;white&quot;) </code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2.</p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits a little bit better than model 1. The two models are similar since we only drop one parameter for model 2.</p>
 </div>
-<div id="conclusion" class="section level2">
-<h2>Conclusion</h2>
 <div id="regression-conclusion" class="section level3">
 <h3>Regression Conclusion</h3>
-<p>Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.</p>
+<p>Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher RMSE for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.</p>
 </div>
-</div>
-<div id="summary" class="section level2">
-<h2>Summary</h2>
 </div>
 
 

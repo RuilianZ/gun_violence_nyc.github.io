@@ -8,10 +8,20 @@ output:
 ---
 
 Here is the regression analysis of shooting incidence.
-```{r setup, message = FALSE}
+
+## Regression Analysis
+
+The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.
+
+### Model selection
+Import the data set
+```{r setup, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(rvest)
 library(knitr)
+library(leaflet)
+library(rgdal)
+library(lubridate)
 library(plotly)
 library(modelr)
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
@@ -21,49 +31,47 @@ options(
 )
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-#Load the dataset NYPD shooting incident
-shooting = 
-  read_csv("./data/NYPD_Shooting.csv") %>%
+
+shooting_initial = 
+  read_csv("./data/NYPD_Shooting.csv") %>% 
+  janitor::clean_names()
+shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% 
   janitor::clean_names()
 
-#For col boro
+covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% 
+  as_tibble()
+
+```
+
+
+```{r, message = FALSE, warning = FALSE, comment = FALSE}
+#Cleaning NYPD shooting data:
+#A variable name in shooting_new is different from the initial data, change column name in order to merge the data frames
+shooting_2021 = shooting_2021 %>% 
+  rename(lon_lat = new_georeferenced_column)
+
+shooting = rbind(shooting_initial, shooting_2021)
+
+
 shooting = shooting %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
   mutate(location_desc = as.factor(location_desc)) %>%
-  mutate(location_desc = fct_relevel(location_desc, c("NONE", "MULTI DWELL - PUBLIC HOUS", "MULTI DWELL - APT BUILD", "PVT HOUSE", "GROCERY/BODEGA", "BAR/NIGHT CLUB", "HOSPITAL", "COMMERCIAL BLDG", "DEPT STORE", "GAS STATION", "HOTEL/MOTEL", "SMALL MERCHANT", "RESTAURANT/DINER", "CLOTHING BOUTIQUE", "FACTORY/WAREHOUSE", "SOCIAL CLUB/POLICY LOCATI"))) %>%
-  mutate(location_desc = recode(location_desc, 
-                                "NONE" = "none",
-                                "MULTI DWELL - PUBLIC HOUS" = "public_house", 
-                                "MULTI DWELL - APT BUILD" = "apt_building", 
-                                "PVT HOUSE" = "pirvate_house", 
-                                "GROCERY/BODEGA" = "grocery_bodega", 
-                                "BAR/NIGHT CLUB" = "bar_club",
-                                "HOSPITAL" = "hospital",
-                                "COMMERCIAL BLDG" = "commercial",
-                                "DEPT STORE" = "dept_store",
-                                "GAS_STATION" = "gas_station",
-                                "HOTEL/MOTEL" = "hotel",
-                                "SMALL MERCHANT" = "merchant",
-                                "RESTAURANT/DINER" = "restaurant",
-                                "CLOTHING BOUTIQUE" = "clothing",
-                                "FACTORY/WAREHOUSE" = "factory",
-                                "SOCIAL CLUB/POLICY LOCATI" = "club"
-                                )) %>%
   separate(occur_date, into = c("month", "day", "year")) %>% 
   mutate(month = as.numeric(month)) %>% 
   arrange(year, month) %>% 
- # mutate(month = month.name[month]) %>% 
   mutate(year = as.character(year)) %>% 
   mutate(boro = tolower(boro)) %>% 
   mutate(boro = if_else(boro == "staten island", "staten_island", boro)) %>% 
   rename(borough = boro) %>% 
     mutate(date = str_c(month, day, year, sep = "/")) %>% 
   select(incident_key, date, everything())
-#Next, clean the COVID-19 case count data
-#Importing COVID-19 case count data
-covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
-##The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
+```
+
+
+
+```{r, message = FALSE, warning = FALSE, comment=FALSE}
+#Cleaning COVID-19 data:
 clean_covid = covid_counts %>% 
    janitor::clean_names() %>% 
    rename(date = date_of_interest) %>% 
@@ -86,11 +94,10 @@ clean_covid = covid_counts %>%
   select(date, everything())
 ```
 
-
-```{r merge datasets and conunt incidence, message = FALSE, warning = FALSE,comment = FALSE}
+```{r,message = FALSE, warning = FALSE,comment = FALSE}
 shooting_mini =
   shooting %>% 
-  filter(year == "2020"| year == "2021") %>% 
+  filter(year == "2020"|year == "2021") %>% 
   select(c("date", "incident_key", "borough"))
 
 shooting_covid = 
@@ -115,14 +122,8 @@ shooting_covid =
 ```
 
 
-
-The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.
-
-## Model selection
-
 Fit a linear regression model for total shooting case with total COVID case as predictor.
-
-```{r, message = FALSE, warning = FALSE,comment = FALSE}
+```{r}
 original_lm = lm(total_case_count ~ total_n_shooting + borough + borough_case_count + borough_n_shooting + borough_n_victim, data = shooting_covid) 
 
 broom::tidy(original_lm) %>% 
@@ -132,6 +133,7 @@ set.seed(100)
 par(mfrow = c(2,2))
 plot(original_lm)
 ```
+
 According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook's distance from the residual vs leverage plot. 
 
 
@@ -154,7 +156,7 @@ plot(step_lm)
 According to the plot, there is nmo obvious difference between reduced model and original model. From the Residuals vs Leverage plot, we could observed that the spread of standardized residuals shouldn’t change as a function of leverage: here it appears to decrease, indicating heteroskedasticity. Secondly, points with high leverage may be influential, and there are some point outside the Cook's distance dotted line, which would have high influence.
 
 
-```{r, message = FALSE, warning = FALSE,comment = FALSE}
+```{r}
 shooting_covid %>% 
   add_residuals(step_lm) %>% 
   add_predictions(step_lm) %>% 
@@ -166,10 +168,11 @@ shooting_covid %>%
   geom_abline(intercept = 0, slope = 0, color = "red")
 ```
 
+
 From the plot, we observed that it have some outliers with residuals greater than 2000. It clustered around the lower single digits of the y = 0 and looks like a nonconstant variance plot.
 
 
-## Model Comparasion
+### Model Comparasion
 cross validation and the plot for RMSE 
 
 ```{r, message = FALSE, warning = FALSE,comment = FALSE}
@@ -200,13 +203,12 @@ cv %>%
   geom_boxplot(alpha = 0.5, color = "white") 
 ```
 
-According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2. 
+According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits a little bit better than model 1. The two models are similar since we only drop one parameter for model 2. 
 
 
-## Conclusion
+
 ### Regression Conclusion
 
-Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.
+Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher RMSE for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.
 
-## Summary
 
