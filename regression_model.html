@@ -340,15 +340,14 @@ shooting =
 #check null
 shooting %&gt;%
   summarise_all(~ sum(is.na(.)))</code></pre>
-<pre><code>## # A tibble: 1 x 19
+<pre><code>## # A tibble: 1 × 19
 ##   incident_key occur_date occur_time  boro precinct jurisdiction_code
 ##          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
 ## 1            0          0          0     0        0                 2
-## # ... with 13 more variables: location_desc &lt;int&gt;,
-## #   statistical_murder_flag &lt;int&gt;, perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;,
-## #   perp_race &lt;int&gt;, vic_age_group &lt;int&gt;, vic_sex &lt;int&gt;, vic_race &lt;int&gt;,
-## #   x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;, latitude &lt;int&gt;, longitude &lt;int&gt;,
-## #   lon_lat &lt;int&gt;</code></pre>
+## # … with 13 more variables: location_desc &lt;int&gt;, statistical_murder_flag &lt;int&gt;,
+## #   perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;, perp_race &lt;int&gt;, vic_age_group &lt;int&gt;,
+## #   vic_sex &lt;int&gt;, vic_race &lt;int&gt;, x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;,
+## #   latitude &lt;int&gt;, longitude &lt;int&gt;, lon_lat &lt;int&gt;</code></pre>
 <pre class="r"><code>#For col boro
 shooting = shooting %&gt;% 
   mutate(boro = as.factor(boro)) %&gt;%
@@ -386,8 +385,8 @@ shooting = shooting %&gt;%
 #Next, clean the COVID-19 case count data
 #Importing COVID-19 case count data
 covid_counts = read.csv(&quot;./data/COVID19_data.csv&quot;, sep = &quot;;&quot;) %&gt;% as_tibble()
-##The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.</code></pre>
-<pre class="r"><code>clean_covid = covid_counts %&gt;% 
+##The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
+clean_covid = covid_counts %&gt;% 
    janitor::clean_names() %&gt;% 
    rename(date = date_of_interest) %&gt;% 
    select(date, contains(&quot;case_count&quot;)) %&gt;% 
@@ -522,7 +521,7 @@ broom::tidy(original_lm) %&gt;%
 <pre class="r"><code>set.seed(100)
 par(mfrow = c(2,2))
 plot(original_lm)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-2-1.png" width="672" /> According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook’s distance from the residual vs leverage plot.</p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-1-1.png" width="672" /> According to the plot, the residuals is not equally distributed around the 0 horizontal line. The residual does not follow the normal distribution. From the Q-Q plot, the upper end of the Q-Q plot to deviate from the straight line and the lower and follows a straight line then the curve has a longer till to its right and it is right-skewed. There are few influential points outside the Cook’s distance from the residual vs leverage plot.</p>
 <p>Use Stepwise regression to find the reduced model</p>
 <pre class="r"><code>step_lm = step(original_lm ,direction = &quot;backward&quot;)</code></pre>
 <pre><code>FALSE Start:  AIC=6491
@@ -622,7 +621,7 @@ FALSE - borough_case_count  1 589871555 680462461 7573.1</code></pre>
 <pre class="r"><code>set.seed(100)
 par(mfrow = c(2,2))
 plot(step_lm)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>According to the plot, there is nmo obvious difference between reduced model and original model. From the Residuals vs Leverage plot, we could observed that the spread of standardized residuals shouldn’t change as a function of leverage: here it appears to decrease, indicating heteroskedasticity. Secondly, points with high leverage may be influential, and there are some point outside the Cook’s distance dotted line, which would have high influence.</p>
 <pre class="r"><code>shooting_covid %&gt;% 
   add_residuals(step_lm) %&gt;% 
@@ -633,7 +632,7 @@ plot(step_lm)</code></pre>
   ylab(&quot;Residuals&quot;) +
   ggtitle(&quot;Residuals Against Fitted Values plot&quot;) +
   geom_abline(intercept = 0, slope = 0, color = &quot;red&quot;)</code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>From the plot, we observed that it have some outliers with residuals greater than 2000. It clustered around the lower single digits of the y = 0 and looks like a nonconstant variance plot.</p>
 </div>
 <div id="model-comparasion" class="section level3">
@@ -664,14 +663,14 @@ cv %&gt;%
   ) %&gt;% 
   ggplot(aes(x = model, y = rmse)) +  geom_violin(fill = &quot;orange&quot;,alpha = 0.5) +
   geom_boxplot(alpha = 0.5, color = &quot;white&quot;) </code></pre>
-<p><img src="regression_model_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="regression_model_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>According to the plot, there is no obvious different between RMSE. Model 2 have slightly lower average value of RMSE, hence would be fits better than model 1. The two models are similar since we only drop one parameter for model 2.</p>
 </div>
 <div id="conclusion" class="section level3">
 <h3>Conclusion</h3>
 <div id="regression-conclusion" class="section level4">
 <h4>Regression Conclusion</h4>
-<p>Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Disability, smoking, unemployment rate positively associate with the firearm crude death rate. Law strength negatively associate with crude death rate.</p>
+<p>Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.</p>
 </div>
 </div>
 </div>

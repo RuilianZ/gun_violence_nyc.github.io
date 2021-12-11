@@ -65,7 +65,6 @@ shooting = shooting %>%
 #Importing COVID-19 case count data
 covid_counts = read.csv("./data/COVID19_data.csv", sep = ";") %>% as_tibble()
 ##The clean dataset contains only day-by-day COVID-19 case count for each borough and the total case count in NYC of a particular day.
-```{r, message = FALSE, warning = FALSE,comment = FALSE}
 clean_covid = covid_counts %>% 
    janitor::clean_names() %>% 
    rename(date = date_of_interest) %>% 
@@ -211,4 +210,4 @@ According to the plot, there is no obvious different between RMSE. Model 2 have 
 ### Conclusion
 #### Regression Conclusion
 
-Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Disability, smoking, unemployment rate positively associate with the firearm crude death rate. Law strength negatively associate with crude death rate.
+Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher rmse for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.

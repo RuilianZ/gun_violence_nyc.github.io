@@ -53,6 +53,7 @@ shooting = rbind(shooting_initial, shooting_2021) %>%
 
 For the shooting incidents across time, we use three different levels to analyze. 
 Firstly, we compared shooting case year by year.
+
 ### Distribution of Shooting Case of Years
 ```{r,message = FALSE, warning = FALSE}
 shooting_year = shooting %>%
@@ -61,7 +62,7 @@ shooting_year = shooting %>%
 #visualization shooting incidence trend
 shooting_year %>% 
   plot_ly( x = ~year, y = ~n_obs, type = "scatter", mode = "lines+markers") %>% 
-  layout(title = "Shooting Incidence Trend from 2006 to 2020",
+  layout(title = "Shooting Incidence Trend from 2006 to 2021",
          xaxis = list(title = "Year"),
          yaxis = list(title = "Frequency"))
 ```
@@ -84,12 +85,13 @@ shooting_month %>%
           yaxis = list(title = "Frequency"))
 ```
 
-The distribution of the shooting incidence by month has a bell-shape. The shooting case concentrated in summer from May to September. The reason of this may related to the time of memorial day and the labor day.
+The distribution of the shooting incidence by month has a bell-shape. The shooting cases concentrated in summer from May to September. The reason of this may related to the timing of memorial day and the labor day, some perpetrator would like to choose special holidays to raise more attention.
 
 
 
 
 ### Distribution of Shooting Case of Time Range Across day
+
 ```{r,message = FALSE, warning = FALSE}
 shooting_time = shooting %>% 
 ##format the occur_time variable to only hours.
@@ -125,9 +127,13 @@ ggplot(shooting_time, aes(x = "", y = case_numb, fill = occur_time_range)) +
 
 From the bar chart, it is obvious that most of the shooting cases happens in the evening and the late night, which concentrated in 18-24 and 0-6. The pie chart clearly show the occupy of shooting cases time range take place in a day.
 
+
 ### Distribution of shooting case across month in 2020
+
 We would like to focus the gun violence in the year of 2020 as a critical year of surge. 
+
 ### (since the covid-19 starts from March 2020, to see if there any relation between shooting and Covid.)
+
 ```{r,message = FALSE, warning = FALSE}
 shooting_2020 = shooting %>%
   filter(year == "2020") %>% 
@@ -161,5 +167,5 @@ ggplot(shooting_2019_2020, aes(x = month, y = frequency, fill = year)) + geom_ba
 ```
 
 
-According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same. 
+According to the plot, besides there is year on year to growth between 2019 to 2020, the distribution of shooting case across month are the same, which reinforce that the number of shooting cases is high is summer.
 
