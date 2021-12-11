@@ -7,6 +7,8 @@ output:
     toc_float: true
 ---
 
+The maps below provide general information of the shooting incidents in New York City, including the geolocation, total number of incidents in an area, and background information. Data used for generating the maps are provided by [NYC open data](https://opendata.cityofnewyork.us/). Be interactive and explore the features that interest you the most!
+
 ```{r setup, message = FALSE, warning = FALSE}
 #Need to install "rgdal" package to successfully run the file.
 library(rgdal)
@@ -44,6 +46,7 @@ nyc_boro = readOGR("./data/Borough_Boundaries/geo_export_2204bc6b-9c17-46ed-8a67
 
 shooting_map = shooting %>% 
   mutate_at(c("perp_age_group", "perp_sex", "perp_race"), funs(ifelse(is.na(.), "UNKNOWN", .))) %>% 
+  mutate(borough = gsub("^(\\w)(\\w+)", "\\U\\1\\L\\2",borough, perl = TRUE)) %>% 
   mutate(labels = str_c("<b>Incident Key: </b>", incident_key, 
                     "<br>", "<b>Date: </b>", date,
                     "<br>", "<b>Borough: </b>", borough,
@@ -55,8 +58,7 @@ shooting_map = shooting %>%
                     ))
 ```  
 
-## Shooting Incidents Across Space
-
+## Shooting Incidents From 2006 to 2021
 ```{r, message = FALSE, warning = FALSE}
 polygon_color <- colorFactor(
   palette = "viridis",
@@ -78,8 +80,7 @@ shooting_map %>%
 
 This is an interactive map of shooting incidents from January 2006 to September 2021 in NYC. Incidents' details will show up after clicking the icon. Please zoom in and out the map to see the total number of shooting incidents occurred in the area in the window. Borough's name will appear when hovering over each borough.
 
-## Map of Shooting Incidents Before and After COVID-19 in NYC
-
+## Shooting Incidents Before and After COVID-19 in NYC
 ```{r, message = FALSE, warning = FALSE}
 shooting_map_df = shooting_map %>% 
   filter(year == c(2018,2019,2020,2021)) %>% 
@@ -125,11 +126,54 @@ year_map %>%
 
 This map focuses on the shooting incidents from January 2018 to September 2021. Its purpose includes but not limited to observing the change of location and density of shooting incidents happened in the city before and after COVID-19. Year-to-year comparison can be made by selecting different years on the right upper corner.
 
-## Map of Shooting Incidents by Perpetrator's Race/Ethicity
+## Shooting Incidents by Victim's Race/Ethicity
+```{r, message = FALSE, warning = FALSE}
+vic_race_map_df = shooting_map %>% 
+  filter(year >= 2017) %>% 
+  mutate(vic_race = tolower(vic_race)) %>% 
+  split(.,~vic_race)
 
+vic_raceColors  <- colorFactor(
+  palette = "viridis",
+  domain = as.factor(names(vic_race_map_df)))
+
+vic_race_map <- leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addPolygons(data = nyc_boro,
+              weight = 0.85,
+              fillColor = ~polygon_color(nyc_boro@data$boro_name),
+#              fillOpacity = 0.6,
+              color = "#BDBDC3",
+              label = ~nyc_boro@data$boro_name)
+
+names(vic_race_map_df) %>%
+  purrr::walk( function(df) {
+    vic_race_map <<- vic_race_map %>%
+      addCircleMarkers(data = vic_race_map_df[[df]],
+                          lng = ~longitude, 
+                          lat = ~latitude,
+                          popup = ~labels,
+                          group = df,
+                          radius = 0.3,
+                          color =  ~vic_raceColors(df)
+#                          clusterOptions = markerClusterOptions(),
+                ) 
+  })
+
+vic_race_map %>%
+  addLayersControl(
+    overlayGroups = names(vic_race_map_df),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+This map shows the location of shooting incidents from January 2017 to September 2021 categorized by the ethnic group of the victim. Selection of Ethnic group for exploration is based on given information from the original data.
+
+## Shooting Incidents by Perpetrator's Race/Ethicity
 ```{r, message = FALSE, warning = FALSE}
 race_map_df = shooting_map %>% 
-  filter(year == c(2019,2020,2021)) %>% 
+  filter(year >= 2017) %>% 
   mutate(perp_race = tolower(perp_race)) %>% 
   split(.,~perp_race)
 
@@ -168,4 +212,8 @@ race_map %>%
   )
 ```
 
-This map shows the location of shooting incidents from January 2019 to September 2021 categorized by the ethnic group of the perpetrator. Selection of Ethnic group for exploration is based on given information from the original data.
+This map shows the location of shooting incidents from January 2017 to September 2021 categorized by the ethnic group of the perpetrator. Selection of Ethnic group for exploration is based on given information from the original data.
+
+## Summary
+Based on the information provided by the above maps, from 2006 to 2021, most shooting incidents are centered in south Bronx and north Brooklyn. And around 192 shooting cases actually happened near the CUIMC campus (from 158th to 176th St). 
+From 2019 to 2020, there is an observable increase of shooting incidents in NYC. The relationship between the increase and COVID-19 will be explored in the Regression Analysis section.
