@@ -3,7 +3,8 @@ title: "Demographic characteristics"
 output: 
   html_document:
     code_folding: hide
-    always_allow_html: true
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, message = FALSE, warning = FALSE}
@@ -30,10 +31,7 @@ shooting_2021 = read_csv("./data/NYPD_shooting_New.csv") %>% janitor::clean_name
 shooting_2021 = shooting_2021 %>% 
   rename(lon_lat = new_georeferenced_column)
 
-shooting = rbind(shooting_initial, shooting_2021)
-shooting %>%
-  summarise_all(~ sum(is.na(.)))
-shooting = shooting %>% 
+shooting = rbind(shooting_initial, shooting_2021) %>% 
   mutate(boro = as.factor(boro)) %>%
   mutate(location_desc = replace_na(location_desc, "NONE")) %>%
   mutate(location_desc = as.factor(location_desc)) %>%
@@ -222,7 +220,7 @@ Most of the victims are Black (M: 72%, F: 69%), and the number of male victims i
 
 Put the sex, race information of both the perpetrators and victims together to compare.
 
-```{r comparation，message = FALSE, warning = FALSE}
+```{r comparation, message = FALSE, warning = FALSE}
 # Perpetrators'
 bar_perp_sex_race =
   perp_sex_race %>% 
