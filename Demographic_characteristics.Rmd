@@ -1,5 +1,5 @@
 ---
-title: "Demographic characteristics"
+title: "Demographic Characteristics"
 output: 
   html_document:
     code_folding: hide
@@ -109,6 +109,10 @@ perp_sex_race =
   mutate(perc = round(num/sum(num), digits = 2))
 
 perp_sex_race %>% 
+  select(-perc) %>% 
+  pivot_wider(
+  names_from = "perp_sex", 
+  values_from = "num") %>% 
   knitr::kable()
 
 # Get the position for the label of the pie charts
@@ -187,6 +191,10 @@ vic_sex_race =
   mutate(perc = round(num/sum(num), digits = 2))
 
 vic_sex_race %>% 
+  select(-perc) %>% 
+  pivot_wider(
+  names_from = "vic_sex", 
+  values_from = "num") %>% 
   knitr::kable()
 
 # To see the percentage of different race, we can draw a pie chart

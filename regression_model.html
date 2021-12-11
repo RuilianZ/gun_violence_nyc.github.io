@@ -13,8 +13,8 @@
 
 <title>Regression Model</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -340,14 +340,15 @@ shooting =
 #check null
 shooting %&gt;%
   summarise_all(~ sum(is.na(.)))</code></pre>
-<pre><code>## # A tibble: 1 × 19
+<pre><code>## # A tibble: 1 x 19
 ##   incident_key occur_date occur_time  boro precinct jurisdiction_code
 ##          &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;int&gt;    &lt;int&gt;             &lt;int&gt;
 ## 1            0          0          0     0        0                 2
-## # … with 13 more variables: location_desc &lt;int&gt;, statistical_murder_flag &lt;int&gt;,
-## #   perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;, perp_race &lt;int&gt;, vic_age_group &lt;int&gt;,
-## #   vic_sex &lt;int&gt;, vic_race &lt;int&gt;, x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;,
-## #   latitude &lt;int&gt;, longitude &lt;int&gt;, lon_lat &lt;int&gt;</code></pre>
+## # ... with 13 more variables: location_desc &lt;int&gt;,
+## #   statistical_murder_flag &lt;int&gt;, perp_age_group &lt;int&gt;, perp_sex &lt;int&gt;,
+## #   perp_race &lt;int&gt;, vic_age_group &lt;int&gt;, vic_sex &lt;int&gt;, vic_race &lt;int&gt;,
+## #   x_coord_cd &lt;int&gt;, y_coord_cd &lt;int&gt;, latitude &lt;int&gt;, longitude &lt;int&gt;,
+## #   lon_lat &lt;int&gt;</code></pre>
 <pre class="r"><code>#For col boro
 shooting = shooting %&gt;% 
   mutate(boro = as.factor(boro)) %&gt;%

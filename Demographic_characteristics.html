@@ -11,10 +11,10 @@
 
 
 
-<title>Demographic characteristics</title>
+<title>Demographic Characteristics</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -391,7 +391,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Demographic characteristics</h1>
+<h1 class="title toc-ignore">Demographic Characteristics</h1>
 
 </div>
 
@@ -483,118 +483,62 @@ sum_perp_age %&gt;%
   mutate(perc = round(num/sum(num), digits = 2))
 
 perp_sex_race %&gt;% 
+  select(-perc) %&gt;% 
+  pivot_wider(
+  names_from = &quot;perp_sex&quot;, 
+  values_from = &quot;num&quot;) %&gt;% 
   knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">perp_sex</th>
 <th align="left">perp_race</th>
-<th align="right">num</th>
-<th align="right">perc</th>
+<th align="right">F</th>
+<th align="right">M</th>
+<th align="right">U</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">UNKNOWN</td>
 <td align="right">3</td>
-<td align="right">0.01</td>
+<td align="right">286</td>
+<td align="right">9225</td>
 </tr>
 <tr class="even">
-<td align="left">F</td>
 <td align="left">BLACK</td>
 <td align="right">136</td>
-<td align="right">0.67</td>
+<td align="right">7602</td>
+<td align="right">15</td>
 </tr>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">WHITE HISPANIC</td>
 <td align="right">39</td>
-<td align="right">0.19</td>
+<td align="right">1370</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="left">F</td>
 <td align="left">BLACK HISPANIC</td>
 <td align="right">9</td>
-<td align="right">0.04</td>
+<td align="right">776</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">WHITE</td>
 <td align="right">12</td>
-<td align="right">0.06</td>
-</tr>
-<tr class="even">
-<td align="left">F</td>
-<td align="left">ASIAN / PACIFIC ISLANDER</td>
-<td align="right">2</td>
-<td align="right">0.01</td>
-</tr>
-<tr class="odd">
-<td align="left">F</td>
-<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
-<td align="right">1</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">UNKNOWN</td>
-<td align="right">286</td>
-<td align="right">0.03</td>
-</tr>
-<tr class="odd">
-<td align="left">M</td>
-<td align="left">BLACK</td>
-<td align="right">7602</td>
-<td align="right">0.74</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">WHITE HISPANIC</td>
-<td align="right">1370</td>
-<td align="right">0.13</td>
-</tr>
-<tr class="odd">
-<td align="left">M</td>
-<td align="left">BLACK HISPANIC</td>
-<td align="right">776</td>
-<td align="right">0.08</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">WHITE</td>
 <td align="right">197</td>
-<td align="right">0.02</td>
-</tr>
-<tr class="odd">
-<td align="left">M</td>
-<td align="left">ASIAN / PACIFIC ISLANDER</td>
-<td align="right">83</td>
-<td align="right">0.01</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="left">M</td>
+<td align="left">ASIAN / PACIFIC ISLANDER</td>
+<td align="right">2</td>
+<td align="right">83</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
 <td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
 <td align="right">1</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="odd">
-<td align="left">U</td>
-<td align="left">UNKNOWN</td>
-<td align="right">9225</td>
-<td align="right">1.00</td>
-</tr>
-<tr class="even">
-<td align="left">U</td>
-<td align="left">BLACK</td>
-<td align="right">15</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="odd">
-<td align="left">U</td>
-<td align="left">BLACK HISPANIC</td>
-<td align="right">2</td>
-<td align="right">0.00</td>
+<td align="right">1</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
@@ -667,112 +611,62 @@ vic_sex_race =
   mutate(perc = round(num/sum(num), digits = 2))
 
 vic_sex_race %&gt;% 
+  select(-perc) %&gt;% 
+  pivot_wider(
+  names_from = &quot;vic_sex&quot;, 
+  values_from = &quot;num&quot;) %&gt;% 
   knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">vic_sex</th>
 <th align="left">vic_race</th>
-<th align="right">num</th>
-<th align="right">perc</th>
+<th align="right">F</th>
+<th align="right">M</th>
+<th align="right">U</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">BLACK</td>
 <td align="right">1604</td>
-<td align="right">0.68</td>
+<td align="right">16337</td>
+<td align="right">4</td>
 </tr>
 <tr class="even">
-<td align="left">F</td>
 <td align="left">WHITE HISPANIC</td>
 <td align="right">409</td>
-<td align="right">0.17</td>
+<td align="right">3262</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">BLACK HISPANIC</td>
 <td align="right">215</td>
-<td align="right">0.09</td>
+<td align="right">2218</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="left">F</td>
 <td align="left">WHITE</td>
 <td align="right">105</td>
-<td align="right">0.04</td>
+<td align="right">541</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
-<td align="left">F</td>
 <td align="left">ASIAN / PACIFIC ISLANDER</td>
 <td align="right">30</td>
-<td align="right">0.01</td>
-</tr>
-<tr class="even">
-<td align="left">F</td>
-<td align="left">UNKNOWN</td>
-<td align="right">1</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="odd">
-<td align="left">F</td>
-<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
-<td align="right">1</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">BLACK</td>
-<td align="right">16337</td>
-<td align="right">0.72</td>
-</tr>
-<tr class="odd">
-<td align="left">M</td>
-<td align="left">WHITE HISPANIC</td>
-<td align="right">3262</td>
-<td align="right">0.14</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">BLACK HISPANIC</td>
-<td align="right">2218</td>
-<td align="right">0.10</td>
-</tr>
-<tr class="odd">
-<td align="left">M</td>
-<td align="left">WHITE</td>
-<td align="right">541</td>
-<td align="right">0.02</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">ASIAN / PACIFIC ISLANDER</td>
 <td align="right">316</td>
-<td align="right">0.01</td>
+<td align="right">NA</td>
 </tr>
-<tr class="odd">
-<td align="left">M</td>
+<tr class="even">
 <td align="left">UNKNOWN</td>
+<td align="right">1</td>
 <td align="right">57</td>
-<td align="right">0.00</td>
-</tr>
-<tr class="even">
-<td align="left">M</td>
-<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
 <td align="right">8</td>
-<td align="right">0.00</td>
 </tr>
 <tr class="odd">
-<td align="left">U</td>
-<td align="left">BLACK</td>
-<td align="right">4</td>
-<td align="right">0.33</td>
-</tr>
-<tr class="even">
-<td align="left">U</td>
-<td align="left">UNKNOWN</td>
+<td align="left">AMERICAN INDIAN/ALASKAN NATIVE</td>
+<td align="right">1</td>
 <td align="right">8</td>
-<td align="right">0.67</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
