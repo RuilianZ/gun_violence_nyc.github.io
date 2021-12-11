@@ -330,25 +330,34 @@ div.tocify {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="proposal.html">Proposal</a>
+  <a href="p8105_final_project.html">Report</a>
 </li>
-<li>
-  <a href="p8105_final_project.html">Data Exploration</a>
-</li>
-<li>
-  <a href="shooting_map.html">Map</a>
-</li>
-<li>
-  <a href="shooting_time.html">Time</a>
-</li>
-<li>
-  <a href="Demographic_characteristics.html">Demographic characteristics</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Sections
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="shooting_map.html">Shooting Map of NYC</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting Across Time</a>
+    </li>
+    <li>
+      <a href="Demographic_characteristics.html">Demographic Characteristics</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting and COVID</a>
+    </li>
+    <li>
+      <a href="regression_model.html">Regression Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="shiny_dashboard.html">Shiny Dashboard</a>
-</li>
-<li>
-  <a href="regression_model.html">Regression Analysis</a>
 </li>
 <li>
   <a href="mailto:&lt;rz2570@cumc.columbia.edu&gt;">
@@ -380,7 +389,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Gun Violence Continues in NYC?</h1>
-<h3 class="subtitle">let’s get to know gun violence in our NYC</h3>
+<h3 class="subtitle">Exploring incidents of gun violence in New York City from 2006 to 2021</h3>
 
 </div>
 
@@ -389,21 +398,18 @@ div.tocify {
 Hao Zheng (hz2770) | Peilin Zhou (pz2281) | Xiao Ma(xm2276) | Yida Wang(yw3774) | Ruilian Zhang (rz2570)
 </h6>
 <p><br></br></p>
-<div id="gun-violence-in-nyc" class="section level4">
-<h4>Gun violence in NYC</h4>
 <p><img src="https://ksr-ugc.imgix.net/assets/025/753/880/485dfc57fe19bbcf1c3c533748d69740_original.jpg?ixlib=rb-4.0.2&amp;crop=faces&amp;w=1552&amp;h=873&amp;fit=crop&amp;v=1562703130&amp;auto=format&amp;frame=1&amp;q=92&amp;s=d5d092313f7bbb31d821834125a0b622" /></p>
-<p>Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also try to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.#ADD MORE#</p>
-</div>
+<p>Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also tried to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.</p>
 <div id="motivation" class="section level2">
 <h2>Motivation</h2>
-<p>Recently, the tragedy of a Chinese grad student at Chicago University killed in a shooting near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.</p>
+<p>Recently, the tragedy of a Chinese grad student at Chicago University killed in a <a href="https://chicago.cbslocal.com/2021/11/16/university-of-chicago-protest-violence/">shooting incident</a> near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.</p>
 </div>
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Although open carry is not directly banned, New York City prohibits the possession of a “loaded” handgun outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.</p>
-<p>New York City has been the site of many Black Lives Matter protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020).</p>
-<p>The political issues have a great influence on gun violence as well, for example the mayor change and changes of crime police.</p>
-<p>Besides, COVID-19 literally changed newyorkers’ lives, which contain the frequency and distribution of shooting cases in NYC.</p>
+<p>Although open carry is not directly banned, New York City <a href="https://www.usconcealedcarry.com/resources/ccw_reciprocity_map/nyc-gun-laws/#:~:text=New%20York%20prohibits%20the%20possession,York%20Pistol%20License%20(NYPL).">prohibits the possession of a “loaded” handgun</a> outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.</p>
+<p>New York City has been the site of many <a href="https://www.nytimes.com/interactive/2020/07/03/us/george-floyd-protests-crowd-size.html">Black Lives Matter</a> protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020).</p>
+<p>The political issues have a great influence on gun violence as well, for example the change of mayor and <a href="https://www1.nyc.gov/office-of-the-mayor/news/158-21/recovery-all-us-mayor-de-blasio-outlines-next-phase-comprehensive-police-reform-effort">changes of crime police</a>.</p>
+<p>Besides, COVID-19 literally changed <a href="https://www.nytimes.com/2020/09/23/nyregion/new-york-city-coronavirus-six-months.html">lifestyle of New Yorkers</a>, which contain the frequency and distribution of shooting cases in NYC.</p>
 </div>
 <div id="datasets" class="section level2">
 <h2>Datasets</h2>
@@ -412,18 +418,16 @@ Hao Zheng (hz2770) | Peilin Zhou (pz2281) | Xiao Ma(xm2276) | Yida Wang(yw3774) 
 <li><a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8">NYPD Shooting Incident - Data 2006-2021</a><br />
 </li>
 <li><a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78">NYPD Hate Crimes</a><br />
-<a href="https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3">COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths</a><br />
-*<a href="https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm">Borough Boundaries</a></li>
+</li>
+<li><a href="https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3">COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths</a><br />
+</li>
+<li><a href="https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm">Borough Boundaries</a></li>
 </ul>
 </div>
 <div id="frindly-reminder" class="section level2">
 <h2>FRINDLY REMINDER</h2>
-<ul>
-<li>Keep an eye at midnight on weekends even it is Manhattan!</li>
-</ul>
-</div>
-<div id="come-with-us-to-know-more-information" class="section level2">
-<h2>Come with us to know more information!</h2>
+<p><strong>Keep an eye at midnight on weekends even it is Manhattan!</strong></p>
+<p>Come with us to know more information!</p>
 </div>
 
 

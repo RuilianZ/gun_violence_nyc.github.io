@@ -1,7 +1,6 @@
 ---
 title: "Gun Violence Continues in NYC?"
-subtitle: "let's get to know gun violence in our NYC"
-#formal version:"Exploring incidents of gun violence in New York City from 2006 to 2021"
+subtitle: "Exploring incidents of gun violence in New York City from 2006 to 2021"
 output: 
   html_document:
     code_folding: hide
@@ -18,27 +17,26 @@ library(tidyverse)
 
 <br></br>
 
-#### Gun violence in NYC
 ![](https://ksr-ugc.imgix.net/assets/025/753/880/485dfc57fe19bbcf1c3c533748d69740_original.jpg?ixlib=rb-4.0.2&crop=faces&w=1552&h=873&fit=crop&v=1562703130&auto=format&frame=1&q=92&s=d5d092313f7bbb31d821834125a0b622)
 
-Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also try to figure out the relationship between the changes in frequency and distribution of shooting cases in NYC and the COVID-19 pandemic.#ADD MORE#
+Our project is mainly based on the gun violence crimes that happened in NYC from 2006 to 2021. We also tried to figure out the relationship between the changes in frequency and distribution of shooting cases in [NYC and the COVID-19 pandemic](https://en.wikipedia.org/wiki/COVID-19_pandemic_in_New_York_City).
  
 
 ## Motivation
 
-Recently, the tragedy of a Chinese grad student at Chicago University killed in a shooting near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
+Recently, the tragedy of a Chinese grad student at Chicago University killed in a [shooting incident](https://chicago.cbslocal.com/2021/11/16/university-of-chicago-protest-violence/) near the campus has raised great concern about gun violence again. Being public health students living in NYC, gaining deeper insights into the incidents of gun violence in the city, such as the overall patterns of location or time and potential association with other public health issues, would not only be beneficial for self-protection, but might also be instrumental for advocating prospective legislative changes to form safe communities in NYC.
 
 
 
 ## Background
 
-Although open carry is not directly banned, New York City prohibits the possession of a “loaded” handgun outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.
+Although open carry is not directly banned, New York City [prohibits the possession of a “loaded” handgun](https://www.usconcealedcarry.com/resources/ccw_reciprocity_map/nyc-gun-laws/#:~:text=New%20York%20prohibits%20the%20possession,York%20Pistol%20License%20(NYPL).) outside of the home or place of business without a carry license. We usually think NYC are more strict on guns than some states and cities, but for the geographic location and political reasons, gun situation in NYC is much more complicated.
 
-New York City has been the site of many Black Lives Matter protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020). 
+New York City has been the site of many [Black Lives Matter](https://www.nytimes.com/interactive/2020/07/03/us/george-floyd-protests-crowd-size.html) protests in response to incidents of police brutality and racially motivated violence against black people, especially during George Floyd protests (May–June 2020). 
 
-The political issues have a great influence on gun violence as well, for example the mayor change and changes of crime police.
+The political issues have a great influence on gun violence as well, for example the change of mayor and [changes of crime police](https://www1.nyc.gov/office-of-the-mayor/news/158-21/recovery-all-us-mayor-de-blasio-outlines-next-phase-comprehensive-police-reform-effort).
 
-Besides, COVID-19 literally changed newyorkers' lives, which contain the frequency and distribution of shooting cases in NYC.
+Besides, COVID-19 literally changed [lifestyle of New Yorkers](https://www.nytimes.com/2020/09/23/nyregion/new-york-city-coronavirus-six-months.html), which contain the frequency and distribution of shooting cases in NYC.
 
 
 
@@ -53,14 +51,15 @@ With this in mind, we use several datasets related to the New York City gun viol
 
 * [NYPD Shooting Incident - Data 2006-2021](https://data.cityofnewyork.us/Public-Safety/NYPD-Shooting-Incident-Data-Historic-/833y-fsy8)  
 * [NYPD Hate Crimes](https://data.cityofnewyork.us/Public-Safety/NYPD-Hate-Crimes/bqiq-cu78)  
-[COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3)  
-*[Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
+* [COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths](https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3)  
+* [Borough Boundaries](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm)
 
 
 
 ## FRINDLY REMINDER
 
-- Keep an eye at midnight on weekends even it is Manhattan!
+**Keep an eye at midnight on weekends even it is Manhattan!**
 
-## Come with us to know more information!
+
+Come with us to know more information!
 
