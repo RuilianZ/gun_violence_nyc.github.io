@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -224,6 +227,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -231,6 +297,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -254,25 +330,34 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="proposal.html">Proposal</a>
+  <a href="p8105_final_project.html">Report</a>
 </li>
-<li>
-  <a href="p8105_final_project.html">Data Exploration</a>
-</li>
-<li>
-  <a href="shooting_map.html">Map</a>
-</li>
-<li>
-  <a href="shooting_time.html">Time</a>
-</li>
-<li>
-  <a href="Demographic_characteristics.html">Demographic characteristics</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Sections
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="shooting_map.html">Shooting Map of NYC</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting Across Time</a>
+    </li>
+    <li>
+      <a href="Demographic_characteristics.html">Demographic Characteristics</a>
+    </li>
+    <li>
+      <a href="shooting_time.html">Shooting and COVID</a>
+    </li>
+    <li>
+      <a href="regression_model.html">Regression Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="shiny_dashboard.html">Shiny Dashboard</a>
-</li>
-<li>
-  <a href="regression_model.html">Regression Analysis</a>
 </li>
 <li>
   <a href="mailto:&lt;rz2570@cumc.columbia.edu&gt;">
@@ -316,10 +401,13 @@ $(document).ready(function () {
 gun violence
 </p>
 </div>
+</div>
+<div id="gun-violence" class="section level3">
+<h3>Gun Violence</h3>
 <p>Gun violence has become a major threat to human rights. Every year, many people are killed by shooting. No place is safe, even if you are walking in the campus or near the hospital. The graduate Chinese student recently killed was found fatally shot just near the University of Chicago. As students who have learned data science, we cannot just claim the truth without inferring from real life data. So here, as students who are curious about this human right crisis, we focus on the shooting incidence data from NYPD in NYC from year 2006 to 2021.</p>
 </div>
-<div id="covid-19-influence-on-shooting-cases" class="section level2">
-<h2>COVID-19 influence on shooting cases</h2>
+<div id="covid-19-influence-on-shooting-incidents" class="section level2">
+<h2>COVID-19 influence on shooting incidents</h2>
 <div class="figure" style="text-align: center">
 <img src="data/people_masked.jpg" alt="people with mask" width="70%" />
 <p class="caption">
@@ -328,8 +416,8 @@ people with mask
 </div>
 <p>The global pandemic COVID-19 has influenced the world as a whole. The long duration of the virus has led to many closed stores or companies, a heavier living burden, the increasing unemployment rate, what’s more, a potentially higher crime rate. Therefore, we use the dataset of COVID-19 daily cases counts of NYC as an indicator of the severity of COVID-19 spread and try to find the connection between that and the number of shooting cases.</p>
 </div>
-<div id="data" class="section level2">
-<h2>Data</h2>
+<div id="data-description" class="section level2">
+<h2>Data Description</h2>
 <p>We have mainly used two datasets – NYPD Shooting Incident and COVID-19 Daily Counts of Cases, Hospitalizations, and Deaths, both are from the NYC open data.</p>
 <p>NYPD Shooting Incident: Contains information about the incident number, occurrence date, time, the demographic characteristics of the perpetrator and victims geographic location, etc. of the shooting cases happen in NYC during year 2006 to 2021, and was extracted each quarter by the Office of Management Analysis and Planning. It could serve as a great source for government and police to understand some potential nature behind shooting incidents. Each row represents an unique victim, the same incident key may occur several times, meaning the incident may have multiple victims. There are many values missing for <code>perp_age_group</code>, <code>perp_sex</code> and <code>perp_race</code>, which is due to the fact that the information of the perpetrator was unknown or not available at the time of collection. Key variables used in our analysis are:</p>
 <ul>
@@ -349,8 +437,8 @@ people with mask
 <li><code>total_case_count</code></li>
 </ul>
 </div>
-<div id="discussion-some-main-findings" class="section level2">
-<h2>Discussion/ Some main findings</h2>
+<div id="main-findings" class="section level2">
+<h2>Main findings</h2>
 <ul>
 <li>Based on the time based heatmap, we can see a significant characteristics of the time the shooting cases occur: mostly occurred during the midnight till early in the morning, with an obvious increase on Saturday and Sunday.</li>
 <li>The year 2006 to 2019 has witnessed a gradually decreasing of number of shooting cases with some drastic decline on certain year. However, in year 2020, shooting cases increased dramatically to over 1800 cases. This may be related to COVID-19.</li>
@@ -363,6 +451,8 @@ people with mask
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -400,6 +490,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

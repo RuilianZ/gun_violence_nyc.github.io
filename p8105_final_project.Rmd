@@ -10,11 +10,8 @@ library(tidyverse)
 library(rvest)
 library(knitr)
 library(leaflet)
-#install.packages("rgdal",repos = "http://cran.us.r-project.org")
 library(rgdal)
 library(lubridate)
-#library(dplyr)
-#library(plyr)
 library(plotly)
 col1 = "#d8e1cf" 
 col2 = "#438484"
@@ -127,7 +124,7 @@ According to the result of this heatmap, the midnight of weekends(Sunday and Sat
 Is this situation happened in every boro?
 
 In Brooklyn
-```{r heatmap_Brooklyn}
+```{r heatmap_Brooklyn, message = FALSE}
 heatmap_bn = shooting_initial %>%
   filter(boro == "BROOKLYN") %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -154,7 +151,7 @@ heatmap_Bn = ggplot(dayHour, aes(hour, occur_date)) +
 heatmap_Bn
 ```
 In Bronx
-```{r heatmap_Bronx}
+```{r heatmap_Bronx, message = FALSE}
 heatmap_bx = shooting_initial %>%
   filter(boro == "BRONX") %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -182,7 +179,7 @@ heatmap_Bx
 ```
 
 In Queens
-```{r heatmap_Queens}
+```{r heatmap_Queens, message = FALSE}
 heatmap_q = shooting_initial %>%
   filter(boro == "QUEENS") %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -210,7 +207,7 @@ heatmap_q
 ```
 
 In Manhattan
-```{r heatmap_Manhattan}
+```{r heatmap_Manhattan, message = FALSE}
 heatmap_m = shooting_initial %>%
   filter(boro == "MANHATTAN") %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -239,7 +236,7 @@ heatmap_m
 
 
 In Staten_island 
-```{r heatmap_Staten_island}
+```{r heatmap_Staten_Island, message = FALSE}
 heatmap_l = shooting_initial %>%
   filter(boro == "STATEN ISLAND") %>%
   mutate(occur_date = as.Date(occur_date,'%m/%d/%Y')) %>%
@@ -259,7 +256,7 @@ heatmap_l = ggplot(dayHour, aes(hour, occur_date)) +
   guides(fill = guide_legend(title = "Total Shooting Cases")) +
   theme_bw() + 
   theme_minimal() + 
-  labs(title = "Time Based Heatmap in Staten_island",
+  labs(title = "Time Based Heatmap in Staten Island",
        x = "Shooting Cases Per Hour", y = "Day of Week") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
