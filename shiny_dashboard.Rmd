@@ -2,7 +2,7 @@
 title: "Shiny Dashboard"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
+    orientation: rows
     vertical_layout: fill
     source_code: embed
 runtime: shiny
@@ -99,74 +99,14 @@ sliderInput(
   label = h2("Year Range"),
   min = min_year,
   max = max_year,
-  value = c(2016,2021)
+  value = c(2012,2021)
 )
 
 ```
 
-```{r import and merge covid data}
-covid_counts = read.csv("covid19_data.csv", sep = ";") %>% as_tibble()
-
-clean_covid = covid_counts %>% 
-   janitor::clean_names() %>% 
-   rename(date = date_of_interest) %>% 
-   select(date, contains("case_count")) %>% 
-   select(-contains(c("probable_case_count", "case_count_7day_avg", "all_case_count_7day_avg"))) %>%
-   separate(date, into = c("month", "day", "year")) %>% 
-   mutate_all(as.character) %>% 
-   mutate_if(is.character, gsub, pattern = ",", replacement = "") %>% 
-   mutate_if(is.character, as.numeric) %>%
-   pivot_longer(
-    cols = bx_case_count:si_case_count,
-    names_to = "borough",
-    values_to = "borough_case_count"
-  ) %>% 
-  mutate(borough = gsub("_case_count", "", borough)) %>% 
-  mutate(borough = recode(borough, "bx" = "bronx","bk" = "brooklyn","mn" = "manhattan","si" = "staten_island","qn" = "queens")) %>% 
-  relocate(case_count, .after = borough_case_count) %>% 
-  rename(total_case_count = case_count) %>% 
-  mutate(date = str_c(month, day, year, sep = "/")) %>% 
-  select(date, everything())
-
-shooting_mini =
-  shooting %>% 
-  filter(year == "2020") %>% 
-  select(c("date", "incident_key", "borough"))
-
-shooting_covid = 
-  merge(x = shooting_mini, y = clean_covid, by = c("date", "borough")) %>% 
-  relocate("date", "month", "day", "year", everything()) %>% 
-  group_by(date) %>% 
-  add_count(borough, name = "borough_n_victim") %>% # victim number equals to the count of incident_key (includind duplicate)
-  distinct() %>% 
-  add_count(borough, name = "borough_n_shooting") %>% # shooting number equals to the count of distinct incident_key
-  select(-incident_key) %>% 
-  distinct() %>% 
-  add_count(date, wt = borough_n_victim, name = "total_n_victim") %>% 
-  add_count(date, wt = borough_n_shooting, name = "total_n_shooting") %>% 
-  mutate(
-    borough = recode(borough, 
-                     "bronx" = "Bronx",
-                     "brooklyn" = "Brooklyn",
-                     "manhattan" = "Manhattan",
-                     "queens" = "Queens",
-                     "staten_island" = "Staten Island")
-  )
-```
-
-```{r build menu for shooting_covid data}
-sliderInput(
-  "covid_case_range",
-  label = h3("COVID Case Range"),
-  min = 1,
-  max = 6129,
-  value = c(100, 6000)
-)
-```
 
 
-
-Map of Shooting Incidents in NYC {data-width=650}
+Map of Shooting Incidents in NYC {data-width=550}
 -----------------------------------------------------------------------
 
 ### Shooting Incidents Across Space
@@ -191,10 +131,10 @@ renderLeaflet({
 })
 ```
 
-Column {data-width=350}
+Row {data-width=350}
 -----------------------------------------------------------------------
 
-### Perpetrators' race across space
+### Shooting Incident Based on Perpetrator's Race
 
 ```{r map perpetrator race}
 renderLeaflet({
@@ -215,24 +155,7 @@ renderLeaflet({
 })
 ```
 
-### Shooting incidence and COVID Cases
 
-```{r plotly plot for covid_shooting}
-renderPlotly({
-  
-  shooting_covid %>% 
-    plot_ly(
-      x = ~total_case_count, y = ~total_n_shooting,
-      type = "scatter", mode = "markers",
-           color = ~borough, alpha = .8) %>% 
-    layout(
-      title = "Distribution of Shooting Cases Against COVID Cases Within Each Day",
-      xaxis = list(title = "Total COVID Cases"),
-      yaxis = list(title = "Total Shooting Cases"))
-    
-  
-})
-```
 
 
 
