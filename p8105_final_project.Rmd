@@ -203,8 +203,8 @@ heatmap
 
 According to the result of this heatmap, the midnight of weekends(Sunday and Saturday) have the highest risk of shooting cases and the total shooting cases even reach 500 for an hour. Additionally, daytime between 7 in the morning and 19 in the evening seems to have lower shooting cases than the other time of the day.
 
-## Is this situation happened in every borough?
-## Let's have a look!
+Is this situation happened in every borough?
+Let's have a look!
 
 ### In Brooklyn
 It is very similar to the heatmap above, and the total number of shooting cases is very high as well, which means Brooklyn is one of the main shooting happened place in NYC and it kind of a representative shooting incidents distribution in NYC.
@@ -1049,14 +1049,13 @@ The plots above shows k-means clusters with different group numbers, we can see 
 
 ## Regression Analysis
 
-Fit a linear regression model for total COVID case with total shooting as predictor.
+### Using COVID Cases as Predictor
+
+First we want to further explore that if there is a linear association between COVID cases and shooting incidents, so we fit a linear regression model for total COVID case with total shooting as predictor.
 
 ```{r}
 total_lm = lm(total_n_shooting ~ total_case_count, data = shooting_covid) 
 ```
-
-
-## Model Diagnosis
 
 ```{r}
 broom::tidy(total_lm) %>% 
@@ -1069,13 +1068,12 @@ plot(total_lm)
 
 We can see from the Residuals vs Fitted plot that the residuals is not equally distributed around the 0 horizontal line. In fact, the residuals has a pattern of decrease, indicating that the model has high goodness of fit, but violates the assumption of the normal distribution of the residual. Besides, from the Normal Q-Q plot we can see that most of the data fit the line when the theoretical quantile is under 2, indicating the data might have a normal distribution in a certain range.
 
-## Regression Analysis
+## Multiple Linear Regression
 
 The goal of this section was to find whether there is any relationship between the number of COVID-19 case with the number of shooting case within different borough. We combined our data resources and examine the following candidate predictors for the outcome of COVID-19 case rate: the number of shooting case, the number of shooting case and Covid cases in different borough.
 
-### Model selection
+### Model Selection
 
-Fit a linear regression model for total shooting case with total COVID case as predictor.
 
 ```{r,message = FALSE, warning = FALSE,comment = FALSE}
 shooting_mini =
@@ -1189,21 +1187,40 @@ According to the plot, there is no obvious different between RMSE. Model 2 have 
 
 
 
-### Regression Conclusion
+### Conclusion
 
 Model 2 seems perform a little bit better than the first model.Cross validation shows a little higher RMSE for model2 than model1. Total number of shooting, case count in Brooklyn and Queens, are negatively associate with covid-19 cases. Manhattan-borough case count and borough shooting are positively associate with covid1-19 cases.
 
 
 
 
-## Disscussion
+# Disscussion
 
-### Main Findings
+## Main Findings
 
+* Overall, Bronx and Brooklyn have more shooting cases.
 * Based on the time based heatmap, we can see a significant characteristics of the time the shooting cases occur: mostly occurred during the midnight till early in the morning, with an obvious increase on Saturday and Sunday.
 * The year 2006 to 2019 has witnessed a gradually decreasing of number of shooting cases with some drastic decline on certain year. However, in year 2020, shooting cases increased dramatically to over 1800 cases. This may be related to COVID-19.
 * The month June, July and August have more shooting incidences occurred compared to the rest of the year, which has contradicted our original thought of massive amounts of shootings may happen at the end of the year.
-* Rrom 2006 to 2021, around 192 shooting cases actually happened near the CUIMC campus (from 158th to 176th St) . 
-* Overall, Bronx and Brooklyn have more shooting cases.
 * Most of both the perpetrators and victims are in the age range `18-24` and `25-44`, and is Black or White Hispanic, male.
 * For each borough except Staten Island, there is a general trend that higher number of shooting cases is associated with fewer COVID cases.
+
+
+## What We Might Concern as CUIMC Students
+
+* From 2006 to 2021, around 192 shooting cases actually happened near the CUIMC campus (from 158th to 176th St). 
+
+## Tips for Staying Safe
+
+* Columbia University Public Safety Resources  
+  + Morningside: 212-854-5555 (emergency calls) or 212-854-2797 (main line)  
+  + Manhattanville: 212-853-3333 (emergency calls) or 212-853-3301 (main line)  
+  + Medical Center: 212-305-7979 (emergency calls) or 212-305-8100 (main line)  
+* Local Resources  
+  + New York City Police Department: Dial 911 in an emergency from any phone  
+  + [NYC Office of Emergency Management](https://www1.nyc.gov/site/em/index.page)  
+  + [NYC Department of Health and Mental Hygiene](https://www.health.ny.gov/health_care/medicaid/redesign/ehr/registry/nycdohmh.htm)  
+* Please refer to this [Safety Tips](https://archive.nytimes.com/www.nytimes.com/fodors/top/features/travel/destinations/unitedstates/newyork/newyorkcity/fdrs_feat_111_8.html?n=Top%252FFeatures%252FTravel%252FDestinations%252FUnited%2520States%252FNew%2520York%252FNew%2520York%2520City) from The New York Times
+
+
+**We hope everyone stay safe and healthy in NYC :)**
