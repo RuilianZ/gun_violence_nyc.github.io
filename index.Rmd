@@ -15,7 +15,7 @@ library(tidyverse)
 
 <h6 style="text-align: left;" markdown="1"> Hao Zheng (hz2770) |  Peilin Zhou (pz2281) |  Xiao Ma(xm2276) |  Yida Wang(yw3774) |  Ruilian Zhang (rz2570) </h6>
 
-<br></br>
+</br>
 
 ![](https://ksr-ugc.imgix.net/assets/025/753/880/485dfc57fe19bbcf1c3c533748d69740_original.jpg?ixlib=rb-4.0.2&crop=faces&w=1552&h=873&fit=crop&v=1562703130&auto=format&frame=1&q=92&s=d5d092313f7bbb31d821834125a0b622)
 
